@@ -1,0 +1,33 @@
+# El backend MedicPOS tiene su propio repositorio git (rama refactor/bd-farmamed)
+MedicPOS/
+
+# Compilados Java / Maven
+target/
+*.class
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+yarn-error.log*
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# Logs
+*.log
+logs/
+
+# Respaldo de base de datos generado por 007_respaldo.bat
+database/_respaldo/
+
+# Sistema operativo
+Thumbs.db
+.DS_Store
+desktop.ini
