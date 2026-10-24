@@ -1,256 +1,234 @@
 -- =====================================================
 -- FARMAMED
--- 002_indexes.sql
--- Índices de optimización
--- PostgreSQL
+-- 002_indexes.sql  -  Indices de la base de datos
+-- PostgreSQL 18
+-- -----------------------------------------------------
+-- Indices para:
+--   * sostener las consultas del sistema (RNF-01, RNF-02)
+--   * sostener las consultas de los reportes (M08)
+--   * proteger el FEFO bajo concurrencia (RN09)
+--
+-- Los indices UNIQUE que ya son restricciones (uk_*,
+-- uq_*) estan cubiertos por el indice que PostgreSQL crea
+-- junto con la restriccion, por eso no se repiten aqui.
+--
+-- Es idempotente: CREATE INDEX IF NOT EXISTS.
 -- =====================================================
 
-SET search_path TO farmamed;
+SET search_path TO farmamed, public;
 
 -- =====================================================
--- USUARIOS
+-- PRERREQUISITOS
+-- pg_trgm habilita la busqueda de medicamentos por
+-- coincidencia parcial sin acentos ni mayusculas.
 -- =====================================================
 
-CREATE INDEX idx_usuario_rol
-ON usuario(rol_id);
-
-CREATE INDEX idx_usuario_activo
-ON usuario(activo);
+CREATE EXTENSION IF NOT EXISTS pg_trgm SCHEMA public;
 
 -- =====================================================
--- AUDITORIA
+-- AUDITORIA (M15)
 -- =====================================================
 
-CREATE INDEX idx_auditoria_usuario
-ON auditoria(usuario_id);
+CREATE INDEX IF NOT EXISTS idx_auditoria_fecha
+    ON farmamed.auditoria (fecha_hora DESC);
 
-CREATE INDEX idx_auditoria_fecha
-ON auditoria(fecha_hora DESC);
+CREATE INDEX IF NOT EXISTS idx_auditoria_usuario
+    ON farmamed.auditoria (usuario_id);
 
-CREATE INDEX idx_auditoria_entidad
-ON auditoria(entidad);
-
-CREATE INDEX idx_auditoria_accion
-ON auditoria(accion);
-
--- =====================================================
--- PROVEEDORES
--- =====================================================
-
-CREATE INDEX idx_proveedor_razon_social
-ON proveedor(razon_social);
-
-CREATE INDEX idx_proveedor_activo
-ON proveedor(activo);
+-- Búsqueda por entidad y acción, que es como el usuario
+-- filtra el historial (RN08).
+CREATE INDEX IF NOT EXISTS idx_auditoria_entidad_accion
+    ON farmamed.auditoria (entidad, accion, fecha_hora DESC);
 
 -- =====================================================
--- MEDICAMENTOS
+-- BAJA INVENTARIO (M03)
 -- =====================================================
 
-CREATE INDEX idx_medicamento_nombre
-ON medicamento(nombre);
+CREATE INDEX IF NOT EXISTS idx_baja_fecha
+    ON farmamed.baja_inventario (fecha_hora DESC);
 
-CREATE INDEX idx_medicamento_proveedor
-ON medicamento(proveedor_id);
+CREATE INDEX IF NOT EXISTS idx_baja_lote
+    ON farmamed.baja_inventario (lote_id);
 
-CREATE INDEX idx_medicamento_activo
-ON medicamento(activo);
+CREATE INDEX IF NOT EXISTS idx_baja_usuario
+    ON farmamed.baja_inventario (usuario_id);
 
--- =====================================================
--- LOTES
--- =====================================================
-
-CREATE INDEX idx_lote_medicamento
-ON lote(medicamento_id);
-
-CREATE INDEX idx_lote_vencimiento
-ON lote(fecha_vencimiento);
-
-CREATE INDEX idx_lote_estado
-ON lote(estado);
+-- Reporte de bajas por motivo (M08).
+CREATE INDEX IF NOT EXISTS idx_baja_motivo_fecha
+    ON farmamed.baja_inventario (motivo, fecha_hora DESC);
 
 -- =====================================================
--- FEFO
--- =====================================================
--- Índice principal para el algoritmo FEFO
-
-CREATE INDEX idx_lote_fefo
-ON lote(
-    medicamento_id,
-    fecha_vencimiento,
-    cantidad_actual
-);
-
--- =====================================================
--- ALERTAS DE VENCIMIENTO
+-- CONFIGURACION SISTEMA (M11)
 -- =====================================================
 
-CREATE INDEX idx_lote_dashboard_vencimiento
-ON lote(
-    estado,
-    fecha_vencimiento
-);
+CREATE INDEX IF NOT EXISTS idx_configuracion_created_by
+    ON farmamed.configuracion_sistema (created_by);
 
 -- =====================================================
--- PACIENTES
+-- DETALLE DISPENSACION (M04)
 -- =====================================================
 
-CREATE INDEX idx_paciente_apellidos
-ON paciente(apellidos);
+CREATE INDEX IF NOT EXISTS idx_dd_dispensacion
+    ON farmamed.detalle_dispensacion (dispensacion_id);
 
-CREATE INDEX idx_paciente_nombres
-ON paciente(nombres);
+CREATE INDEX IF NOT EXISTS idx_dd_medicamento
+    ON farmamed.detalle_dispensacion (medicamento_id);
 
--- =====================================================
--- RECETAS
--- =====================================================
-
-CREATE INDEX idx_receta_paciente
-ON receta(paciente_id);
-
-CREATE INDEX idx_receta_numero
-ON receta(numero_receta);
-
-CREATE INDEX idx_receta_fecha
-ON receta(fecha_receta);
+CREATE INDEX IF NOT EXISTS idx_dd_lote
+    ON farmamed.detalle_dispensacion (lote_id);
 
 -- =====================================================
--- DISPENSACIONES
+-- DETALLE ORDEN COMPRA (M07)
 -- =====================================================
 
-CREATE INDEX idx_dispensacion_receta
-ON dispensacion(receta_id);
+CREATE INDEX IF NOT EXISTS idx_doc_orden
+    ON farmamed.detalle_orden_compra (orden_compra_id);
 
-CREATE INDEX idx_dispensacion_usuario
-ON dispensacion(usuario_id);
-
-CREATE INDEX idx_dispensacion_fecha
-ON dispensacion(fecha_hora DESC);
-
-CREATE INDEX idx_dispensacion_estado
-ON dispensacion(estado);
+CREATE INDEX IF NOT EXISTS idx_doc_medicamento
+    ON farmamed.detalle_orden_compra (medicamento_id);
 
 -- =====================================================
--- DETALLE DISPENSACION
+-- DISPENSACION (M04)
 -- =====================================================
 
-CREATE INDEX idx_dd_dispensacion
-ON detalle_dispensacion(dispensacion_id);
+CREATE INDEX IF NOT EXISTS idx_dispensacion_fecha
+    ON farmamed.dispensacion (fecha_hora DESC);
 
-CREATE INDEX idx_dd_medicamento
-ON detalle_dispensacion(medicamento_id);
-
-CREATE INDEX idx_dd_lote
-ON detalle_dispensacion(lote_id);
+CREATE INDEX IF NOT EXISTS idx_dispensacion_usuario
+    ON farmamed.dispensacion (usuario_id);
 
 -- =====================================================
--- BAJAS
+-- LOTE (M03)
 -- =====================================================
 
-CREATE INDEX idx_baja_lote
-ON baja_inventario(lote_id);
+CREATE INDEX IF NOT EXISTS idx_lote_vencimiento
+    ON farmamed.lote (fecha_vencimiento);
 
-CREATE INDEX idx_baja_usuario
-ON baja_inventario(usuario_id);
+CREATE INDEX IF NOT EXISTS idx_lote_medicamento_fecha
+    ON farmamed.lote (medicamento_id, fecha_vencimiento);
 
-CREATE INDEX idx_baja_fecha
-ON baja_inventario(fecha_hora DESC);
-
-CREATE INDEX idx_baja_motivo
-ON baja_inventario(motivo);
-
--- =====================================================
--- MOVIMIENTO INVENTARIO
--- =====================================================
-
-CREATE INDEX idx_movimiento_medicamento
-ON movimiento_inventario(medicamento_id);
-
-CREATE INDEX idx_movimiento_lote
-ON movimiento_inventario(lote_id);
-
-CREATE INDEX idx_movimiento_usuario
-ON movimiento_inventario(usuario_id);
-
-CREATE INDEX idx_movimiento_tipo
-ON movimiento_inventario(tipo_movimiento);
-
-CREATE INDEX idx_movimiento_fecha
-ON movimiento_inventario(fecha_hora DESC);
+-- Indice parcial para el FEFO: solo interesan los lotes
+-- vigentes con existencias. Es el indice que sostiene la
+-- seleccion de lote en la dispensacion (RN02) y mantiene
+-- el indice pequeno cuando hay muchos lotes dados de baja.
+CREATE INDEX IF NOT EXISTS idx_lote_fefo
+    ON farmamed.lote (medicamento_id, fecha_vencimiento, id)
+    WHERE estado = 'ACTIVO' AND cantidad_actual > 0;
 
 -- =====================================================
--- KARDEX
+-- MEDICAMENTO (M02)
 -- =====================================================
 
-CREATE INDEX idx_movimiento_kardex
-ON movimiento_inventario(
-    medicamento_id,
-    lote_id,
-    fecha_hora DESC
-);
+CREATE INDEX IF NOT EXISTS idx_medicamento_nombre
+    ON farmamed.medicamento (nombre);
+
+CREATE INDEX IF NOT EXISTS idx_medicamento_proveedor
+    ON farmamed.medicamento (proveedor_id);
+
+-- Busqueda parcial por nombre, la que usa el buscador de
+-- medicamentos (ILIKE '%texto%').
+CREATE INDEX IF NOT EXISTS idx_medicamento_nombre_trgm
+    ON farmamed.medicamento USING gin (nombre public.gin_trgm_ops);
 
 -- =====================================================
--- ORDENES DE COMPRA
+-- MOVIMIENTO INVENTARIO (M03 kardex)
 -- =====================================================
 
-CREATE INDEX idx_orden_proveedor
-ON orden_compra(proveedor_id);
+CREATE INDEX IF NOT EXISTS idx_mov_fecha
+    ON farmamed.movimiento_inventario (fecha_hora DESC);
 
-CREATE INDEX idx_orden_usuario
-ON orden_compra(usuario_id);
+CREATE INDEX IF NOT EXISTS idx_mov_lote
+    ON farmamed.movimiento_inventario (lote_id);
 
-CREATE INDEX idx_orden_estado
-ON orden_compra(estado);
+CREATE INDEX IF NOT EXISTS idx_mov_medicamento
+    ON farmamed.movimiento_inventario (medicamento_id);
 
-CREATE INDEX idx_orden_fecha
-ON orden_compra(fecha_hora DESC);
+CREATE INDEX IF NOT EXISTS idx_mov_usuario
+    ON farmamed.movimiento_inventario (usuario_id);
 
--- =====================================================
--- DETALLE ORDEN
--- =====================================================
-
-CREATE INDEX idx_doc_orden
-ON detalle_orden_compra(orden_compra_id);
-
-CREATE INDEX idx_doc_medicamento
-ON detalle_orden_compra(medicamento_id);
+-- El kardex referencia la entidad que origino el
+-- movimiento (DISPENSACION, BAJA_INVENTARIO).
+CREATE INDEX IF NOT EXISTS idx_mov_referencia
+    ON farmamed.movimiento_inventario (referencia_tipo, referencia_id);
 
 -- =====================================================
--- CONFIGURACION
+-- ORDEN COMPRA (M07)
 -- =====================================================
 
-CREATE INDEX idx_configuracion_activo
-ON configuracion_sistema(activo);
+CREATE INDEX IF NOT EXISTS idx_orden_estado
+    ON farmamed.orden_compra (estado);
+
+CREATE INDEX IF NOT EXISTS idx_orden_proveedor
+    ON farmamed.orden_compra (proveedor_id);
+
+CREATE INDEX IF NOT EXISTS idx_orden_usuario
+    ON farmamed.orden_compra (usuario_id);
 
 -- =====================================================
--- DASHBOARD
+-- PACIENTE (M04)
 -- =====================================================
 
-CREATE INDEX idx_dashboard_stock
-ON medicamento(
-    stock_minimo,
-    stock_maximo
-);
+CREATE INDEX IF NOT EXISTS idx_paciente_created_by
+    ON farmamed.paciente (created_by);
 
-CREATE INDEX idx_dashboard_lote
-ON lote(
-    fecha_vencimiento,
-    estado
-);
+-- Historial de recetas por paciente.
+CREATE INDEX IF NOT EXISTS idx_receta_paciente_fecha
+    ON farmamed.receta (paciente_id, fecha_receta DESC);
 
--- =====================================================
--- REPORTES
--- =====================================================
-
-CREATE INDEX idx_reporte_dispensacion_fecha
-ON dispensacion(fecha_hora);
-
-CREATE INDEX idx_reporte_movimiento_fecha
-ON movimiento_inventario(fecha_hora);
-
-CREATE INDEX idx_reporte_baja_fecha
-ON baja_inventario(fecha_hora);
+-- El codigo externo es la clave de integracion futura
+-- con el sistema de historia clinica (Fase 2, RNF-29).
+-- Unico solo entre los que lo tienen.
+CREATE UNIQUE INDEX IF NOT EXISTS ux_paciente_codigo_externo
+    ON farmamed.paciente (codigo_externo)
+    WHERE codigo_externo IS NOT NULL;
 
 -- =====================================================
--- FIN
+-- PROVEEDOR (M06)
+-- =====================================================
+
+CREATE INDEX IF NOT EXISTS idx_proveedor_created_by
+    ON farmamed.proveedor (created_by);
+
+-- =====================================================
+-- RECETA (M04)
+-- =====================================================
+
+CREATE INDEX IF NOT EXISTS idx_receta_paciente
+    ON farmamed.receta (paciente_id);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_receta_codigo_externo
+    ON farmamed.receta (codigo_externo)
+    WHERE codigo_externo IS NOT NULL;
+
+-- =====================================================
+-- ROL (M10) y USUARIO (M09)
+-- =====================================================
+
+CREATE INDEX IF NOT EXISTS idx_usuario_rol
+    ON farmamed.usuario (rol_id);
+
+CREATE INDEX IF NOT EXISTS idx_usuario_created_by
+    ON farmamed.usuario (created_by);
+
+-- =====================================================
+-- RESTRICCIONES UNIQUE PENDIENTES
+-- La clave de configuracion es unica: una sola fila por
+-- parametro. En una base recien creada 001_schema.sql ya
+-- la trae; este bloque cubre las bases que se actualizan.
+-- =====================================================
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE conname = 'uq_configuracion_clave'
+          AND conrelid = 'farmamed.configuracion_sistema'::regclass
+    ) THEN
+        ALTER TABLE farmamed.configuracion_sistema
+            ADD CONSTRAINT uq_configuracion_clave UNIQUE (clave);
+    END IF;
+END $$;
+
+-- =====================================================
+-- FIN DE LOS INDICES
 -- =====================================================
