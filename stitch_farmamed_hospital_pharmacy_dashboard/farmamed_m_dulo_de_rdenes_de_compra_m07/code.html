@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary": "#ffffff", "on-background": "#1b1c1c", "on-surface-variant": "#414752", "tertiary": "#006771", "error": "#ba1a1a", "inverse-on-surface": "#f2f0f0", "outline": "#717783", "on-tertiary-fixed": "#001f23", "surface-variant": "#e3e2e2", "surface-dim": "#dbdad9", "surface-bright": "#fbf9f9", "secondary-fixed-dim": "#b0c6ff", "on-primary-container": "#fffdff", "surface-container": "#efeded", "surface": "#fbf9f9", "tertiary-container": "#00828e", "inverse-surface": "#303031", "on-secondary-container": "#00337c", "on-surface": "#1b1c1c", "surface-container-low": "#f5f3f3", "on-tertiary": "#ffffff", "on-error": "#ffffff", "on-primary-fixed-variant": "#004786", "surface-container-highest": "#e3e2e2", "on-error-container": "#93000a", "inverse-primary": "#a5c8ff", "tertiary-fixed": "#92f1fe", "surface-tint": "#005faf", "error-container": "#ffdad6", "on-tertiary-fixed-variant": "#004f56", "primary-fixed-dim": "#a5c8ff", "on-secondary-fixed": "#001945", "secondary-fixed": "#d9e2ff", "on-secondary": "#ffffff", "secondary-container": "#759efd", "surface-container-high": "#e9e8e7", "on-primary-fixed": "#001c3a", "primary-container": "#1976d2", "background": "#fbf9f9", "primary-fixed": "#d4e3ff", "outline-variant": "#c1c6d4", "on-secondary-fixed-variant": "#00429c", "tertiary-fixed-dim": "#75d5e2", "secondary": "#2b5bb5", "on-tertiary-container": "#fcffff", "primary": "#005dac", "surface-container-lowest": "#ffffff" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-xs": "0.25rem", "space-xl": "2rem", "margin-mobile": "1rem", "gutter-mobile": "0.5rem", "margin": "1.5rem", "space-sm": "0.5rem", "gutter": "1rem", "space-lg": "1.5rem", "space-md": "1rem" }, "fontFamily": { "title-sm": ["Roboto Flex"], "label-lg": ["Roboto Flex"], "body-md": ["Roboto Flex"], "label-sm": ["Roboto Flex"], "label-md": ["Roboto Flex"], "headline-lg": ["Roboto Flex"], "code-batch": ["Roboto Flex"], "body-lg": ["Roboto Flex"], "headline-md": ["Roboto Flex"], "headline-sm": ["Roboto Flex"], "title-md": ["Roboto Flex"], "body-sm": ["Roboto Flex"] }, "fontSize": { "title-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.5px", "fontWeight": "500" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }], "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "400" }], "code-batch": ["13px", { "lineHeight": "18px", "letterSpacing": "1px", "fontWeight": "500" }], "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }], "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "500" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "500" }], "title-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500" }], "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.4px", "fontWeight": "400" }] } } } }</script></head><body class="bg-surface font-body-md text-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-space-md flex items-center gap-space-sm bg-surface-container-lowest"><img alt="Brand logo. - Primary color: #1976d2
+- Font: robotoFlex
+- Mode: light
+- Roundness: rounded-sm
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XxTU2D48n_L9Pfvw3etZ1dqxOEtDZr87rDb6JdSPOPmK_JG848nNKZun2UJaiYDsC4gxcoSfOsAMVU0lR2IFYOx33inwPbl2R1nObI0k856fsiHp1QsZGp3hk4ubUaoG33GsZO1amqcw1M7eSTSQ85IBicu2gWwd6BCPX2JNBEs9BoD15ZtOY8Rvc2venUOl1C50pj7nx_HUmFxOH0rC114SdpA0HThf8Ao7cjknwUgBX_C0KQldPPKRc"/><div class="flex flex-col min-w-0"><span class="font-title-md text-title-sm text-primary font-bold tracking-tight truncate leading-tight">FarmaMed</span><span class="font-label-sm text-label-sm text-on-surface-variant truncate">Hosp. Santa María</span></div></div><div class="px-space-md py-space-xs"><div class="p-space-xs bg-surface-container-low rounded-lg"><p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider px-space-xs">Unidad Farmacéutica</p><p class="font-title-sm text-body-sm text-on-surface font-medium px-space-xs truncate">Socorro Central #04</p></div></div><nav class="flex-1 px-space-sm py-space-xs space-y-space-xs overflow-y-auto" data-active-classes="bg-primary-fixed text-on-primary-fixed font-title-sm"><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="dashboard" href="#"><span class="font-label-lg text-label-lg">Dashboard</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="medicamentos" href="#"><span class="font-label-lg text-label-lg">Medicamentos</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="inventario" href="#"><span class="font-label-lg text-label-lg">Inventario</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="dispensacion" href="#"><span class="font-label-lg text-label-lg">Dispensación</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="alertas" href="#"><span class="font-label-lg text-label-lg font-medium">Alertas</span><span class="px-space-xs py-0.5 rounded-full bg-error text-on-error font-label-sm text-label-sm font-semibold shadow-sm">12</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="proveedores" href="#"><span class="font-label-lg text-label-lg">Proveedores</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="ordenes" href="#"><span class="font-label-lg text-label-lg">Órdenes</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="reportes" href="#"><span class="font-label-lg text-label-lg">Reportes</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="usuarios" href="#"><span class="font-label-lg text-label-lg">Usuarios</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="configuracion" href="#"><span class="font-label-lg text-label-lg">Configuración</span></a></nav><div class="p-space-md bg-surface-container-low"><div class="flex items-center gap-space-xs text-on-surface-variant"><span class="material-symbols-outlined text-[16px] text-tertiary">verified</span><span class="font-label-sm text-label-sm">Norma Sanitaria SIS-MED v2.4</span></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs font-label-md text-label-md text-on-surface-variant"><span class="hover:text-primary transition-colors cursor-pointer">Hospital Santa María del Socorro</span><span class="material-symbols-outlined text-[14px]">chevron_right</span><span class="text-primary font-medium">Servicio de Farmacia Central</span></div><div class="relative ml-space-md w-72 lg:w-96"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span><input class="w-full pl-9 pr-space-md py-space-xs bg-surface-container-low text-on-surface font-body-sm text-body-sm rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary transition-all" placeholder="Buscar lote, fármaco, DNI paciente..." type="text"/></div></div><div class="flex items-center gap-space-md"><button class="relative p-space-xs rounded-full text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" title="Notificaciones"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-error ring-2 ring-surface-container-lowest"></span></button><div class="flex items-center gap-space-sm pl-space-sm"><div class="relative"><img alt="Profile Dra. Elena Morales" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1VzFc9HCI18YoNoaZnXe34UiAvDNyamHIhV0jEyhSho1_iMMmd7EzPDcVvsYAB-Wa0Q3oDMFGvFrL3ufvNZyQRFAxoosPaL0Ztb456NXOwxluKm2h0KRAvPJPDG8oFfdQztmoYEce_EeVh556IiDrq_3cd7U2t58RdJz_-HUOtEg3a6aHB78dIZ7UlQvF8SHOlNXvGtYjGPY2FgAXU-BGTw4PMVh9Kcra5usHv6NmV5Yhtr_0H8bxu0OUQ"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-tertiary ring-2 ring-surface-container-lowest"></span></div><div class="flex flex-col text-left"><span class="font-title-sm text-title-sm text-on-surface font-medium leading-none">Dra. Elena Morales</span><span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Jefe de Farmacia</span></div></div></div></header><main class="relative pt-16 w-full min-h-screen bg-surface"><div class="flex flex-col w-full">
+<!-- Script para marcar activo el menú "Órdenes" en el App Shell institucional -->
+<script>
+    (function highlightNav() {
+      const navLinks = document.querySelectorAll('aside nav a');
+      navLinks.forEach(link => {
+        if (link.getAttribute('data-path') === 'ordenes') {
+          link.className = "flex items-center justify-between px-space-md py-space-sm rounded-lg bg-primary-fixed text-on-primary-fixed font-title-sm shadow-sm";
+          const label = link.querySelector('span');
+          if (label) label.className = "font-title-sm text-title-sm font-semibold";
+        } else {
+          link.className = "flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors";
+        }
+      });
+    })();
+  </script>
+<!-- Contenedor Principal con padding uniforme 24px -->
+<div class="p-space-lg space-y-space-lg max-w-[1720px] mx-auto w-full">
+<!-- 1. Cabecera del Módulo (M07) -->
+<section class="space-y-space-md">
+<!-- Breadcrumb y Tag de Versión SISMED -->
+<div class="flex items-center justify-between flex-wrap gap-space-xs">
+<div class="flex items-center gap-space-xs font-label-md text-label-md text-on-surface-variant">
+<span class="hover:text-primary transition-colors cursor-pointer">Hospital Santa María del Socorro</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="hover:text-primary transition-colors cursor-pointer">Logística Farmacéutica</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="font-title-sm text-title-sm text-primary font-semibold">Órdenes de Compra (M07)</span>
+</div>
+<div class="flex items-center gap-space-xs px-space-sm py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px] text-tertiary">tune</span>
+<span>Motor FEFO Predictivo v3.1 activo</span>
+</div>
+</div>
+<!-- Título, Subtítulo y Acciones de Cabecera -->
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-space-md">
+<div class="max-w-3xl space-y-1">
+<div class="flex items-center gap-space-sm">
+<h1 class="font-headline-md text-headline-md text-on-surface tracking-tight font-semibold">
+              Gestión de Órdenes de Compra y Reposición
+            </h1>
+<span class="px-space-xs py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-code-batch text-code-batch font-medium">M07</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            Planificación de compras hospitalarias basadas en algoritmo de consumo promedio diario, quiebre de stock y rotación FEFO.
+          </p>
+</div>
+<div class="flex items-center gap-space-sm flex-wrap shrink-0">
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-primary shadow-sm hover:shadow-md hover:bg-surface-container-low transition-all font-label-lg text-label-lg font-medium" id="btnSyncIA" onclick="recalcularSugerencias()">
+<span class="material-symbols-outlined text-[18px] transition-transform" id="iconSync">sync</span>
+<span>Generar Sugerencia Automática (IA/Consumo)</span>
+</button>
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-primary-container text-on-primary shadow hover:shadow-md transition-all font-label-lg text-label-lg font-medium uppercase tracking-wide">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span>+ Nueva Orden Manual</span>
+</button>
+</div>
+</div>
+<!-- KPIs de resumen rápido (4 Tarjetas Elevación-1) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md pt-space-xs">
+<!-- KPI 1: Órdenes Sugeridas -->
+<div class="p-space-md bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between">
+<div class="absolute -right-3 -top-3 w-16 h-16 bg-primary-fixed/30 rounded-full blur-xl pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant font-medium uppercase tracking-wider">Órdenes Sugeridas</span>
+<div class="w-8 h-8 rounded-lg bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+</div>
+</div>
+<div class="mt-space-sm flex items-baseline justify-between">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg font-semibold text-primary">6</span>
+<span class="font-label-md text-label-md text-on-surface-variant">pendientes</span>
+</div>
+<span class="font-title-sm text-title-sm text-primary font-semibold">S/ 24,850.00</span>
+</div>
+<div class="mt-space-xs flex items-center gap-space-xs font-label-sm text-label-sm text-tertiary">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+<span>Basado en consumo de 7 días</span>
+</div>
+</div>
+<!-- KPI 2: En Borrador -->
+<div class="p-space-md bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant font-medium uppercase tracking-wider">En Borrador</span>
+<div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">edit_note</span>
+</div>
+</div>
+<div class="mt-space-sm flex items-baseline justify-between">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg font-semibold text-on-surface">3</span>
+<span class="font-label-md text-label-md text-on-surface-variant">solicitudes</span>
+</div>
+<span class="font-title-sm text-title-sm text-on-surface-variant">S/ 9,420.50</span>
+</div>
+<div class="mt-space-xs flex items-center gap-space-xs font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+<span>Última mod. hace 2 horas</span>
+</div>
+</div>
+<!-- KPI 3: Aprobadas este mes -->
+<div class="p-space-md bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant font-medium uppercase tracking-wider">Aprobadas este Mes</span>
+<div class="w-8 h-8 rounded-lg bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</div>
+</div>
+<div class="mt-space-sm flex items-baseline justify-between">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg font-semibold text-tertiary">28</span>
+<span class="font-label-md text-label-md text-on-surface-variant">entregadas</span>
+</div>
+<span class="font-title-sm text-title-sm text-tertiary font-semibold">S/ 118,650.00</span>
+</div>
+<div class="mt-space-xs flex items-center gap-space-xs font-label-sm text-label-sm text-tertiary">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>100% recepción conforme DIGEMID</span>
+</div>
+</div>
+<!-- KPI 4: Tasa de Cumplimiento -->
+<div class="p-space-md bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant font-medium uppercase tracking-wider">Cumplimiento Proveedor</span>
+<div class="w-8 h-8 rounded-lg bg-secondary-fixed flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">local_shipping</span>
+</div>
+</div>
+<div class="mt-space-sm flex items-baseline justify-between">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg font-semibold text-secondary">96.4%</span>
+</div>
+<span class="px-space-xs py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold">Excelente</span>
+</div>
+<div class="mt-space-xs flex items-center gap-space-xs font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">timer</span>
+<span>Lead time promedio: 36 hrs</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 2. Tabs de Navegación Material Design -->
+<div class="border-b-0 bg-surface-container-lowest rounded-t-xl px-space-md pt-space-xs shadow-sm flex items-center justify-between overflow-x-auto">
+<div class="flex items-center gap-space-md">
+<!-- Tab 1: Sugeridas (Activa) -->
+<button class="relative pb-3 pt-2.5 px-space-sm flex items-center gap-space-xs text-primary font-title-sm text-title-sm font-semibold transition-colors">
+<span class="material-symbols-outlined text-[20px]">auto_awesome</span>
+<span>Sugeridas</span>
+<span class="ml-1 px-1.5 py-0.5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm font-bold shadow-sm" id="tabCountBadge">6</span>
+<!-- Indicador activo Material -->
+<span class="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-container rounded-t"></span>
+</button>
+<!-- Tab 2: Borradores -->
+<button class="relative pb-3 pt-2.5 px-space-sm flex items-center gap-space-xs text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-colors">
+<span class="material-symbols-outlined text-[20px]">draft</span>
+<span>Borradores</span>
+<span class="ml-1 px-1.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold">3</span>
+</button>
+<!-- Tab 3: Aprobadas -->
+<button class="relative pb-3 pt-2.5 px-space-sm flex items-center gap-space-xs text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-colors">
+<span class="material-symbols-outlined text-[20px]">check_box</span>
+<span>Aprobadas</span>
+<span class="ml-1 px-1.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold">28</span>
+</button>
+<!-- Tab 4: Rechazadas -->
+<button class="relative pb-3 pt-2.5 px-space-sm flex items-center gap-space-xs text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-colors">
+<span class="material-symbols-outlined text-[20px]">cancel</span>
+<span>Rechazadas</span>
+<span class="ml-1 px-1.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold">2</span>
+</button>
+</div>
+<div class="hidden md:flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm pr-space-sm">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span>Reabastecimiento con Droguerías Homologadas</span>
+</div>
+</div>
+<!-- 3. Contenido de la pestaña activa 'Sugeridas' -->
+<section class="space-y-space-md">
+<!-- Barra de Filtros y Acción Masiva -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-md">
+<div class="flex-1 flex flex-col sm:flex-row items-stretch sm:items-center gap-space-sm">
+<!-- Buscador Rápido -->
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+<input class="w-full pl-9 pr-space-md py-space-xs bg-surface-container-low text-on-surface font-body-sm text-body-sm rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container transition-all" id="searchSugeridas" placeholder="Filtrar por medicamento o proveedor homologado..." type="text"/>
+</div>
+<!-- Filtro por Criterio -->
+<div class="relative w-full sm:w-80">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">filter_list</span>
+<select class="w-full pl-9 pr-space-md py-space-xs bg-surface-container-low text-on-surface font-body-sm text-body-sm rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container transition-all appearance-none cursor-pointer" id="filterCriterion">
+<option value="all">Todos los criterios (Stock Crítico, Rotación, Vencer)</option>
+<option value="critico">Stock Crítico / Urgencia</option>
+<option value="fefo">Rotación FEFO / Reposición por Baja</option>
+<option value="seguridad">Stock de Seguridad Hospitalario</option>
+<option value="frio">Cadena de Frío (2°C - 8°C)</option>
+<option value="uci">Alto Costo / UCI</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline text-[18px] pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Botón Masivo -->
+<div class="shrink-0 flex items-center justify-end gap-space-sm">
+<button class="w-full sm:w-auto inline-flex items-center justify-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container text-primary font-label-lg text-label-lg font-semibold hover:bg-primary-fixed hover:text-on-primary-fixed transition-colors shadow-sm" onclick="aprobarTodasLasFiltradas()">
+<span class="material-symbols-outlined text-[18px]">done_all</span>
+<span>Aprobar Todas las Sugerencias Filtradas</span>
+</button>
+</div>
+</div>
+<!-- Grid de Tarjetas de Órdenes Sugeridas (2 Columnas amplias) -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-space-md" id="cardsContainer">
+<!-- ================= TARJETA 1 (Urgencia Máxima - Stock Crítico) ================= -->
+<article class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden relative border-l-4 border-l-error" data-card="1" data-criterion="critico">
+<div class="p-space-md space-y-space-md">
+<!-- Header Tarjeta -->
+<div class="flex items-start justify-between gap-space-sm flex-wrap">
+<div class="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold uppercase tracking-wide">
+<span class="material-symbols-outlined text-[15px]">emergency</span>
+<span>URGENCIA CRÍTICA - Shock Room / Quirófano</span>
+</div>
+<span class="font-code-batch text-code-batch font-semibold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">
+                SUG-2024-041
+              </span>
+</div>
+<!-- Datos del Medicamento -->
+<div class="space-y-1">
+<h2 class="font-title-md text-title-md font-bold text-on-surface flex items-center gap-2">
+<span>Propofol 1% 20ml (Emulsión Inyectable)</span>
+<span class="font-label-sm text-label-sm font-normal text-on-surface-variant bg-surface-container-low px-2 py-0.5 rounded">Caja x 10 viales</span>
+</h2>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-tertiary">store</span>
+<span>Droguería Farmacéutica del Sur S.A.C.</span>
+<span class="inline-flex items-center text-[11px] font-semibold text-tertiary bg-tertiary-fixed/40 px-1.5 py-0.2 rounded">BPA Vigente</span>
+</div>
+</div>
+<!-- Métricas de Stock y Consumo -->
+<div class="grid grid-cols-3 gap-space-xs p-space-sm bg-surface-container-low rounded-lg text-center">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Stock Actual</p>
+<p class="font-title-md text-title-md font-bold text-error">4 viales</p>
+</div>
+<div class="bg-surface-container-lowest/60 rounded py-0.5">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Consumo Diario</p>
+<p class="font-title-md text-title-md font-semibold text-on-surface">12 viales/día</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Autonomía</p>
+<p class="font-title-md text-title-md font-bold text-error">&lt; 8 horas</p>
+</div>
+</div>
+<!-- Justificación Algorítmica -->
+<div class="flex items-start gap-space-xs p-space-xs bg-error-container/20 rounded-lg">
+<span class="material-symbols-outlined text-[18px] text-error shrink-0 mt-0.5">info</span>
+<p class="font-body-sm text-body-sm text-on-surface">
+<span class="font-semibold text-error">Justificación:</span> Quiebre inminente en Quirófano Central. Reposición para cubrir 5 días de cirugías programadas.
+              </p>
+</div>
+<!-- Input Numérico Material y Cálculo de Subtotal -->
+<div class="flex items-center justify-between gap-space-md p-space-sm bg-surface-container-lowest rounded-lg shadow-[0_1px_4px_rgba(0,0,0,0.03)] flex-wrap">
+<div class="flex flex-col">
+<label class="font-label-sm text-label-sm text-on-surface-variant font-medium" for="qty-1">Cantidad Sugerida (viales)</label>
+<div class="flex items-center mt-1">
+<button class="w-8 h-8 rounded-l bg-surface-container-high hover:bg-surface-container-highest text-on-surface flex items-center justify-center font-bold text-lg transition-colors" onclick="adjustQty('qty-1', -10, 32.00, 'subtotal-1')">-</button>
+<input class="w-20 h-8 text-center bg-surface-container-low font-title-sm text-title-sm font-semibold text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" id="qty-1" min="10" oninput="updateSubtotal('qty-1', 32.00, 'subtotal-1')" step="10" type="number" value="60"/>
+<button class="w-8 h-8 rounded-r bg-surface-container-high hover:bg-surface-container-highest text-on-surface flex items-center justify-center font-bold text-lg transition-colors" onclick="adjustQty('qty-1', 10, 32.00, 'subtotal-1')">+</button>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-on-surface-variant">Precio Unit: <span class="font-medium text-on-surface">S/ 32.00</span></p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Subtotal Estimado</p>
+<p class="font-title-md text-headline-sm font-bold text-primary" id="subtotal-1">S/ 1,920.00</p>
+</div>
+</div>
+</div>
+<!-- Acciones de Tarjeta -->
+<div class="p-space-md bg-surface-container-low/60 flex items-center justify-between gap-space-sm flex-wrap">
+<button class="inline-flex items-center gap-1 font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" onclick="ajustarDetalles('SUG-2024-041')">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>Ajustar Detalles</span>
+</button>
+<div class="flex items-center gap-space-sm ml-auto">
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-lowest text-error hover:bg-error-container hover:text-on-error-container font-label-lg text-label-lg font-medium shadow-sm transition-colors" onclick="rechazarCard('1', 'SUG-2024-041')">
+<span class="material-symbols-outlined text-[18px]">close</span>
+<span>Rechazar</span>
+</button>
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded bg-[#2e7d32] text-on-primary hover:bg-[#1b5e20] font-label-lg text-label-lg font-semibold shadow hover:shadow-md transition-all" onclick="aprobarCard('1', 'SUG-2024-041')">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span>Aprobar Orden</span>
+</button>
+</div>
+</div>
+</article>
+<!-- ================= TARJETA 2 (Alerta Sanitaria / Reposición por Retiro) ================= -->
+<article class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden relative border-l-4 border-l-[#f57c00]" data-card="2" data-criterion="fefo">
+<div class="p-space-md space-y-space-md">
+<div class="flex items-start justify-between gap-space-sm flex-wrap">
+<div class="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-[#fff3e0] text-[#e65100] font-label-sm text-label-sm font-semibold uppercase tracking-wide">
+<span class="material-symbols-outlined text-[15px]">inventory</span>
+<span>REPOSICIÓN POR BAJA / FEFO</span>
+</div>
+<span class="font-code-batch text-code-batch font-semibold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">
+                SUG-2024-042
+              </span>
+</div>
+<div class="space-y-1">
+<h2 class="font-title-md text-title-md font-bold text-on-surface flex items-center gap-2">
+<span>Midazolam 15mg/3ml (Solución Inyectable)</span>
+<span class="font-label-sm text-label-sm font-normal text-on-surface-variant bg-surface-container-low px-2 py-0.5 rounded">Ampollas x 5</span>
+</h2>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-tertiary">store</span>
+<span>Droguería Farmacéutica del Sur S.A.C.</span>
+<span class="inline-flex items-center text-[11px] font-semibold text-tertiary bg-tertiary-fixed/40 px-1.5 py-0.2 rounded">BPA Vigente</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-space-xs p-space-sm bg-surface-container-low rounded-lg text-center">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Stock Actual</p>
+<p class="font-title-md text-title-md font-bold text-[#e65100]">12 amp.</p>
+</div>
+<div class="bg-surface-container-lowest/60 rounded py-0.5">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Umbral Mínimo</p>
+<p class="font-title-md text-title-md font-semibold text-on-surface">50 ampollas</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Consumo Diario</p>
+<p class="font-title-md text-title-md font-semibold text-on-surface">8 amp./día</p>
+</div>
+</div>
+<div class="flex items-start gap-space-xs p-space-xs bg-[#fff3e0]/50 rounded-lg">
+<span class="material-symbols-outlined text-[18px] text-[#e65100] shrink-0 mt-0.5">published_with_changes</span>
+<p class="font-body-sm text-body-sm text-on-surface">
+<span class="font-semibold text-[#e65100]">Justificación:</span> Compensación de 15 ampollas retiradas por vencimiento en carro de paro y cobertura de guardia.
+              </p>
+</div>
+<div class="flex items-center justify-between gap-space-md p-space-sm bg-surface-container-lowest rounded-lg shadow-[0_1px_4px_rgba(0,0,0,0.03)] flex-wrap">
+<div class="flex flex-col">
+<label class="font-label-sm text-label-sm text-on-surface-variant font-medium" for="qty-2">Cantidad Sugerida (ampollas)</label>
+<div class="flex items-center mt-1">
+<button class="w-8 h-8 rounded-l bg-surface-container-high hover:bg-surface-container-highest text-on-surface flex items-center justify-center font-bold text-lg transition-colors" onclick="adjustQty('qty-2', -20, 14.50, 'subtotal-2')">-</button>
+<input class="w-20 h-8 text-center bg-surface-container-low font-title-sm text-title-sm font-semibold text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" id="qty-2" min="20" oninput="updateSubtotal('qty-2', 14.50, 'subtotal-2')" step="20" type="number" value="100"/>
+<button class="w-8 h-8 rounded-r bg-surface-container-high hover:bg-surface-container-highest text-on-surface flex items-center justify-center font-bold text-lg transition-colors" onclick="adjustQty('qty-2', 20, 14.50, 'subtotal-2')">+</button>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-on-surface-variant">Precio Unit: <span class="font-medium text-on-surface">S/ 14.50</span></p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Subtotal Estimado</p>
+<p class="font-title-md text-headline-sm font-bold text-primary" id="subtotal-2">S/ 1,450.00</p>
+</div>
+</div>
+</div>
+<div class="p-space-md bg-surface-container-low/60 flex items-center justify-between gap-space-sm flex-wrap">
+<button class="inline-flex items-center gap-1 font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" onclick="ajustarDetalles('SUG-2024-042')">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>Ajustar Detalles</span>
+</button>
+<div class="flex items-center gap-space-sm ml-auto">
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-lowest text-error hover:bg-error-container hover:text-on-error-container font-label-lg text-label-lg font-medium shadow-sm transition-colors" onclick="rechazarCard('2', 'SUG-2024-042')">
+<span class="material-symbols-outlined text-[18px]">close</span>
+<span>Rechazar</span>
+</button>
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded bg-[#2e7d32] text-on-primary hover:bg-[#1b5e20] font-label-lg text-label-lg font-semibold shadow hover:shadow-md transition-all" onclick="aprobarCard('2', 'SUG-2024-042')">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span>Aprobar Orden</span>
+</button>
+</div>
+</div>
+</article>
+<!-- ================= TARJETA 3 (Alta Rotación Hospitalización) ================= -->
+<article class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden relative border-l-4 border-l-primary-container" data-card="3" data-criterion="seguridad">
+<div class="p-space-md space-y-space-md">
+<div class="flex items-start justify-between gap-space-sm flex-wrap">
+<div class="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-semibold uppercase tracking-wide">
+<span class="material-symbols-outlined text-[15px]">health_and_safety</span>
+<span>STOCK DE SEGURIDAD - Hospitalización General</span>
+</div>
+<span class="font-code-batch text-code-batch font-semibold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">
+                SUG-2024-043
+              </span>
+</div>
+<div class="space-y-1">
+<h2 class="font-title-md text-title-md font-bold text-on-surface flex items-center gap-2">
+<span>Ceftriaxona 1g Polvo Liofilizado para Inyección IV/IM</span>
+<span class="font-label-sm text-label-sm font-normal text-on-surface-variant bg-surface-container-low px-2 py-0.5 rounded">Frasco ampolla</span>
+</h2>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-tertiary">store</span>
+<span>Laboratorios BioTech Perú S.A.</span>
+<span class="inline-flex items-center text-[11px] font-semibold text-tertiary bg-tertiary-fixed/40 px-1.5 py-0.2 rounded">Certificado BPM</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-space-xs p-space-sm bg-surface-container-low rounded-lg text-center">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Stock Actual</p>
+<p class="font-title-md text-title-md font-bold text-on-surface">85 viales</p>
+</div>
+<div class="bg-surface-container-lowest/60 rounded py-0.5">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Umbral Mínimo</p>
+<p class="font-title-md text-title-md font-semibold text-on-surface">100 viales</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Consumo Diario</p>
+<p class="font-title-md text-title-md font-semibold text-primary">45 viales/día</p>
+</div>
+</div>
+<div class="flex items-start gap-space-xs p-space-xs bg-primary-fixed/20 rounded-lg">
+<span class="material-symbols-outlined text-[18px] text-primary shrink-0 mt-0.5">schedule</span>
+<p class="font-body-sm text-body-sm text-on-surface">
+<span class="font-semibold text-primary">Justificación:</span> Rotación regular SIS. Tiempo de entrega del proveedor: 48h. Evita desabastecimiento en pisos 2 y 4.
+              </p>
+</div>
+<div class="flex items-center justify-between gap-space-md p-space-sm bg-surface-container-lowest rounded-lg shadow-[0_1px_4px_rgba(0,0,0,0.03)] flex-wrap">
+<div class="flex flex-col">
+<label class="font-label-sm text-label-sm text-on-surface-variant font-medium" for="qty-3">Cantidad Sugerida (viales)</label>
+<div class="flex items-center mt-1">
+<button class="w-8 h-8 rounded-l bg-surface-container-high hover:bg-surface-container-highest text-on-surface flex items-center justify-center font-bold text-lg transition-colors" onclick="adjustQty('qty-3', -50, 8.50, 'subtotal-3')">-</button>
+<input class="w-20 h-8 text-center bg-surface-container-low font-title-sm text-title-sm font-semibold text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" id="qty-3" min="50" oninput="updateSubtotal('qty-3', 8.50, 'subtotal-3')" step="50" type="number" value="250"/>
+<button class="w-8 h-8 rounded-r bg-surface-container-high hover:bg-surface-container-highest text-on-surface flex items-center justify-center font-bold text-lg transition-colors" onclick="adjustQty('qty-3', 50, 8.50, 'subtotal-3')">+</button>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-on-surface-variant">Precio Unit: <span class="font-medium text-on-surface">S/ 8.50</span></p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Subtotal Estimado</p>
+<p class="font-title-md text-headline-sm font-bold text-primary" id="subtotal-3">S/ 2,125.00</p>
+</div>
+</div>
+</div>
+<div class="p-space-md bg-surface-container-low/60 flex items-center justify-between gap-space-sm flex-wrap">
+<button class="inline-flex items-center gap-1 font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" onclick="ajustarDetalles('SUG-2024-043')">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>Ajustar Detalles</span>
+</button>
+<div class="flex items-center gap-space-sm ml-auto">
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-lowest text-error hover:bg-error-container hover:text-on-error-container font-label-lg text-label-lg font-medium shadow-sm transition-colors" onclick="rechazarCard('3', 'SUG-2024-043')">
+<span class="material-symbols-outlined text-[18px]">close</span>
+<span>Rechazar</span>
+</button>
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded bg-[#2e7d32] text-on-primary hover:bg-[#1b5e20] font-label-lg text-label-lg font-semibold shadow hover:shadow-md transition-all" onclick="aprobarCard('3', 'SUG-2024-043')">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span>Aprobar Orden</span>
+</button>
+</div>
+</div>
+</article>
+<!-- ================= TARJETA 4 (Petitorio Esencial - Cadena de Frío) ================= -->
+<article class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden relative border-l-4 border-l-tertiary" data-card="4" data-criterion="frio">
+<div class="p-space-md space-y-space-md">
+<div class="flex items-start justify-between gap-space-sm flex-wrap">
+<div class="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold uppercase tracking-wide">
+<span class="material-symbols-outlined text-[15px]">ac_unit</span>
+<span>CADENA DE FRÍO (2°C - 8°C)</span>
+</div>
+<span class="font-code-batch text-code-batch font-semibold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">
+                SUG-2024-044
+              </span>
+</div>
+<div class="space-y-1">
+<h2 class="font-title-md text-title-md font-bold text-on-surface flex items-center gap-2">
+<span>Insulina NPH 100 UI/ml (Suspensión Inyectable)</span>
+<span class="font-label-sm text-label-sm font-normal text-on-surface-variant bg-surface-container-low px-2 py-0.5 rounded">Vial 10ml</span>
+</h2>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-tertiary">store</span>
+<span>Laboratorios Baxter Perú S.A.</span>
+<span class="inline-flex items-center text-[11px] font-semibold text-tertiary bg-tertiary-fixed/40 px-1.5 py-0.2 rounded">Termo-Validado</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-space-xs p-space-sm bg-surface-container-low rounded-lg text-center">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Stock Actual</p>
+<p class="font-title-md text-title-md font-bold text-tertiary">18 viales</p>
+</div>
+<div class="bg-surface-container-lowest/60 rounded py-0.5">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Umbral Mínimo</p>
+<p class="font-title-md text-title-md font-semibold text-on-surface">25 viales</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Consumo Diario</p>
+<p class="font-title-md text-title-md font-semibold text-on-surface">6 viales/día</p>
+</div>
+</div>
+<div class="flex items-start gap-space-xs p-space-xs bg-tertiary-fixed/30 rounded-lg">
+<span class="material-symbols-outlined text-[18px] text-tertiary shrink-0 mt-0.5">thermostat</span>
+<p class="font-body-sm text-body-sm text-on-surface">
+<span class="font-semibold text-tertiary">Justificación:</span> Reposición programada para endocrinología y hospitalización piso 3. Control estricto de temperatura.
+              </p>
+</div>
+<div class="flex items-center justify-between gap-space-md p-space-sm bg-surface-container-lowest rounded-lg shadow-[0_1px_4px_rgba(0,0,0,0.03)] flex-wrap">
+<div class="flex flex-col">
+<label class="font-label-sm text-label-sm text-on-surface-variant font-medium" for="qty-4">Cantidad Sugerida (viales)</label>
+<div class="flex items-center mt-1">
+<button class="w-8 h-8 rounded-l bg-surface-container-high hover:bg-surface-container-highest text-on-surface flex items-center justify-center font-bold text-lg transition-colors" onclick="adjustQty('qty-4', -10, 35.00, 'subtotal-4')">-</button>
+<input class="w-20 h-8 text-center bg-surface-container-low font-title-sm text-title-sm font-semibold text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" id="qty-4" min="10" oninput="updateSubtotal('qty-4', 35.00, 'subtotal-4')" step="10" type="number" value="50"/>
+<button class="w-8 h-8 rounded-r bg-surface-container-high hover:bg-surface-container-highest text-on-surface flex items-center justify-center font-bold text-lg transition-colors" onclick="adjustQty('qty-4', 10, 35.00, 'subtotal-4')">+</button>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-on-surface-variant">Precio Unit: <span class="font-medium text-on-surface">S/ 35.00</span></p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Subtotal Estimado</p>
+<p class="font-title-md text-headline-sm font-bold text-primary" id="subtotal-4">S/ 1,750.00</p>
+</div>
+</div>
+</div>
+<div class="p-space-md bg-surface-container-low/60 flex items-center justify-between gap-space-sm flex-wrap">
+<button class="inline-flex items-center gap-1 font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" onclick="ajustarDetalles('SUG-2024-044')">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>Ajustar Detalles</span>
+</button>
+<div class="flex items-center gap-space-sm ml-auto">
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-lowest text-error hover:bg-error-container hover:text-on-error-container font-label-lg text-label-lg font-medium shadow-sm transition-colors" onclick="rechazarCard('4', 'SUG-2024-044')">
+<span class="material-symbols-outlined text-[18px]">close</span>
+<span>Rechazar</span>
+</button>
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded bg-[#2e7d32] text-on-primary hover:bg-[#1b5e20] font-label-lg text-label-lg font-semibold shadow hover:shadow-md transition-all" onclick="aprobarCard('4', 'SUG-2024-044')">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span>Aprobar Orden</span>
+</button>
+</div>
+</div>
+</article>
+<!-- ================= TARJETA 5 (Insumos Respiratorios Urgencias) ================= -->
+<article class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden relative border-l-4 border-l-outline" data-card="5" data-criterion="critico">
+<div class="p-space-md space-y-space-md">
+<div class="flex items-start justify-between gap-space-sm flex-wrap">
+<div class="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold uppercase tracking-wide">
+<span class="material-symbols-outlined text-[15px]">warning</span>
+<span>ALERTA PREVENTIVA - Emergencia Pediátrica</span>
+</div>
+<span class="font-code-batch text-code-batch font-semibold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">
+                SUG-2024-045
+              </span>
+</div>
+<div class="space-y-1">
+<h2 class="font-title-md text-title-md font-bold text-on-surface flex items-center gap-2">
+<span>Salbutamol 100mcg Aerosol Inhalador</span>
+<span class="font-label-sm text-label-sm font-normal text-on-surface-variant bg-surface-container-low px-2 py-0.5 rounded">Frasco 200 dosis</span>
+</h2>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-tertiary">store</span>
+<span>Medifarma Distribuciones S.A.</span>
+<span class="inline-flex items-center text-[11px] font-semibold text-tertiary bg-tertiary-fixed/40 px-1.5 py-0.2 rounded">Stock Local</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-space-xs p-space-sm bg-surface-container-low rounded-lg text-center">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Stock Actual</p>
+<p class="font-title-md text-title-md font-bold text-[#e65100]">48 inh.</p>
+</div>
+<div class="bg-surface-container-lowest/60 rounded py-0.5">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Umbral Mínimo</p>
+<p class="font-title-md text-title-md font-semibold text-on-surface">60 unidades</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Consumo Estimado</p>
+<p class="font-title-md text-title-md font-semibold text-on-surface">14 inh./día</p>
+</div>
+</div>
+<div class="flex items-start gap-space-xs p-space-xs bg-surface-container rounded-lg">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant shrink-0 mt-0.5">air</span>
+<p class="font-body-sm text-body-sm text-on-surface">
+<span class="font-semibold text-on-surface">Justificación:</span> Incremento estacional de demanda pediátrica en guardia de emergencias por afecciones respiratorias agudas.
+              </p>
+</div>
+<div class="flex items-center justify-between gap-space-md p-space-sm bg-surface-container-lowest rounded-lg shadow-[0_1px_4px_rgba(0,0,0,0.03)] flex-wrap">
+<div class="flex flex-col">
+<label class="font-label-sm text-label-sm text-on-surface-variant font-medium" for="qty-5">Cantidad Sugerida (inhaladores)</label>
+<div class="flex items-center mt-1">
+<button class="w-8 h-8 rounded-l bg-surface-container-high hover:bg-surface-container-highest text-on-surface flex items-center justify-center font-bold text-lg transition-colors" onclick="adjustQty('qty-5', -20, 13.00, 'subtotal-5')">-</button>
+<input class="w-20 h-8 text-center bg-surface-container-low font-title-sm text-title-sm font-semibold text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" id="qty-5" min="20" oninput="updateSubtotal('qty-5', 13.00, 'subtotal-5')" step="20" type="number" value="120"/>
+<button class="w-8 h-8 rounded-r bg-surface-container-high hover:bg-surface-container-highest text-on-surface flex items-center justify-center font-bold text-lg transition-colors" onclick="adjustQty('qty-5', 20, 13.00, 'subtotal-5')">+</button>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-on-surface-variant">Precio Unit: <span class="font-medium text-on-surface">S/ 13.00</span></p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Subtotal Estimado</p>
+<p class="font-title-md text-headline-sm font-bold text-primary" id="subtotal-5">S/ 1,560.00</p>
+</div>
+</div>
+</div>
+<div class="p-space-md bg-surface-container-low/60 flex items-center justify-between gap-space-sm flex-wrap">
+<button class="inline-flex items-center gap-1 font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" onclick="ajustarDetalles('SUG-2024-045')">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>Ajustar Detalles</span>
+</button>
+<div class="flex items-center gap-space-sm ml-auto">
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-lowest text-error hover:bg-error-container hover:text-on-error-container font-label-lg text-label-lg font-medium shadow-sm transition-colors" onclick="rechazarCard('5', 'SUG-2024-045')">
+<span class="material-symbols-outlined text-[18px]">close</span>
+<span>Rechazar</span>
+</button>
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded bg-[#2e7d32] text-on-primary hover:bg-[#1b5e20] font-label-lg text-label-lg font-semibold shadow hover:shadow-md transition-all" onclick="aprobarCard('5', 'SUG-2024-045')">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span>Aprobar Orden</span>
+</button>
+</div>
+</div>
+</article>
+<!-- ================= TARJETA 6 (Anticoagulante UCI Quirúrgica) ================= -->
+<article class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden relative border-l-4 border-l-secondary" data-card="6" data-criterion="uci">
+<div class="p-space-md space-y-space-md">
+<div class="flex items-start justify-between gap-space-sm flex-wrap">
+<div class="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold uppercase tracking-wide">
+<span class="material-symbols-outlined text-[15px]">monitor_heart</span>
+<span>ALTO COSTO / UCI QUIRÚRGICA</span>
+</div>
+<span class="font-code-batch text-code-batch font-semibold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">
+                SUG-2024-046
+              </span>
+</div>
+<div class="space-y-1">
+<h2 class="font-title-md text-title-md font-bold text-on-surface flex items-center gap-2">
+<span>Enoxaparina 40mg/0.4ml Jeringa Prellenada</span>
+<span class="font-label-sm text-label-sm font-normal text-on-surface-variant bg-surface-container-low px-2 py-0.5 rounded">Caja x 10 jeringas</span>
+</h2>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-tertiary">store</span>
+<span>Droguería Farmacéutica del Sur S.A.C.</span>
+<span class="inline-flex items-center text-[11px] font-semibold text-tertiary bg-tertiary-fixed/40 px-1.5 py-0.2 rounded">BPA Vigente</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-space-xs p-space-sm bg-surface-container-low rounded-lg text-center">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Stock Actual</p>
+<p class="font-title-md text-title-md font-bold text-secondary">35 jer.</p>
+</div>
+<div class="bg-surface-container-lowest/60 rounded py-0.5">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Umbral Mínimo</p>
+<p class="font-title-md text-title-md font-semibold text-on-surface">50 jeringas</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Consumo Diario</p>
+<p class="font-title-md text-title-md font-semibold text-on-surface">15 jer./día</p>
+</div>
+</div>
+<div class="flex items-start gap-space-xs p-space-xs bg-secondary-fixed/20 rounded-lg">
+<span class="material-symbols-outlined text-[18px] text-secondary shrink-0 mt-0.5">medical_information</span>
+<p class="font-body-sm text-body-sm text-on-surface">
+<span class="font-semibold text-secondary">Justificación:</span> Programación de cirugías cardiovasculares y profilaxis postquirúrgica en Unidad de Cuidados Intensivos.
+              </p>
+</div>
+<div class="flex items-center justify-between gap-space-md p-space-sm bg-surface-container-lowest rounded-lg shadow-[0_1px_4px_rgba(0,0,0,0.03)] flex-wrap">
+<div class="flex flex-col">
+<label class="font-label-sm text-label-sm text-on-surface-variant font-medium" for="qty-6">Cantidad Sugerida (jeringas)</label>
+<div class="flex items-center mt-1">
+<button class="w-8 h-8 rounded-l bg-surface-container-high hover:bg-surface-container-highest text-on-surface flex items-center justify-center font-bold text-lg transition-colors" onclick="adjustQty('qty-6', -25, 28.00, 'subtotal-6')">-</button>
+<input class="w-20 h-8 text-center bg-surface-container-low font-title-sm text-title-sm font-semibold text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" id="qty-6" min="25" oninput="updateSubtotal('qty-6', 28.00, 'subtotal-6')" step="25" type="number" value="150"/>
+<button class="w-8 h-8 rounded-r bg-surface-container-high hover:bg-surface-container-highest text-on-surface flex items-center justify-center font-bold text-lg transition-colors" onclick="adjustQty('qty-6', 25, 28.00, 'subtotal-6')">+</button>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-on-surface-variant">Precio Unit: <span class="font-medium text-on-surface">S/ 28.00</span></p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Subtotal Estimado</p>
+<p class="font-title-md text-headline-sm font-bold text-primary" id="subtotal-6">S/ 4,200.00</p>
+</div>
+</div>
+</div>
+<div class="p-space-md bg-surface-container-low/60 flex items-center justify-between gap-space-sm flex-wrap">
+<button class="inline-flex items-center gap-1 font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" onclick="ajustarDetalles('SUG-2024-046')">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>Ajustar Detalles</span>
+</button>
+<div class="flex items-center gap-space-sm ml-auto">
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-lowest text-error hover:bg-error-container hover:text-on-error-container font-label-lg text-label-lg font-medium shadow-sm transition-colors" onclick="rechazarCard('6', 'SUG-2024-046')">
+<span class="material-symbols-outlined text-[18px]">close</span>
+<span>Rechazar</span>
+</button>
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded bg-[#2e7d32] text-on-primary hover:bg-[#1b5e20] font-label-lg text-label-lg font-semibold shadow hover:shadow-md transition-all" onclick="aprobarCard('6', 'SUG-2024-046')">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span>Aprobar Orden</span>
+</button>
+</div>
+</div>
+</article>
+</div>
+<!-- Estado Vacío cuando se aprueban todas o no hay coincidencias -->
+<div class="hidden bg-surface-container-lowest rounded-xl p-space-xl text-center space-y-space-sm shadow-sm" id="emptyState">
+<div class="w-16 h-16 rounded-full bg-primary-fixed flex items-center justify-center mx-auto text-primary">
+<span class="material-symbols-outlined text-[32px]">task_alt</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm font-semibold text-on-surface">No hay órdenes pendientes en este criterio</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto">
+          Todas las sugerencias han sido procesadas o no coinciden con los filtros aplicados.
+        </p>
+<div class="pt-space-xs">
+<button class="px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-lg text-label-lg font-medium" onclick="resetFiltros()">
+            Restablecer Filtros
+          </button>
+</div>
+</div>
+</section>
+<!-- Modal / Drawer Ligero de Ajuste de Detalles (Simulado) -->
+<div class="fixed inset-0 bg-inverse-surface/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-space-md" id="modalAjuste">
+<div class="bg-surface-container-lowest rounded-xl shadow-xl max-w-lg w-full p-space-lg space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary">tune</span>
+<h3 class="font-title-md text-title-md font-bold text-on-surface">Parámetros de Reabastecimiento</h3>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface" onclick="cerrarModal()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant" id="modalSub">
+          Ajuste fino de lote, condición de flete hospitalario y fecha requerida en almacén central.
+        </p>
+<div class="space-y-space-sm">
+<div>
+<label class="font-label-sm text-label-sm text-on-surface-variant">Prioridad de Entrega</label>
+<select class="w-full mt-1 p-space-xs bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface">
+<option>Ordinaria (48 - 72 hrs)</option>
+<option selected="">Urgente Quirúrgica (Menor a 12 hrs)</option>
+<option>Guardia de Emergencia (Inmediata)</option>
+</select>
+</div>
+<div>
+<label class="font-label-sm text-label-sm text-on-surface-variant">Observaciones Logísticas / Almacén de Destino</label>
+<textarea class="w-full mt-1 p-space-xs bg-surface-container-low rounded font-body-sm text-body-sm text-on-surface" placeholder="Ingreso directo a Farmacia de Shock Room con cadena de custodia..." rows="3"></textarea>
+</div>
+</div>
+<div class="flex justify-end gap-space-sm pt-space-xs">
+<button class="px-space-md py-space-xs rounded bg-surface-container text-on-surface font-label-lg text-label-lg font-medium" onclick="cerrarModal()">Cancelar</button>
+<button class="px-space-md py-space-xs rounded bg-primary-container text-on-primary font-label-lg text-label-lg font-semibold" onclick="guardarAjuste()">Guardar y Aplicar</button>
+</div>
+</div>
+</div>
+<!-- Toast Notification Flotante para Confirmaciones -->
+<div class="fixed bottom-6 right-6 z-50 hidden items-center gap-space-sm px-space-md py-space-sm rounded-lg bg-inverse-surface text-inverse-on-surface shadow-xl transition-all" id="toast">
+<span class="material-symbols-outlined text-tertiary-fixed" id="toastIcon">check_circle</span>
+<span class="font-label-lg text-label-lg font-medium" id="toastMsg">Acción procesada con éxito</span>
+</div>
+</div>
+<!-- Lógica Interactiva Vanilla JS -->
+<script>
+    function updateSubtotal(qtyInputId, unitPrice, subtotalSpanId) {
+      const input = document.getElementById(qtyInputId);
+      const span = document.getElementById(subtotalSpanId);
+      let qty = parseInt(input.value, 10);
+      if (isNaN(qty) || qty < 1) qty = 1;
+      const total = qty * unitPrice;
+      span.textContent = `S/ ${total.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function adjustQty(qtyInputId, delta, unitPrice, subtotalSpanId) {
+      const input = document.getElementById(qtyInputId);
+      let currentVal = parseInt(input.value, 10) || 0;
+      let minVal = parseInt(input.getAttribute('min'), 10) || 1;
+      let newVal = currentVal + delta;
+      if (newVal < minVal) newVal = minVal;
+      input.value = newVal;
+      updateSubtotal(qtyInputId, unitPrice, subtotalSpanId);
+    }
+
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      const toastIcon = document.getElementById('toastIcon');
+      
+      toastMsg.textContent = message;
+      if (isError) {
+        toastIcon.textContent = 'cancel';
+        toastIcon.className = 'material-symbols-outlined text-error-container';
+      } else {
+        toastIcon.textContent = 'check_circle';
+        toastIcon.className = 'material-symbols-outlined text-tertiary-fixed';
+      }
+      
+      toast.classList.remove('hidden');
+      toast.classList.add('flex');
+      
+      setTimeout(() => {
+        toast.classList.remove('flex');
+        toast.classList.add('hidden');
+      }, 3500);
+    }
+
+    function updateBadgeCount() {
+      const visibleCards = document.querySelectorAll('#cardsContainer article:not(.hidden)');
+      const badge = document.getElementById('tabCountBadge');
+      const emptyState = document.getElementById('emptyState');
+      
+      if (badge) badge.textContent = visibleCards.length;
+      if (visibleCards.length === 0) {
+        emptyState.classList.remove('hidden');
+      } else {
+        emptyState.classList.add('hidden');
+      }
+    }
+
+    function aprobarCard(id, code) {
+      const card = document.querySelector(`article[data-card="${id}"]`);
+      if (card) {
+        card.style.opacity = '0.4';
+        card.style.transform = 'scale(0.98)';
+        setTimeout(() => {
+          card.remove();
+          showToast(`Orden ${code} aprobada y enviada a Logística Farmacéutica.`);
+          updateBadgeCount();
+        }, 250);
+      }
+    }
+
+    function rechazarCard(id, code) {
+      const card = document.querySelector(`article[data-card="${id}"]`);
+      if (card) {
+        card.style.opacity = '0.3';
+        setTimeout(() => {
+          card.remove();
+          showToast(`Sugerencia ${code} desestimada.`, true);
+          updateBadgeCount();
+        }, 200);
+      }
+    }
+
+    function aprobarTodasLasFiltradas() {
+      const visibleCards = document.querySelectorAll('#cardsContainer article:not(.hidden)');
+      if (visibleCards.length === 0) {
+        showToast('No hay órdenes visibles para aprobar.', true);
+        return;
+      }
+      const count = visibleCards.length;
+      visibleCards.forEach(c => c.remove());
+      showToast(`¡Se aprobaron en bloque ${count} órdenes sugeridas!`);
+      updateBadgeCount();
+    }
+
+    function recalcularSugerencias() {
+      const icon = document.getElementById('iconSync');
+      icon.classList.add('animate-spin');
+      showToast('Sincronizando consumos hospitalarios con el motor FEFO...');
+      setTimeout(() => {
+        icon.classList.remove('animate-spin');
+        showToast('6 órdenes recalculadas según stock en tiempo real.');
+      }, 900);
+    }
+
+    // Filtrado interactivo por buscador y select
+    const searchInput = document.getElementById('searchSugeridas');
+    const filterSelect = document.getElementById('filterCriterion');
+
+    function applyFilters() {
+      const query = (searchInput.value || '').toLowerCase().trim();
+      const criterion = filterSelect.value;
+      const cards = document.querySelectorAll('#cardsContainer article');
+
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        const cardCrit = card.getAttribute('data-criterion');
+
+        const matchesQuery = query === '' || text.includes(query);
+        const matchesCrit = criterion === 'all' || cardCrit === criterion;
+
+        if (matchesQuery && matchesCrit) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+      updateBadgeCount();
+    }
+
+    if (searchInput) searchInput.addEventListener('input', applyFilters);
+    if (filterSelect) filterSelect.addEventListener('change', applyFilters);
+
+    function resetFiltros() {
+      if (searchInput) searchInput.value = '';
+      if (filterSelect) filterSelect.value = 'all';
+      applyFilters();
+    }
+
+    function ajustarDetalles(code) {
+      const modal = document.getElementById('modalAjuste');
+      const sub = document.getElementById('modalSub');
+      sub.textContent = `Ajustando especificaciones para la sugerencia ${code} (Droguería homologada).`;
+      modal.classList.remove('hidden');
+    }
+
+    function cerrarModal() {
+      document.getElementById('modalAjuste').classList.add('hidden');
+    }
+
+    function guardarAjuste() {
+      cerrarModal();
+      showToast('Parámetros de entrega actualizados correctamente.');
+    }
+  </script>
+</div></main></div></body></html>
