@@ -1,0 +1,393 @@
+<div class="fm-page">
+  <div class="fm-page-header">
+    <div>
+      <h1 class="fm-page-title">Dispensacion en caja</h1>
+      <p class="fm-page-subtitle">
+        Cada receta origina una sola dispensacion (RN05.0). El descuento se hace por FEFO y nunca toca lotes vencidos (RN02, RN03).
+      </p>
+    </div>
+    <div class="fm-page-actions dis-segments">
+      <button
+        type="button"
+        class="fm-btn fm-btn--sm"
+        [class.dis-segment--active]="vista() === 'CAJA'"
+        (click)="cambiarVista('CAJA')"
+      >
+        Nueva dispensacion
+      </button>
+      <button
+        type="button"
+        class="fm-btn fm-btn--sm"
+        [class.dis-segment--active]="vista() === 'HISTORIAL'"
+        (click)="cambiarVista('HISTORIAL')"
+      >
+        Historial
+      </button>
+    </div>
+  </div>
+
+  <div class="fm-alert fm-alert--success" *ngIf="success()" role="status">
+    <svg-icon name="success" [size]="18" />
+    <span>{{ success() }}</span>
+  </div>
+
+  <div class="fm-alert fm-alert--error" *ngIf="error()" role="alert">
+    <svg-icon name="error" [size]="18" />
+    <span>{{ error() }}</span>
+  </div>
+
+  <app-fm-loading *ngIf="loading()" text="Cargando caja..."></app-fm-loading>
+
+  <div class="dis-grid" *ngIf="!loading() && vista() === 'CAJA'">
+    <section class="fm-card">
+      <div class="fm-card-header">
+        <h2 class="fm-card-title">1. Receta</h2>
+        <span class="fm-badge fm-badge--info">Obligatoria</span>
+      </div>
+      <div class="fm-card-body" *ngIf="!recetaSeleccionada()">
+        <div class="fm-field">
+          <label class="fm-label" for="dis-buscar-receta">Buscar receta pendiente</label>
+          <input
+            id="dis-buscar-receta"
+            class="fm-input"
+            type="search"
+            placeholder="Numero, paciente o DNI"
+            [value]="searchReceta()"
+            (input)="onSearchReceta($event)"
+          />
+        </div>
+        <div class="dis-recetas" *ngIf="recetasFiltradas().length > 0">
+          <button
+            *ngFor="let receta of recetasFiltradas(); trackBy: trackReceta"
+            type="button"
+            class="dis-receta"
+            (click)="seleccionarReceta(receta)"
+          >
+            <span class="dis-receta__numero">{{ receta.numeroReceta }}</span>
+            <span class="dis-receta__paciente">{{ receta.pacienteNombreCompleto }}</span>
+            <span class="dis-receta__meta">
+              <span class="fm-mono">{{ receta.pacienteDni }}</span>
+              <span>{{ receta.medico }}</span>
+              <span>{{ receta.fechaReceta | fmDate }}</span>
+            </span>
+            <span class="fm-badge fm-badge--neutral">{{ etiquetaReceta(receta.tipoReceta) }}</span>
+          </button>
+        </div>
+        <p class="fm-muted fm-small" *ngIf="recetasFiltradas().length === 0" style="margin: 0">
+          No hay recetas pendientes de dispensar.
+        </p>
+      </div>
+
+      <div class="fm-card-body" *ngIf="recetaSeleccionada() as receta">
+        <div class="dis-receta-activa">
+          <div>
+            <div class="fm-strong">{{ receta.numeroReceta }}</div>
+            <div class="fm-small">{{ receta.pacienteNombreCompleto }}</div>
+            <div class="fm-xs fm-muted fm-mono">{{ receta.pacienteDni }}</div>
+          </div>
+          <button type="button" class="fm-btn fm-btn--sm fm-btn--ghost" (click)="limpiarReceta()">Cambiar</button>
+        </div>
+        <dl class="dis-detalle-receta">
+          <div><dt>Medico</dt><dd>{{ receta.medico }}</dd></div>
+          <div><dt>Fecha</dt><dd>{{ receta.fechaReceta | fmDate }}</dd></div>
+          <div><dt>Tipo</dt><dd>{{ etiquetaReceta(receta.tipoReceta) }}</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="fm-card" *ngIf="recetaSeleccionada()">
+      <div class="fm-card-header">
+        <h2 class="fm-card-title">2. Items del ticket</h2>
+        <span class="fm-badge">{{ totalUnidades() }} unidades</span>
+      </div>
+      <div class="fm-card-body">
+        <div class="fm-field">
+          <label class="fm-label" for="dis-buscar-med">Agregar medicamento</label>
+          <input
+            id="dis-buscar-med"
+            class="fm-input"
+            type="search"
+            placeholder="Nombre o codigo"
+            [value]="searchMedicamento()"
+            (input)="onSearchMedicamento($event)"
+          />
+        </div>
+
+        <div class="dis-catalogo" *ngIf="medicamentosFiltrados().length > 0">
+          <button
+            *ngFor="let medicamento of medicamentosFiltrados(); trackBy: trackMedicamento"
+            type="button"
+            class="fm-btn fm-btn--sm fm-btn--secondary dis-add"
+            [disabled]="yaAgregado(medicamento.id)"
+            (click)="agregarMedicamento(medicamento)"
+          >
+            {{ medicamento.codigo }} - {{ medicamento.nombre }}
+          </button>
+        </div>
+
+        <div class="dis-items" *ngIf="items().length > 0">
+          <article class="dis-item" *ngFor="let item of items(); trackBy: trackItem">
+            <div class="dis-item__head">
+              <div>
+                <div class="fm-strong">{{ item.medicamentoNombre }}</div>
+                <div class="fm-xs fm-muted fm-mono">{{ item.medicamentoCodigo }}</div>
+              </div>
+              <button type="button" class="fm-btn fm-btn--sm fm-btn--icon fm-btn--danger" (click)="quitarItem(item.medicamentoId)" title="Quitar medicamento" aria-label="Quitar medicamento">
+      <svg-icon name="close" [size]="16" />
+    </button>
+            </div>
+
+            <div class="dis-item__grid">
+              <div class="fm-field">
+                <label class="fm-label" [for]="'cant-' + item.medicamentoId">Cantidad ({{ item.unidadMedida }})</label>
+                <input
+                  [id]="'cant-' + item.medicamentoId"
+                  class="fm-input"
+                  type="number"
+                  min="0"
+                  [value]="item.cantidad"
+                  (input)="setCantidad(item.medicamentoId, $any($event.target).value)"
+                />
+              </div>
+              <div class="fm-field">
+                <label class="fm-label" [for]="'lote-' + item.medicamentoId">Lote (FEFO)</label>
+                <select
+                  [id]="'lote-' + item.medicamentoId"
+                  class="fm-select"
+                  [value]="item.loteSeleccionadoId ?? ''"
+                  (change)="setLote(item.medicamentoId, +$any($event.target).value, $any($event.target).selectedIndex > 0)"
+                >
+                  <option *ngIf="item.lotesDisponibles.length === 0" [ngValue]="null">Sin lotes vigentes</option>
+                  <option
+                    *ngFor="let lote of item.lotesDisponibles; let i = index"
+                    [ngValue]="lote.id"
+                  >
+                    {{ lote.numeroLote }} - vence {{ lote.fechaVencimiento | fmDate }} ({{ lote.cantidadActual }}){{ i === 0 ? ' *FEFO' : '' }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="dis-fefo" *ngIf="item.lotesDisponibles.length > 1">
+              <svg-icon name="clock" [size]="15" />
+              <span>FEFO sugiere el lote con vencimiento mas proximo. Usar otro lote es una excepcion.</span>
+              <button
+                *ngIf="puedeExcepcionFefo && !item.excepcionFefo"
+                type="button"
+                class="fm-btn fm-btn--sm fm-btn--secondary"
+                (click)="abrirExcepcion(item)"
+              >
+                Autorizar excepcion
+              </button>
+            </div>
+
+            <div class="fm-alert fm-alert--warning" *ngIf="item.excepcionFefo">
+              <svg-icon name="warning" [size]="16" />
+              <span>Excepcion FEFO: {{ item.motivoExcepcionFefo }}</span>
+            </div>
+
+            <div class="fm-alert fm-alert--error" *ngIf="item.error">
+              <svg-icon name="error" [size]="16" />
+              <span>{{ item.error }}</span>
+            </div>
+          </article>
+        </div>
+
+        <p class="fm-muted fm-small" *ngIf="items().length === 0" style="margin: 0">
+              Agrega los medicamentos a dispensar. El sistema descontara por lote segun FEFO.
+        </p>
+      </div>
+      <div class="fm-card-footer">
+        <button
+          type="button"
+          class="fm-btn fm-btn--primary fm-btn--block"
+          [disabled]="!puedeConfirmar() || guardando()"
+          (click)="confirmar()"
+        >
+          {{ guardando() ? 'Registrando...' : 'Confirmar dispensacion' }}
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <div class="fm-card" *ngIf="!loading() && vista() === 'HISTORIAL'">
+    <div class="fm-card-body fm-card-body--flush" *ngIf="historico().length > 0; else historialVacio">
+      <div class="fm-table-wrap">
+        <table class="fm-table">
+          <thead>
+            <tr>
+              <th scope="col">Ticket</th>
+              <th scope="col">Fecha</th>
+              <th scope="col">Receta</th>
+              <th scope="col">Paciente</th>
+              <th scope="col" class="fm-num">Items</th>
+              <th scope="col" class="fm-num">Unidades</th>
+              <th scope="col">Estado</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let dispensacion of historico(); trackBy: trackDispensacion">
+              <td class="fm-mono fm-strong">{{ dispensacion.numeroTicket }}</td>
+              <td class="fm-nowrap">{{ dispensacion.fechaHora | fmDate: 'datetime' }}</td>
+              <td class="fm-mono">{{ dispensacion.numeroReceta }}</td>
+              <td>
+                <div>{{ dispensacion.pacienteNombreCompleto }}</div>
+                <div class="fm-xs fm-muted">{{ dispensacion.medico }}</div>
+              </td>
+              <td class="fm-num">{{ dispensacion.totalItems }}</td>
+              <td class="fm-num">{{ dispensacion.totalUnidades }}</td>
+              <td>
+                <span class="fm-badge" [class.fm-badge--success]="dispensacion.estado === 'COMPLETADA'" [class.fm-badge--neutral]="dispensacion.estado === 'ANULADA'">
+                  {{ dispensacion.estado === 'COMPLETADA' ? 'Completada' : 'Anulada' }}
+                </span>
+              </td>
+              <td class="fm-right">
+                <button type="button" class="fm-btn fm-btn--sm fm-btn--ghost" (click)="verTicket(dispensacion)">Detalle</button>
+                <button
+                  *ngIf="dispensacion.estado === 'COMPLETADA'"
+                  type="button"
+                  class="fm-btn fm-btn--sm fm-btn--danger"
+                  (click)="pedirAnular(dispensacion)"
+                >
+                  Anular
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <ng-template #historialVacio>
+      <div class="fm-card-body">
+        <app-fm-empty title="Sin dispensaciones" message=" todavia no se registro ningun ticket en caja."></app-fm-empty>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<app-fm-modal *ngIf="ticketDetalle() as ticket" title="Ticket de dispensacion" (closed)="cerrarTicket()">
+  <div class="dis-ticket">
+    <div class="dis-ticket__head">
+      <div>
+        <div class="fm-strong fm-mono">{{ ticket.numeroTicket }}</div>
+        <div class="fm-small">{{ ticket.fechaHora | fmDate: 'datetime' }}</div>
+      </div>
+      <span class="fm-badge" [class.fm-badge--success]="ticket.estado === 'COMPLETADA'" [class.fm-badge--neutral]="ticket.estado === 'ANULADA'">
+        {{ ticket.estado === 'COMPLETADA' ? 'Completada' : 'Anulada' }}
+      </span>
+    </div>
+    <dl class="dis-detalle-receta">
+      <div><dt>Receta</dt><dd class="fm-mono">{{ ticket.numeroReceta }}</dd></div>
+      <div><dt>Paciente</dt><dd>{{ ticket.pacienteNombreCompleto }} ({{ ticket.pacienteDni }})</dd></div>
+      <div><dt>Medico</dt><dd>{{ ticket.medico }}</dd></div>
+      <div><dt>Atendio</dt><dd>{{ ticket.usuarioNombre }}</dd></div>
+    </dl>
+    <div class="fm-table-wrap">
+      <table class="fm-table">
+        <thead>
+          <tr>
+            <th scope="col">Medicamento</th>
+            <th scope="col">Lote</th>
+            <th scope="col" class="fm-num">Cantidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let detalle of ticket.detalles">
+            <td>
+              <div>{{ detalle.medicamentoNombre }}</div>
+              <div class="fm-xs fm-muted" *ngIf="detalle.excepcionFefo">Excepcion FEFO: {{ detalle.motivoExcepcionFefo }}</div>
+            </td>
+            <td class="fm-mono">{{ detalle.numeroLote }}</td>
+            <td class="fm-num">{{ detalle.cantidad }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <app-codigo-barras
+      *ngIf="ticket.estado === 'COMPLETADA'"
+      tipo="dispensacion"
+      [id]="ticket.id"
+      [titulo]="'Codigo QR del comprobante ' + ticket.numeroTicket"
+    />
+  </div>
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarTicket()">Cerrar</button>
+  </ng-container>
+</app-fm-modal>
+
+<app-fm-modal *ngIf="excepcionModal()" title="Autorizar excepcion al orden FEFO" (closed)="cerrarExcepcion()">
+  <div class="fm-alert fm-alert--warning">
+    <svg-icon name="warning" [size]="18" />
+    <span>
+      Se descontara un lote distinto al que vence primero. Solo el Jefe de Farmacia puede autorizarlo y queda
+      registrado en auditoria con el motivo.
+    </span>
+  </div>
+  <form [formGroup]="excepcionForm" (ngSubmit)="confirmarExcepcion()" novalidate>
+    <div class="fm-field" [class.fm-field--invalid]="excepcionForm.controls.motivo.invalid && excepcionForm.controls.motivo.touched">
+      <label class="fm-label" for="excepcion-motivo">Motivo <span class="fm-label__required">*</span></label>
+      <textarea
+        id="excepcion-motivo"
+        class="fm-textarea"
+        formControlName="motivo"
+        maxlength="300"
+        placeholder="Describe por que se descarta el lote que vence primero"
+      ></textarea>
+      <span class="fm-error" *ngIf="excepcionForm.controls.motivo.invalid && excepcionForm.controls.motivo.touched">
+        El motivo es obligatorio y debe tener al menos 10 caracteres.
+      </span>
+    </div>
+  </form>
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarExcepcion()">Cancelar</button>
+    <button type="button" class="fm-btn fm-btn--primary" (click)="confirmarExcepcion()">Autorizar</button>
+  </ng-container>
+</app-fm-modal>
+
+<app-fm-modal
+  *ngIf="loteInspeccion() as lote"
+  [title]="'Lote ' + lote.numeroLote"
+  (closed)="cerrarLote()"
+>
+  <dl class="dis-detalle-receta">
+    <div><dt>Medicamento</dt><dd>{{ lote.medicamentoNombre }}</dd></div>
+    <div><dt>Proveedor</dt><dd>{{ lote.proveedorRazonSocial }}</dd></div>
+    <div><dt>Vencimiento</dt><dd>{{ lote.fechaVencimiento | fmDate }}</dd></div>
+    <div><dt>Stock actual</dt><dd>{{ lote.cantidadActual }} de {{ lote.cantidadInicial }}</dd></div>
+  </dl>
+  <h3 class="dis-subtitulo">Movimientos del lote</h3>
+  <div class="fm-table-wrap" *ngIf="movimientosLote().length > 0">
+    <table class="fm-table">
+      <thead>
+        <tr>
+          <th scope="col">Fecha</th>
+          <th scope="col">Tipo</th>
+          <th scope="col" class="fm-num">Cantidad</th>
+          <th scope="col">Usuario</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let movimiento of movimientosLote()">
+          <td class="fm-nowrap">{{ movimiento.fechaHora | fmDate: 'datetime' }}</td>
+          <td>{{ movimiento.tipoMovimiento }}</td>
+          <td class="fm-num">{{ movimiento.cantidad }}</td>
+          <td>{{ movimiento.usuarioNombre }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="fm-muted fm-small" *ngIf="movimientosLote().length === 0">Este lote aun no tiene movimientos.</p>
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarLote()">Cerrar</button>
+  </ng-container>
+</app-fm-modal>
+
+<app-fm-confirm
+  *ngIf="confirmarAnular() as dispensacion"
+  title="Anular dispensacion"
+  [message]="'Se anulara el ticket ' + dispensacion.numeroTicket + ' y el stock volvera a los lotes de origen. Esta accion queda en auditoria.'"
+  confirmText="Anular"
+  (accepted)="anular()"
+  (cancelled)="cerrarAnular()"
+></app-fm-confirm>

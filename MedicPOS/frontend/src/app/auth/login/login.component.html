@@ -1,0 +1,101 @@
+<div class="login">
+  <div class="login__panel">
+    <div class="login__card">
+      <span class="login__accent" aria-hidden="true"></span>
+
+      <div class="login__brand">
+        <span class="login__mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M10.5 20.5 3.5 13.5a5 5 0 0 1 7-7l7 7a5 5 0 0 1-7 7Z" />
+            <path d="m7 10 7 7" />
+            <path d="M15 4.5 19.5 9" />
+          </svg>
+        </span>
+        <h1 class="login__title">FarmaMed</h1>
+        <p class="login__subtitle">Hospital Santa Maria del Socorro</p>
+        <span class="login__badge">
+          <svg-icon name="escudo" [size]="15" />
+          Portal Clinico Autorizado
+        </span>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="fm-field">
+          <label class="fm-label" for="usuario">Usuario / Matricula Profesional</label>
+          <div class="login__control" [class.login__control--invalid]="usuario.invalid && usuario.touched">
+            <svg-icon class="login__control-icon" name="credencial" [size]="20" />
+            <input
+              id="usuario"
+              class="login__input"
+              type="text"
+              formControlName="usuario"
+              autocomplete="username"
+              placeholder="Ej: emorales o MP-48192"
+            />
+          </div>
+          <span class="fm-error" *ngIf="usuario.invalid && usuario.touched">Ingrese su usuario o matricula</span>
+        </div>
+
+        <div class="fm-field">
+          <label class="fm-label" for="password">Contrasena</label>
+          <div class="login__control" [class.login__control--invalid]="password.invalid && password.touched">
+            <svg-icon class="login__control-icon" name="candado" [size]="20" />
+            <input
+              id="password"
+              class="login__input login__input--pad"
+              [type]="showPassword() ? 'text' : 'password'"
+              formControlName="password"
+              autocomplete="current-password"
+              placeholder="********"
+            />
+            <button
+              type="button"
+              class="login__control-toggle"
+              [attr.aria-label]="showPassword() ? 'Ocultar contrasena' : 'Mostrar contrasena'"
+              (click)="showPassword.set(!showPassword())"
+            >
+              <svg-icon [name]="showPassword() ? 'close' : 'user'" [size]="20" />
+            </button>
+          </div>
+          <span class="fm-error" *ngIf="password.invalid && password.touched">Contrasena requerida</span>
+        </div>
+
+        <div class="login__row">
+          <label class="fm-check">
+            <input type="checkbox" formControlName="recordar" />
+            <span>Recordar sesion</span>
+          </label>
+          <button type="button" class="login__link">Olvide mi contrasena</button>
+        </div>
+
+        <div class="fm-alert fm-alert--error" *ngIf="error()" role="alert">
+          <svg-icon name="error" [size]="18" />
+          <span>{{ error() }}</span>
+        </div>
+
+        <button
+          type="submit"
+          class="login__submit"
+          [disabled]="loading()"
+        >
+          <span>{{ loading() ? 'Validando credenciales...' : 'Ingresar al Sistema' }}</span>
+          <svg-icon name="chevronRight" [size]="18" />
+        </button>
+      </form>
+
+      <p class="login__caption">
+        Sistema de Control de Caducidad, Inventario y Dispensacion
+      </p>
+    </div>
+
+    <div class="login__compliance">
+      <div class="login__secure">
+        <svg-icon name="escudo" [size]="14" />
+        <span>Conexion Encriptada TLS 1.3</span>
+        <span>&bull;</span>
+        <span class="login__version">v2.4.0-PROD</span>
+      </div>
+      <p class="login__dept">Departamento de Farmacia y Bioquimica Clinica</p>
+    </div>
+  </div>
+</div>

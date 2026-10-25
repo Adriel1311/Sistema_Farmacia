@@ -1,0 +1,60 @@
+@use 'styles/design-tokens' as *;
+
+:host {
+  display: block;
+}
+
+.aud-filtros__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-3;
+}
+
+.aud-filtros__acciones {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.aud-descripcion {
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aud-valor {
+  max-width: 220px;
+  font-family: $font-family-mono;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: #{$bp-sm}) {
+  .aud-filtros__footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .aud-filtros__acciones {
+    justify-content: flex-end;
+  }
+
+  .fm-table {
+    min-width: 720px;
+  }
+
+  .fm-table th,
+  .fm-table td {
+    padding: $space-2 $space-3;
+  }
+
+  .aud-descripcion,
+  .aud-valor {
+    max-width: 160px;
+  }
+}

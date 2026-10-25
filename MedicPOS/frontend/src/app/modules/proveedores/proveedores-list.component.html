@@ -1,0 +1,205 @@
+<div class="fm-page">
+  <header class="fm-page-header">
+    <div>
+      <h1 class="fm-page-title">Proveedores</h1>
+      <p class="fm-page-subtitle">Empresas que abastecen el catalogo de medicamentos</p>
+    </div>
+    <div class="fm-page-actions">
+      <button type="button" class="fm-btn fm-btn--ghost" (click)="refrescar()">
+        <svg-icon name="refresh" [size]="16" />
+        <span class="fm-hidden-mobile">Actualizar</span>
+      </button>
+      <button *ngIf="puedeEscribir" type="button" class="fm-btn fm-btn--primary" (click)="abrirAlta()">
+        <svg-icon name="plus" [size]="16" />
+        Nuevo proveedor
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="!puedeEscribir" class="fm-alert fm-alert--info">
+    <svg-icon name="warning" [size]="18" />
+    <span>Tu rol solo puede consultar proveedores. El registro y los cambios los realiza Logistica.</span>
+  </div>
+
+  <div *ngIf="success()" class="fm-alert fm-alert--success" role="status">
+    <svg-icon name="success" [size]="18" />
+    <span class="fm-spacer">{{ success() }}</span>
+    <button type="button" class="fm-btn fm-btn--ghost fm-btn--sm" aria-label="Cerrar aviso" (click)="success.set('')">
+      <svg-icon name="close" [size]="14" />
+    </button>
+  </div>
+
+  <div *ngIf="error()" class="fm-alert fm-alert--error" role="alert">
+    <svg-icon name="error" [size]="18" />
+    <span class="fm-spacer">{{ error() }}</span>
+    <button type="button" class="fm-btn fm-btn--secondary fm-btn--sm" (click)="refrescar()">Reintentar</button>
+  </div>
+
+  <div class="fm-toolbar">
+    <div class="fm-field fm-toolbar__grow">
+      <label class="fm-label" for="prov-busqueda">Buscar</label>
+      <input
+        id="prov-busqueda"
+        class="fm-input"
+        type="search"
+        placeholder="RUC, razon social o contacto"
+        [formControl]="searchControl"
+      />
+    </div>
+    <div class="fm-field">
+      <span class="fm-label">{{ proveedores().length }} proveedor(es)</span>
+    </div>
+  </div>
+
+  <div class="fm-card">
+    <div class="fm-card-header">
+      <h2 class="fm-card-title">Listado de proveedores</h2>
+      <span class="fm-muted fm-small">{{ proveedores().length }} registro(s)</span>
+    </div>
+    <div class="fm-card-body fm-card-body--flush">
+      <app-fm-loading *ngIf="loading()" text="Cargando proveedores..."></app-fm-loading>
+
+      <app-fm-empty
+        *ngIf="!loading() && proveedores().length === 0"
+        title="Aun no hay proveedores registrados"
+        message="Registra los proveedores con los que negocia la farmacia."
+        [action]="puedeEscribir ? 'Registrar proveedor' : ''"
+        (actionClick)="abrirAlta()"
+      ></app-fm-empty>
+
+      <div *ngIf="!loading() && proveedores().length > 0" class="fm-table-wrap">
+        <table class="fm-table">
+          <thead>
+            <tr>
+              <th>RUC</th>
+              <th>Razon social</th>
+              <th class="fm-hidden-mobile">Contacto</th>
+              <th class="fm-nowrap">Telefono</th>
+              <th class="fm-hidden-mobile">Correo</th>
+              <th class="fm-num">Medicamentos</th>
+              <th>Estado</th>
+              <th class="fm-right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let proveedor of proveedores(); trackBy: trackById">
+              <td class="fm-mono fm-nowrap">{{ proveedor.ruc }}</td>
+              <td class="fm-strong">{{ proveedor.razonSocial }}</td>
+              <td class="fm-hidden-mobile">{{ proveedor.contacto }}</td>
+              <td class="fm-nowrap">{{ proveedor.telefono }}</td>
+              <td class="fm-hidden-mobile pro-mail" [title]="proveedor.correo">{{ proveedor.correo }}</td>
+              <td class="fm-num">{{ proveedor.medicamentosAsociados }}</td>
+              <td>
+                <span
+                  class="fm-badge"
+                  [class.fm-badge--success]="proveedor.activo"
+                  [class.fm-badge--neutral]="!proveedor.activo"
+                >
+                  {{ proveedor.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td class="fm-right fm-nowrap">
+                <button
+                  *ngIf="puedeEscribir"
+                  type="button"
+                  class="fm-btn fm-btn--ghost fm-btn--sm"
+                  (click)="abrirEdicion(proveedor)"
+                >
+                  <svg-icon name="configuracion" [size]="14" />
+                  Editar
+                </button>
+                <button
+                  *ngIf="puedeEscribir"
+                  type="button"
+                  class="fm-btn fm-btn--ghost fm-btn--sm"
+                  (click)="pedirToggle(proveedor)"
+                >
+                  <svg-icon [name]="proveedor.activo ? 'close' : 'check'" [size]="14" />
+                  {{ proveedor.activo ? 'Desactivar' : 'Activar' }}
+                </button>
+                <span *ngIf="!puedeEscribir" class="fm-muted fm-xs">Solo lectura</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-fm-modal
+  *ngIf="modalAbierto()"
+  [title]="modo() === 'alta' ? 'Nuevo proveedor' : 'Editar proveedor'"
+  (closed)="cerrarModal()"
+>
+  <form id="prov-form" [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+    <div *ngIf="formError()" class="fm-alert fm-alert--error" role="alert">
+      <svg-icon name="error" [size]="18" />
+      <span>{{ formError() }}</span>
+    </div>
+
+    <div class="fm-form-grid">
+      <div *ngIf="modo() === 'alta'" class="fm-field">
+        <label class="fm-label" for="prov-ruc">RUC <span class="fm-label__required">*</span></label>
+        <input id="prov-ruc" class="fm-input fm-mono" type="text" inputmode="numeric" formControlName="ruc" placeholder="20123456789" />
+        <span *ngIf="form.controls.ruc.touched && form.controls.ruc.invalid" class="fm-error">
+          El RUC debe tener 11 digitos numericos.
+        </span>
+      </div>
+
+      <div [class.fm-field--full]="modo() === 'alta'" class="fm-field">
+        <label class="fm-label" for="prov-razon">Razon social <span class="fm-label__required">*</span></label>
+        <input id="prov-razon" class="fm-input" type="text" formControlName="razonSocial" placeholder="Distribuidora Farmaceutica S.A.C." />
+        <span *ngIf="form.controls.razonSocial.touched && form.controls.razonSocial.invalid" class="fm-error">
+          Ingresa la razon social del proveedor.
+        </span>
+      </div>
+
+      <div class="fm-field">
+        <label class="fm-label" for="prov-contacto">Contacto <span class="fm-label__required">*</span></label>
+        <input id="prov-contacto" class="fm-input" type="text" formControlName="contacto" placeholder="Nombre del asesor comercial" />
+        <span *ngIf="form.controls.contacto.touched && form.controls.contacto.invalid" class="fm-error">
+          Ingresa el contacto del proveedor.
+        </span>
+      </div>
+
+      <div class="fm-field">
+        <label class="fm-label" for="prov-telefono">Telefono <span class="fm-label__required">*</span></label>
+        <input id="prov-telefono" class="fm-input" type="tel" formControlName="telefono" placeholder="+51 900 000 000" />
+        <span *ngIf="form.controls.telefono.touched && form.controls.telefono.invalid" class="fm-error">
+          Ingresa un telefono valido.
+        </span>
+      </div>
+
+      <div class="fm-field fm-field--full">
+        <label class="fm-label" for="prov-correo">Correo <span class="fm-label__required">*</span></label>
+        <input id="prov-correo" class="fm-input" type="email" formControlName="correo" placeholder="contacto@proveedor.com" />
+        <span *ngIf="form.controls.correo.touched && form.controls.correo.invalid" class="fm-error">
+          Ingresa un correo valido.
+        </span>
+      </div>
+    </div>
+
+    <p *ngIf="modo() === 'edicion'" class="fm-hint">El RUC no se modifica: es la clave natural del proveedor.</p>
+  </form>
+
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarModal()">Cancelar</button>
+    <button type="submit" form="prov-form" class="fm-btn fm-btn--primary" [disabled]="guardando()">
+      {{ guardando() ? 'Guardando...' : 'Guardar' }}
+    </button>
+  </ng-container>
+</app-fm-modal>
+
+<app-fm-confirm
+  *ngIf="objetivo() as proveedor"
+  [title]="proveedor.activo ? 'Desactivar proveedor' : 'Activar proveedor'"
+  [message]="
+    proveedor.activo
+      ? 'El proveedor ' + proveedor.razonSocial + ' dejara de estar disponible para nuevos medicamentos.'
+      : 'El proveedor ' + proveedor.razonSocial + ' volvera a estar disponible.'
+  "
+  [confirmText]="proveedor.activo ? 'Desactivar' : 'Activar'"
+  (accepted)="confirmarToggle()"
+  (cancelled)="cancelarToggle()"
+></app-fm-confirm>

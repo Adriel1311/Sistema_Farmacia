@@ -1,0 +1,138 @@
+@use 'styles/design-tokens' as *;
+
+:host {
+  display: block;
+}
+
+.con-semaforo__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $space-4;
+}
+
+.con-umbral {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+  padding: $space-4;
+  border: 1px solid $color-border;
+  border-left-width: 4px;
+  border-radius: $radius-md;
+  background: $color-bg-secondary;
+
+  &--rojo {
+    border-left-color: $semaforo-rojo;
+  }
+
+  &--ambar {
+    border-left-color: $semaforo-ambar;
+  }
+}
+
+.con-umbral__valor {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  color: $color-text-primary;
+}
+
+.con-umbral__label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: $color-text-secondary;
+}
+
+.con-leyenda {
+  list-style: none;
+  margin: $space-4 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $space-2 $space-4;
+}
+
+.con-leyenda__item {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+
+  &--verde .con-leyenda__dot {
+    background: $semaforo-verde;
+  }
+
+  &--ambar .con-leyenda__dot {
+    background: $semaforo-ambar;
+  }
+
+  &--rojo .con-leyenda__dot {
+    background: $semaforo-rojo;
+  }
+
+  &--negro .con-leyenda__dot {
+    background: $semaforo-negro;
+  }
+}
+
+.con-leyenda__dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  flex: 0 0 auto;
+  border-radius: $radius-full;
+  box-shadow: inset 0 0 0 1px rgba(19, 27, 33, 0.18);
+}
+
+.con-grupo {
+  margin-top: $space-5;
+}
+
+.con-grupo__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-3;
+}
+
+.con-input {
+  min-width: 10rem;
+  font-family: $font-family-mono;
+  font-size: $font-size-sm;
+}
+
+.con-descripcion {
+  max-width: 320px;
+}
+
+.fm-table tbody tr.con-row--editado {
+  background: $color-primary-light;
+  box-shadow: inset 3px 0 0 0 $color-primary;
+}
+
+@media (max-width: #{$bp-sm}) {
+  .con-semaforo__grid,
+  .con-leyenda {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .con-grupo__footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .con-input {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .fm-table {
+    min-width: 560px;
+  }
+
+  .fm-table th,
+  .fm-table td {
+    padding: $space-2 $space-3;
+  }
+}

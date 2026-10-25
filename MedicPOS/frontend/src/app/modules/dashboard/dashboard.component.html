@@ -1,0 +1,149 @@
+<div class="fm-page">
+  <div class="fm-page-header">
+    <div>
+      <h1 class="fm-page-title">Panel de control</h1>
+      <p class="fm-page-subtitle">
+        Semaforo configurado: critico a {{ data()?.diasCritico ?? 30 }} dias, proximo a vencer a
+        {{ data()?.diasProximo ?? 60 }} dias (RN04).
+      </p>
+    </div>
+    <div class="fm-page-actions">
+      <button type="button" class="fm-btn fm-btn--secondary" (click)="refrescar()" [disabled]="loading()">
+        <svg-icon name="refresh" [size]="16" />
+        Actualizar
+      </button>
+    </div>
+  </div>
+
+  <div class="fm-alert fm-alert--error" *ngIf="error()" role="alert">
+    <svg-icon name="error" [size]="18" />
+    <span>{{ error() }}</span>
+    <button type="button" class="fm-btn fm-btn--sm fm-btn--secondary das-retry" (click)="refrescar()">Reintentar</button>
+  </div>
+
+  <app-fm-loading *ngIf="loading() && !data()" text="Cargando indicadores..."></app-fm-loading>
+
+  <ng-container *ngIf="data() as info">
+    <div class="fm-stat-grid">
+      <a class="fm-stat das-stat" routerLink="/inventario">
+        <span class="fm-stat__icon"><svg-icon name="inventario" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ info.medicamentosActivos }}</div>
+          <div class="fm-stat__label">Medicamentos activos</div>
+        </div>
+      </a>
+      <a class="fm-stat fm-stat--danger das-stat" routerLink="/inventario">
+        <span class="fm-stat__icon"><svg-icon name="warning" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ info.lotesCriticos + info.lotesVencidos }}</div>
+          <div class="fm-stat__label">Lotes criticos y vencidos</div>
+        </div>
+      </a>
+      <a class="fm-stat fm-stat--warning das-stat" routerLink="/inventario">
+        <span class="fm-stat__icon"><svg-icon name="clock" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ info.lotesProximosAVencer }}</div>
+          <div class="fm-stat__label">Proximos a vencer</div>
+        </div>
+      </a>
+      <a class="fm-stat fm-stat--info das-stat" routerLink="/dispensacion">
+        <span class="fm-stat__icon"><svg-icon name="dispensacion" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ info.dispensacionesHoy }}</div>
+          <div class="fm-stat__label">Dispensaciones hoy</div>
+        </div>
+      </a>
+      <a class="fm-stat das-stat" routerLink="/ordenes">
+        <span class="fm-stat__icon"><svg-icon name="orden" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ info.ordenesSugeridas }}</div>
+          <div class="fm-stat__label">Ordenes sugeridas</div>
+        </div>
+      </a>
+      <a class="fm-stat" [class.fm-stat--danger]="alertasAlta() > 0" routerLink="/alertas">
+        <span class="fm-stat__icon"><svg-icon name="alerta" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ info.alertasTotales }}</div>
+          <div class="fm-stat__label">Alertas ({{ alertasAlta() }} de prioridad alta)</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="das-grid">
+      <section class="fm-card">
+        <div class="fm-card-header">
+          <h2 class="fm-card-title">Proximos a vencer</h2>
+          <a class="fm-btn fm-btn--sm fm-btn--ghost" routerLink="/inventario">Ver todo</a>
+        </div>
+        <div class="fm-card-body fm-card-body--flush" *ngIf="info.proximosAVencer.length > 0">
+          <div class="fm-table-wrap">
+            <table class="fm-table">
+              <thead>
+                <tr>
+                  <th scope="col">Medicamento</th>
+                  <th scope="col">Lote</th>
+                  <th scope="col">Vencimiento</th>
+                  <th scope="col" class="fm-num">Stock</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let lote of info.proximosAVencer; trackBy: trackLote">
+                  <td>
+                    <div>{{ lote.medicamentoNombre }}</div>
+                    <div class="fm-xs fm-muted fm-mono">{{ lote.medicamentoCodigo }}</div>
+                  </td>
+                  <td class="fm-mono">{{ lote.numeroLote }}</td>
+                  <td class="fm-nowrap">
+                    {{ lote.fechaVencimiento | fmDate }}
+                    <app-fm-semaforo [estado]="lote.estadoVencimiento" [diasRestantes]="lote.diasRestantes" />
+                  </td>
+                  <td class="fm-num">{{ lote.cantidadActual }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="fm-card-body" *ngIf="info.proximosAVencer.length === 0">
+          <p class="fm-muted fm-small" style="margin: 0">Ningun lote dentro de la ventana de proximo a vencer.</p>
+        </div>
+      </section>
+
+      <section class="fm-card">
+        <div class="fm-card-header">
+          <h2 class="fm-card-title">Sugerencias de compra</h2>
+          <a class="fm-btn fm-btn--sm fm-btn--ghost" routerLink="/ordenes">Generar orden</a>
+        </div>
+        <div class="fm-card-body fm-card-body--flush" *ngIf="info.suggestions.length > 0">
+          <div class="fm-table-wrap">
+            <table class="fm-table">
+              <thead>
+                <tr>
+                  <th scope="col">Medicamento</th>
+                  <th scope="col">Proveedor</th>
+                  <th scope="col" class="fm-num">Stock</th>
+                  <th scope="col" class="fm-num">Minimo</th>
+                  <th scope="col" class="fm-num">Sugerido</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let sugerencia of info.suggestions; trackBy: trackSugerencia">
+                  <td>
+                    <div>{{ sugerencia.nombre }}</div>
+                    <div class="fm-xs fm-muted fm-mono">{{ sugerencia.codigo }}</div>
+                  </td>
+                  <td class="das-proveedor">{{ sugerencia.proveedorRazonSocial }}</td>
+                  <td class="fm-num">{{ sugerencia.stockActual }}</td>
+                  <td class="fm-num">{{ sugerencia.stockMinimo }}</td>
+                  <td class="fm-num fm-strong">{{ sugerencia.cantidadSugerida }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="fm-card-body" *ngIf="info.suggestions.length === 0">
+          <p class="fm-muted fm-small" style="margin: 0">Ningun medicamento esta en o por debajo de su stock minimo (RN06).</p>
+        </div>
+      </section>
+    </div>
+  </ng-container>
+</div>

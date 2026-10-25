@@ -1,0 +1,25 @@
+@use 'styles/design-tokens' as *;
+
+:host {
+  display: block;
+}
+
+.pro-mail {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:host {
+  @media (max-width: #{$bp-sm}) {
+    .fm-table {
+      min-width: 640px;
+    }
+
+    .fm-table th,
+    .fm-table td {
+      padding: $space-2 $space-3;
+    }
+  }
+}

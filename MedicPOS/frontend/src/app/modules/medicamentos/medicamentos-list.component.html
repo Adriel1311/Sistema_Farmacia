@@ -1,0 +1,292 @@
+<div class="fm-page">
+  <header class="fm-page-header">
+    <div>
+      <h1 class="fm-page-title">Medicamentos</h1>
+      <p class="fm-page-subtitle">Catalogo, proveedores y niveles de stock</p>
+    </div>
+    <div class="fm-page-actions">
+      <button type="button" class="fm-btn fm-btn--ghost" (click)="refrescar()">
+        <svg-icon name="refresh" [size]="16" />
+        <span class="fm-hidden-mobile">Actualizar</span>
+      </button>
+      <button *ngIf="puedeEditar" type="button" class="fm-btn fm-btn--primary" (click)="abrirAlta()">
+        <svg-icon name="plus" [size]="16" />
+        Nuevo medicamento
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="success()" class="fm-alert fm-alert--success" role="status">
+    <svg-icon name="success" [size]="18" />
+    <span class="fm-spacer">{{ success() }}</span>
+    <button type="button" class="fm-btn fm-btn--ghost fm-btn--sm" aria-label="Cerrar aviso" (click)="success.set('')">
+      <svg-icon name="close" [size]="14" />
+    </button>
+  </div>
+
+  <div *ngIf="error()" class="fm-alert fm-alert--error" role="alert">
+    <svg-icon name="error" [size]="18" />
+    <span class="fm-spacer">{{ error() }}</span>
+    <button type="button" class="fm-btn fm-btn--secondary fm-btn--sm" (click)="refrescar()">Reintentar</button>
+  </div>
+
+  <div class="fm-toolbar">
+    <div class="fm-field fm-toolbar__grow">
+      <label class="fm-label" for="med-busqueda">Buscar</label>
+      <input
+        id="med-busqueda"
+        class="fm-input"
+        type="search"
+        placeholder="Codigo, nombre o descripcion"
+        [formControl]="searchControl"
+      />
+    </div>
+    <div class="fm-field">
+      <label class="fm-label" for="med-proveedor">Proveedor</label>
+      <select
+        #filtroProveedor
+        id="med-proveedor"
+        class="fm-select"
+        [value]="proveedorSeleccionado()"
+        (change)="cambiarProveedor(filtroProveedor.value)"
+      >
+        <option [value]="0">Todos los proveedores</option>
+        <option *ngFor="let proveedor of proveedores()" [value]="proveedor.id">
+          {{ proveedor.razonSocial }}
+        </option>
+      </select>
+    </div>
+    <label class="fm-check fm-check--inline">
+      <input type="checkbox" [checked]="soloCriticos()" (change)="alternarSoloCriticos()" />
+      <svg-icon name="warning" [size]="16" />
+      <span>Solo stock critico</span>
+    </label>
+  </div>
+
+  <div class="fm-stat-grid">
+    <div class="fm-stat">
+      <span class="fm-stat__icon"><svg-icon name="medicamento" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ visibles().length }}</div>
+        <div class="fm-stat__label">Medicamentos</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--danger">
+      <span class="fm-stat__icon"><svg-icon name="warning" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ criticos() }}</div>
+        <div class="fm-stat__label">Stock critico</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--info">
+      <span class="fm-stat__icon"><svg-icon name="box" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ inactivos() }}</div>
+        <div class="fm-stat__label">Inactivos</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fm-card">
+    <div class="fm-card-header">
+      <h2 class="fm-card-title">Listado de medicamentos</h2>
+      <span class="fm-muted fm-small">{{ visibles().length }} registro(s)</span>
+    </div>
+    <div class="fm-card-body fm-card-body--flush">
+      <app-fm-loading *ngIf="loading()" text="Cargando medicamentos..."></app-fm-loading>
+
+      <app-fm-empty
+        *ngIf="!loading() && visibles().length === 0"
+        title="Aun no hay medicamentos registrados"
+        message="Registra el catalogo de medicamentos para poder dispensar."
+        [action]="puedeEditar ? 'Registrar medicamento' : ''"
+        (actionClick)="abrirAlta()"
+      ></app-fm-empty>
+
+      <div *ngIf="!loading() && visibles().length > 0" class="fm-table-wrap">
+        <table class="fm-table">
+          <thead>
+            <tr>
+              <th>Codigo</th>
+              <th>Nombre</th>
+              <th class="fm-hidden-mobile">Unidad</th>
+              <th class="fm-hidden-mobile">Proveedor</th>
+              <th class="fm-num">Stock vigente</th>
+              <th class="fm-num fm-hidden-mobile">Minimo</th>
+              <th class="fm-num fm-hidden-mobile">Maximo</th>
+              <th>Estado</th>
+              <th class="fm-right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let medicamento of visibles(); trackBy: trackById" [class.med-row--critical]="medicamento.stockCritico">
+              <td class="fm-mono fm-nowrap">{{ medicamento.codigo }}</td>
+              <td>
+                <span class="fm-strong">{{ medicamento.nombre }}</span>
+                <div *ngIf="medicamento.descripcion" class="fm-xs fm-muted med-desc">{{ medicamento.descripcion }}</div>
+              </td>
+              <td class="fm-nowrap fm-hidden-mobile">{{ medicamento.unidadMedida }}</td>
+              <td class="fm-hidden-mobile">{{ medicamento.proveedorRazonSocial }}</td>
+              <td class="fm-num">
+                <span class="fm-strong">{{ medicamento.stockVigente }}</span>
+                <div *ngIf="medicamento.stockCritico" class="fm-xs">
+                  <span class="fm-badge fm-badge--danger">Stock critico</span>
+                </div>
+              </td>
+              <td class="fm-num fm-hidden-mobile">{{ medicamento.stockMinimo }}</td>
+              <td class="fm-num fm-hidden-mobile">{{ medicamento.stockMaximo }}</td>
+              <td>
+                <span
+                  class="fm-badge"
+                  [class.fm-badge--success]="medicamento.activo"
+                  [class.fm-badge--neutral]="!medicamento.activo"
+                >
+                  {{ medicamento.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td class="fm-right fm-nowrap">
+                <button
+                  type="button"
+                  class="fm-btn fm-btn--ghost fm-btn--sm"
+                  (click)="abrirCodigo(medicamento)"
+                >
+                  <svg-icon name="download" [size]="14" />
+                  Etiqueta
+                </button>
+                <button
+                  *ngIf="puedeEditar"
+                  type="button"
+                  class="fm-btn fm-btn--ghost fm-btn--sm"
+                  (click)="abrirEdicion(medicamento)"
+                >
+                  <svg-icon name="configuracion" [size]="14" />
+                  Editar
+                </button>
+                <button
+                  *ngIf="puedeEditar"
+                  type="button"
+                  class="fm-btn fm-btn--ghost fm-btn--sm"
+                  (click)="pedirToggle(medicamento)"
+                >
+                  <svg-icon [name]="medicamento.activo ? 'close' : 'check'" [size]="14" />
+                  {{ medicamento.activo ? 'Desactivar' : 'Activar' }}
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-fm-modal *ngIf="modalAbierto()" [title]="tituloModal()" (closed)="cerrarModal()">
+  <form id="med-form" [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+    <div *ngIf="formError()" class="fm-alert fm-alert--error" role="alert">
+      <svg-icon name="error" [size]="18" />
+      <span>{{ formError() }}</span>
+    </div>
+
+    <div class="fm-form-grid">
+      <div class="fm-field">
+        <label class="fm-label" for="med-codigo">Codigo <span class="fm-label__required">*</span></label>
+        <input id="med-codigo" class="fm-input fm-mono" type="text" formControlName="codigo" placeholder="MED-001" />
+        <span *ngIf="form.controls.codigo.touched && form.controls.codigo.invalid" class="fm-error">
+          Ingresa el codigo del medicamento.
+        </span>
+      </div>
+
+      <div class="fm-field">
+        <label class="fm-label" for="med-unidad">Unidad de medida <span class="fm-label__required">*</span></label>
+        <select id="med-unidad" class="fm-select" formControlName="unidadMedida">
+          <option *ngFor="let unidad of unidades" [value]="unidad">{{ unidad }}</option>
+        </select>
+      </div>
+
+      <div class="fm-field fm-field--full">
+        <label class="fm-label" for="med-nombre">Nombre <span class="fm-label__required">*</span></label>
+        <input id="med-nombre" class="fm-input" type="text" formControlName="nombre" placeholder="Paracetamol 500 mg" />
+        <span *ngIf="form.controls.nombre.touched && form.controls.nombre.invalid" class="fm-error">
+          Ingresa el nombre del medicamento.
+        </span>
+      </div>
+
+      <div class="fm-field fm-field--full">
+        <label class="fm-label" for="med-descripcion">Descripcion</label>
+        <textarea id="med-descripcion" class="fm-textarea" formControlName="descripcion" rows="2"></textarea>
+        <span class="fm-hint">Presentacion, concentracion ovia de administracion.</span>
+      </div>
+
+      <div class="fm-field">
+        <label class="fm-label" for="med-proveedor-form">Proveedor <span class="fm-label__required">*</span></label>
+        <select id="med-proveedor-form" class="fm-select" formControlName="proveedorId">
+          <option [ngValue]="0">Selecciona un proveedor</option>
+          <option *ngFor="let proveedor of proveedores()" [ngValue]="proveedor.id">
+            {{ proveedor.razonSocial }}
+          </option>
+        </select>
+        <span *ngIf="form.controls.proveedorId.touched && form.controls.proveedorId.invalid" class="fm-error">
+          Selecciona el proveedor del medicamento.
+        </span>
+      </div>
+
+      <div class="fm-field"></div>
+
+      <div class="fm-field">
+        <label class="fm-label" for="med-minimo">Stock minimo <span class="fm-label__required">*</span></label>
+        <input id="med-minimo" class="fm-input" type="number" min="0" step="1" formControlName="stockMinimo" />
+        <span *ngIf="form.controls.stockMinimo.touched && form.controls.stockMinimo.invalid" class="fm-error">
+          Ingresa un valor mayor o igual a 0.
+        </span>
+      </div>
+
+      <div class="fm-field">
+        <label class="fm-label" for="med-maximo">Stock maximo <span class="fm-label__required">*</span></label>
+        <input id="med-maximo" class="fm-input" type="number" min="0" step="1" formControlName="stockMaximo" />
+        <span
+          *ngIf="form.hasError('stockMaximoMenorAlMinimo') && (form.controls.stockMaximo.touched || form.controls.stockMinimo.touched)"
+          class="fm-error"
+        >
+          El stock maximo debe ser mayor o igual al stock minimo.
+        </span>
+        <span
+          *ngIf="form.controls.stockMaximo.touched && form.controls.stockMaximo.invalid && !form.hasError('stockMaximoMenorAlMinimo')"
+          class="fm-error"
+        >
+          Ingresa un valor mayor o igual a 0.
+        </span>
+      </div>
+    </div>
+  </form>
+
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarModal()">Cancelar</button>
+    <button type="submit" form="med-form" class="fm-btn fm-btn--primary" [disabled]="guardando()">
+      {{ guardando() ? 'Guardando...' : 'Guardar' }}
+    </button>
+  </ng-container>
+</app-fm-modal>
+
+<app-fm-modal *ngIf="medicamentoCodigo() as medicamento" [title]="'Etiqueta de ' + medicamento.nombre" (closed)="cerrarCodigo()">
+  <app-codigo-barras
+    tipo="medicamento"
+    [id]="medicamento.id"
+    [titulo]="'Codigo de barras de ' + medicamento.nombre"
+  />
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarCodigo()">Cerrar</button>
+  </ng-container>
+</app-fm-modal>
+
+<app-fm-confirm
+  *ngIf="objetivo() as medicamento"
+  [title]="medicamento.activo ? 'Desactivar medicamento' : 'Activar medicamento'"
+  [message]="
+    (medicamento.activo
+      ? 'El medicamento ' + medicamento.nombre + ' dejara de estar disponible para nuevas dispensaciones.'
+      : 'El medicamento ' + medicamento.nombre + ' volvera a estar disponible para dispensacion.')
+  "
+  [confirmText]="medicamento.activo ? 'Desactivar' : 'Activar'"
+  (accepted)="confirmarToggle()"
+  (cancelled)="cancelarToggle()"
+></app-fm-confirm>

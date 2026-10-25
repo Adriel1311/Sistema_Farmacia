@@ -1,0 +1,316 @@
+<div class="fm-page">
+  <div class="fm-page-header">
+    <div>
+      <h1 class="fm-page-title">Ordenes de compra</h1>
+      <p class="fm-page-subtitle">
+        Logistica genera la orden y el Jefe de Farmacia la aprueba o rechaza (RSP-06).
+      </p>
+    </div>
+    <div class="fm-page-actions">
+      <button type="button" class="fm-btn fm-btn--secondary" (click)="refrescar()" [disabled]="loading()">
+        <svg-icon name="refresh" [size]="16" />
+        Actualizar
+      </button>
+      <button type="button" class="fm-btn fm-btn--primary" (click)="abrirSugerencia()">
+        <svg-icon name="plus" [size]="16" />
+        Crear desde sugerencias
+      </button>
+    </div>
+  </div>
+
+  <div class="fm-alert fm-alert--success" *ngIf="success()" role="status">
+    <svg-icon name="success" [size]="18" />
+    <span>{{ success() }}</span>
+  </div>
+
+  <div class="fm-alert fm-alert--error" *ngIf="error()" role="alert">
+    <svg-icon name="error" [size]="18" />
+    <span>{{ error() }}</span>
+  </div>
+
+  <div class="fm-stat-grid">
+    <div class="fm-stat">
+      <span class="fm-stat__icon"><svg-icon name="orden" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ resumen().total }}</div>
+        <div class="fm-stat__label">Ordenes</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--info">
+      <span class="fm-stat__icon"><svg-icon name="clock" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ resumen().sugeridas }}</div>
+        <div class="fm-stat__label">Esperando aprobacion</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--success">
+      <span class="fm-stat__icon"><svg-icon name="check" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ resumen().aprobadas }}</div>
+        <div class="fm-stat__label">Aprobadas</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--danger">
+      <span class="fm-stat__icon"><svg-icon name="error" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ resumen().rechazadas }}</div>
+        <div class="fm-stat__label">Rechazadas</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ord-segments fm-row" role="tablist">
+    <button
+      type="button"
+      class="fm-btn fm-btn--sm"
+      [class.ord-segment--active]="vista() === 'LISTADO'"
+      (click)="cambiarVista('LISTADO')"
+    >
+      Ordenes
+    </button>
+    <button
+      type="button"
+      class="fm-btn fm-btn--sm"
+      [class.ord-segment--active]="vista() === 'SUGERENCIAS'"
+      (click)="cambiarVista('SUGERENCIAS')"
+    >
+      Sugerencias del sistema
+    </button>
+  </div>
+
+  <app-fm-loading *ngIf="loading()" text="Cargando ordenes..."></app-fm-loading>
+
+  <ng-container *ngIf="!loading() && vista() === 'LISTADO'">
+    <div class="fm-toolbar">
+      <div class="fm-field fm-toolbar__grow">
+        <label class="fm-label" for="ord-buscar">Buscar proveedor</label>
+        <input
+          id="ord-buscar"
+          class="fm-input"
+          type="search"
+          placeholder="Razon social o RUC"
+          [value]="texto()"
+          (input)="onTexto($event)"
+        />
+      </div>
+      <div class="fm-field">
+        <label class="fm-label" for="ord-estado">Estado</label>
+        <select id="ord-estado" class="fm-select" (change)="filtrarEstado($event)">
+          <option value="">Todos</option>
+          <option value="BORRADOR">Borrador</option>
+          <option value="SUGERIDA">Sugerida</option>
+          <option value="APROBADA">Aprobada</option>
+          <option value="RECHAZADA">Rechazada</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="fm-card" *ngIf="visibles().length > 0">
+      <div class="fm-table-wrap">
+        <table class="fm-table">
+          <thead>
+            <tr>
+              <th scope="col" class="fm-num">#</th>
+              <th scope="col">Proveedor</th>
+              <th scope="col">Fecha</th>
+              <th scope="col" class="fm-num">Items</th>
+              <th scope="col" class="fm-num">Unidades</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Aprobada por</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let orden of visibles(); trackBy: trackOrden">
+              <td class="fm-num fm-mono">{{ orden.id }}</td>
+              <td>
+                <div>{{ orden.proveedorRazonSocial }}</div>
+                <div class="fm-xs fm-muted fm-mono">{{ orden.proveedorRuc }}</div>
+              </td>
+              <td class="fm-nowrap">{{ orden.fechaHora | fmDate: 'datetime' }}</td>
+              <td class="fm-num">{{ orden.totalItems }}</td>
+              <td class="fm-num">{{ orden.totalUnidades }}</td>
+              <td>
+                <span class="fm-badge" [ngClass]="claseEstado(orden.estado)">
+                  {{ ORDEN_ESTADO_LABELS[orden.estado] }}
+                </span>
+              </td>
+              <td class="ord-aprobador">{{ orden.aprobadoPorNombre || '---' }}</td>
+              <td class="fm-right">
+                <button type="button" class="fm-btn fm-btn--sm fm-btn--ghost" (click)="verDetalle(orden)">Detalle</button>
+                <button
+                  *ngIf="puedeResolver && orden.estado === 'SUGERIDA'"
+                  type="button"
+                  class="fm-btn fm-btn--sm fm-btn--primary"
+                  (click)="abrirResolver(orden)"
+                >
+                  Resolver
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <app-fm-empty
+      *ngIf="visibles().length === 0"
+      title="Sin ordenes que coincidan"
+      message="Puedes crear una orden a partir de las sugerencias del sistema."
+      action="Ver sugerencias"
+      (actionClick)="cambiarVista('SUGERENCIAS')"
+    ></app-fm-empty>
+  </ng-container>
+
+  <ng-container *ngIf="!loading() && vista() === 'SUGERENCIAS'">
+    <div class="fm-alert fm-alert--info">
+      <svg-icon name="alerta" [size]="18" />
+      <span>
+        Estas sugerencias responden a la regla RN06: cuando el stock vigente iguala o queda por debajo del minimo,
+        el sistema propone reponer hasta el maximo configurado.
+      </span>
+    </div>
+
+    <div class="fm-card" *ngIf="conSugerenciasPendientes().length > 0">
+      <div class="fm-card-header">
+        <h2 class="fm-card-title">Medicamentos por reponer</h2>
+        <button type="button" class="fm-btn fm-btn--sm fm-btn--secondary" (click)="seleccionarTodas()">
+          {{ seleccion().length === conSugerenciasPendientes().length ? 'Quitar todas' : 'Seleccionar todas' }}
+        </button>
+      </div>
+      <div class="fm-table-wrap">
+        <table class="fm-table">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Medicamento</th>
+              <th scope="col">Proveedor</th>
+              <th scope="col" class="fm-num">Stock</th>
+              <th scope="col" class="fm-num">Minimo</th>
+              <th scope="col" class="fm-num">Maximo</th>
+              <th scope="col" class="fm-num">Sugerido</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let sugerencia of conSugerenciasPendientes(); trackBy: trackSugerencia"
+              [class.ord-row--selected]="estaSeleccionada(sugerencia.medicamentoId)"
+            >
+              <td>
+                <input
+                  type="checkbox"
+                  class="fm-check"
+                  [checked]="estaSeleccionada(sugerencia.medicamentoId)"
+                  (change)="alternarSugerencia(sugerencia)"
+                  [attr.aria-label]="'Seleccionar ' + sugerencia.nombre"
+                />
+              </td>
+              <td>
+                <div>{{ sugerencia.nombre }}</div>
+                <div class="fm-xs fm-muted fm-mono">{{ sugerencia.codigo }}</div>
+              </td>
+              <td class="ord-proveedor">{{ sugerencia.proveedorRazonSocial }}</td>
+              <td class="fm-num">
+                <span class="fm-badge fm-badge--danger">{{ sugerencia.stockActual }}</span>
+              </td>
+              <td class="fm-num">{{ sugerencia.stockMinimo }}</td>
+              <td class="fm-num">{{ sugerencia.stockMaximo }}</td>
+              <td class="fm-num fm-strong">{{ sugerencia.cantidadSugerida }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <app-fm-empty
+      *ngIf="conSugerenciasPendientes().length === 0"
+      title="Sin sugerencias"
+      message="Ningun medicamento esta en o por debajo de su stock minimo."
+    ></app-fm-empty>
+  </ng-container>
+</div>
+
+<app-fm-modal *ngIf="modalSugerencia()" title="Crear orden desde sugerencias" [wide]="true" (closed)="cerrarSugerencia()">
+  <p class="fm-small fm-muted">
+    Se creara una orden en estado SUGERIDA con {{ seleccion().length }} item(s) y {{ totalSeleccionado() }} unidades en total.
+    Quedara pendiente de aprobacion del Jefe de Farmacia.
+  </p>
+  <form [formGroup]="observacionForm" (ngSubmit)="crearDesdeSugerencia()" novalidate>
+    <div class="fm-field">
+      <label class="fm-label" for="ord-observacion">Observacion</label>
+      <textarea id="ord-observacion" class="fm-textarea" formControlName="observacion" maxlength="300"></textarea>
+    </div>
+  </form>
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarSugerencia()">Cancelar</button>
+    <button
+      type="button"
+      class="fm-btn fm-btn--primary"
+      [disabled]="seleccion().length === 0 || guardando()"
+      (click)="crearDesdeSugerencia()"
+    >
+      {{ guardando() ? 'Creando...' : 'Crear orden' }}
+    </button>
+  </ng-container>
+</app-fm-modal>
+
+<app-fm-modal *ngIf="modalResolver() as orden" title="Resolver orden de compra" (closed)="cerrarResolver()">
+  <div class="fm-alert fm-alert--info">
+    <svg-icon name="orden" [size]="18" />
+    <span>
+      Orden #{{ orden.id }} de {{ orden.proveedorRazonSocial }} con {{ orden.totalItems }} item(s) y
+      {{ orden.totalUnidades }} unidades.
+    </span>
+  </div>
+  <form [formGroup]="observacionForm" (ngSubmit)="resolver(OrdenEstado.APROBADA)" novalidate>
+    <div class="fm-field">
+      <label class="fm-label" for="ord-resolver-obs">Observacion de la resolucion</label>
+      <textarea id="ord-resolver-obs" class="fm-textarea" formControlName="observacion" maxlength="300"></textarea>
+    </div>
+  </form>
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarResolver()">Cancelar</button>
+    <button type="button" class="fm-btn fm-btn--danger" [disabled]="guardando()" (click)="resolver(OrdenEstado.RECHAZADA)">
+      Rechazar
+    </button>
+    <button type="button" class="fm-btn fm-btn--success" [disabled]="guardando()" (click)="resolver(OrdenEstado.APROBADA)">
+      {{ guardando() ? 'Guardando...' : 'Aprobar' }}
+    </button>
+  </ng-container>
+</app-fm-modal>
+
+<app-fm-modal *ngIf="detalle() as orden" title="Detalle de la orden" [wide]="true" (closed)="cerrarDetalle()">
+  <dl class="ord-detalle">
+    <div><dt>Estado</dt><dd>{{ ORDEN_ESTADO_LABELS[orden.estado] }}</dd></div>
+    <div><dt>Proveedor</dt><dd>{{ orden.proveedorRazonSocial }}</dd></div>
+    <div><dt>RUC</dt><dd class="fm-mono">{{ orden.proveedorRuc }}</dd></div>
+    <div><dt>Creada</dt><dd>{{ orden.fechaHora | fmDate: 'datetime' }}</dd></div>
+    <div><dt>Creada por</dt><dd>{{ orden.usuarioNombre }}</dd></div>
+    <div><dt>Aprobada por</dt><dd>{{ orden.aprobadoPorNombre || '---' }}</dd></div>
+  </dl>
+  <p class="fm-small fm-muted" *ngIf="orden.observacion"><strong>Observacion:</strong> {{ orden.observacion }}</p>
+  <div class="fm-table-wrap">
+    <table class="fm-table">
+      <thead>
+        <tr>
+          <th scope="col">Medicamento</th>
+          <th scope="col" class="fm-num">Stock actual</th>
+          <th scope="col" class="fm-num">Cantidad</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let detalle of orden.detalles">
+          <td>
+            <div>{{ detalle.medicamentoNombre }}</div>
+            <div class="fm-xs fm-muted fm-mono">{{ detalle.medicamentoCodigo }}</div>
+          </td>
+          <td class="fm-num">{{ detalle.stockActual }}</td>
+          <td class="fm-num fm-strong">{{ detalle.cantidad }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarDetalle()">Cerrar</button>
+  </ng-container>
+</app-fm-modal>

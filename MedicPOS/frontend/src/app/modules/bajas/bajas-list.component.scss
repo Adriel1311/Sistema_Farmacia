@@ -1,0 +1,27 @@
+@use 'styles/design-tokens' as *;
+
+:host {
+  display: block;
+}
+
+.baj-observacion {
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: #{$bp-sm}) {
+  .fm-table {
+    min-width: 700px;
+  }
+
+  .fm-table th,
+  .fm-table td {
+    padding: $space-2 $space-3;
+  }
+
+  .baj-observacion {
+    max-width: 160px;
+  }
+}

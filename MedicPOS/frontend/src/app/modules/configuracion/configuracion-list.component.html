@@ -1,0 +1,187 @@
+<div class="fm-page">
+  <header class="fm-page-header">
+    <div>
+      <h1 class="fm-page-title">Configuracion</h1>
+      <p class="fm-page-subtitle">Parametros del sistema y semaforo de vencimiento</p>
+    </div>
+    <div class="fm-page-actions">
+      <button type="button" class="fm-btn fm-btn--ghost" (click)="refrescar()">
+        <svg-icon name="refresh" [size]="16" />
+        <span class="fm-hidden-mobile">Actualizar</span>
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="success()" class="fm-alert fm-alert--success" role="status">
+    <svg-icon name="success" [size]="18" />
+    <span class="fm-spacer">{{ success() }}</span>
+    <button type="button" class="fm-btn fm-btn--ghost fm-btn--sm" aria-label="Cerrar aviso" (click)="success.set('')">
+      <svg-icon name="close" [size]="14" />
+    </button>
+  </div>
+
+  <div *ngIf="error()" class="fm-alert fm-alert--error" role="alert">
+    <svg-icon name="error" [size]="18" />
+    <span class="fm-spacer">{{ error() }}</span>
+    <button type="button" class="fm-btn fm-btn--secondary fm-btn--sm" (click)="refrescar()">Reintentar</button>
+  </div>
+
+  <div class="fm-alert fm-alert--info" role="note">
+    <svg-icon name="configuracion" [size]="18" />
+    <span>
+      El semaforo de vencimiento (RN04) y los minimos y maximos de stock (RN06) se definen aqui. Cada cambio
+      queda registrado en el historial de auditoria con el usuario y la fecha correspondientes.
+    </span>
+  </div>
+
+  <div class="fm-card con-semaforo">
+    <div class="fm-card-header">
+      <h2 class="fm-card-title">Semaforo de vencimiento (RN04)</h2>
+      <span class="fm-muted fm-small">Parametros vigentes</span>
+    </div>
+    <div class="fm-card-body">
+      <app-fm-loading *ngIf="loading() && !semaforo()" text="Cargando configuracion..."></app-fm-loading>
+
+      <div class="con-semaforo__grid">
+        <div class="con-umbral con-umbral--rojo">
+          <span class="con-umbral__valor">{{ diasCritico() ?? '-' }}</span>
+          <span class="con-umbral__label">dias criticos</span>
+          <span class="fm-xs fm-muted">Rojo: vence en {{ diasCritico() ?? '-' }} dias o menos</span>
+        </div>
+        <div class="con-umbral con-umbral--ambar">
+          <span class="con-umbral__valor">{{ diasProximo() ?? '-' }}</span>
+          <span class="con-umbral__label">dias proximos</span>
+          <span class="fm-xs fm-muted">Ambar: entre {{ diasCritico() ?? '-' }} y {{ diasProximo() ?? '-' }} dias</span>
+        </div>
+      </div>
+
+      <ul class="con-leyenda">
+        <li class="con-leyenda__item con-leyenda__item--verde">
+          <span class="con-leyenda__dot" aria-hidden="true"></span>
+          Verde: mas de {{ diasProximo() ?? '-' }} dias para vencer
+        </li>
+        <li class="con-leyenda__item con-leyenda__item--ambar">
+          <span class="con-leyenda__dot" aria-hidden="true"></span>
+          Ambar: entre {{ diasCritico() ?? '-' }} y {{ diasProximo() ?? '-' }} dias
+        </li>
+        <li class="con-leyenda__item con-leyenda__item--rojo">
+          <span class="con-leyenda__dot" aria-hidden="true"></span>
+          Rojo: {{ diasCritico() ?? '-' }} dias o menos
+        </li>
+        <li class="con-leyenda__item con-leyenda__item--negro">
+          <span class="con-leyenda__dot" aria-hidden="true"></span>
+          Negro: lote ya vencido, no se dispensa (RN03)
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="fm-stat-grid">
+    <div class="fm-stat">
+      <span class="fm-stat__icon"><svg-icon name="configuracion" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ configuraciones().length }}</div>
+        <div class="fm-stat__label">Parametros</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--info">
+      <span class="fm-stat__icon"><svg-icon name="box" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ grupos().length }}</div>
+        <div class="fm-stat__label">Categorias</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--success">
+      <span class="fm-stat__icon"><svg-icon name="check" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ totalActivas() }}</div>
+        <div class="fm-stat__label">Activos</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--warning">
+      <span class="fm-stat__icon"><svg-icon name="close" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ totalInactivas() }}</div>
+        <div class="fm-stat__label">Inactivos</div>
+      </div>
+    </div>
+  </div>
+
+  <app-fm-loading *ngIf="loading() && configuraciones().length === 0" text="Cargando configuracion..."></app-fm-loading>
+
+  <app-fm-empty
+    *ngIf="!loading() && configuraciones().length === 0"
+    title="No hay configuraciones registradas"
+    message="El administrador de TI debe cargar los parametros del sistema."
+  ></app-fm-empty>
+
+  <div *ngFor="let grupo of grupos()" class="fm-card con-grupo">
+    <div class="fm-card-header">
+      <h2 class="fm-card-title">{{ grupo.categoria }}</h2>
+      <span class="fm-muted fm-small">{{ grupo.items.length }} parametro(s)</span>
+    </div>
+    <div class="fm-card-body fm-card-body--flush">
+      <div class="fm-table-wrap">
+        <table class="fm-table">
+          <thead>
+            <tr>
+              <th>Clave</th>
+              <th>Valor</th>
+              <th class="fm-hidden-mobile">Descripcion</th>
+              <th class="fm-hidden-mobile">Tipo de dato</th>
+              <th>Activo</th>
+              <th class="fm-hidden-mobile">Ultima modificacion</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of grupo.items; trackBy: trackByClave" [class.con-row--editado]="valorEditado(item) !== item.valor">
+              <td class="fm-mono fm-nowrap">{{ item.clave }}</td>
+              <td>
+                <input
+                  class="fm-input con-input"
+                  type="text"
+                  [value]="valorEditado(item)"
+                  [attr.aria-label]="'Valor de ' + item.clave"
+                  [disabled]="!item.activo || guardandoCategoria() !== ''"
+                  (input)="editar(item, $event)"
+                />
+              </td>
+              <td class="fm-hidden-mobile con-descripcion">{{ item.descripcion }}</td>
+              <td class="fm-hidden-mobile fm-mono fm-xs">{{ item.tipoDato }}</td>
+              <td>
+                <span
+                  class="fm-badge"
+                  [class.fm-badge--success]="item.activo"
+                  [class.fm-badge--neutral]="!item.activo"
+                >
+                  {{ item.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td class="fm-hidden-mobile fm-nowrap">
+                <div>{{ item.updatedAt | fmDate: 'datetime' }}</div>
+                <div class="fm-xs fm-muted">{{ item.updatedByNombre }}</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="fm-card-footer con-grupo__footer">
+      <span class="fm-xs fm-muted">
+        <ng-container *ngIf="hayCambios(grupo); else sinCambios">
+          {{ cantidadCambios(grupo) }} valor(es) modificado(s) en esta categoria.
+        </ng-container>
+        <ng-template #sinCambios>Edita un valor y pulsa Guardar para enviar la categoria completa.</ng-template>
+      </span>
+      <button
+        type="button"
+        class="fm-btn fm-btn--primary fm-btn--sm"
+        [disabled]="!hayCambios(grupo) || guardandoCategoria() !== ''"
+        (click)="guardarGrupo(grupo)"
+      >
+        <svg-icon name="check" [size]="14" />
+        {{ guardandoCategoria() === grupo.categoria ? 'Guardando...' : 'Guardar' }}
+      </button>
+    </div>
+  </div>
+</div>

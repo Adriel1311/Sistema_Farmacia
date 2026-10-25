@@ -1,0 +1,18 @@
+@use 'styles/design-tokens' as *;
+
+:host {
+  display: block;
+}
+
+:host {
+  @media (max-width: #{$bp-sm}) {
+    .fm-table {
+      min-width: 600px;
+    }
+
+    .fm-table th,
+    .fm-table td {
+      padding: $space-2 $space-3;
+    }
+  }
+}

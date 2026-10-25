@@ -1,0 +1,195 @@
+/* ============================================
+   DESIGN TOKENS - FARMAMED
+   Hospital Santa Maria del Socorro - Ica
+
+   Fuente: exportacion de Google Stitch
+   (stitch_farmamed_hospital_pharmacy_dashboard)
+   Todos los valores provienen del token set
+   Material Design 3 definido en DESIGN.md y en
+   el tailwind.config de cada code.html.
+   ============================================ */
+
+/* ---- Marca: escala construida sobre primary #1976D2 (Material Blue 700) ---- */
+$fm-primary-50: #e3f2fd;
+$fm-primary-100: #bbdefb;
+$fm-primary-200: #90caf9;
+$fm-primary-300: #64b5f6;
+$fm-primary-400: #42a5f5;
+$fm-primary-500: #2196f3;
+$fm-primary-600: #1976d2;
+$fm-primary-700: #1565c0;
+$fm-primary-800: #0d47a1;
+$fm-primary-900: #0a3d82;
+
+$color-primary: $fm-primary-600;
+$color-primary-light: $fm-primary-100;
+$color-primary-dark: $fm-primary-700;
+$color-primary-100: $fm-primary-100;
+$color-primary-200: $fm-primary-200;
+$color-primary-300: $fm-primary-300;
+$color-primary-400: $fm-primary-400;
+$color-primary-500: $fm-primary-500;
+$color-primary-600: $fm-primary-600;
+$color-primary-700: $fm-primary-700;
+$color-primary-800: $fm-primary-800;
+$color-primary-900: $fm-primary-900;
+
+/* Tokens M3 adicionales usados en el diseno */
+$color-primary-container: #1976d2;
+$color-on-primary: #ffffff;
+$color-primary-fixed: #bbdefb;
+$color-on-primary-fixed: #001c3a;
+$color-on-primary-fixed-variant: #0d47a1;
+
+$color-secondary: #2b5bb5;
+$color-secondary-fixed: #d9e2ff;
+$color-on-secondary-fixed: #001945;
+$color-on-secondary-container: #00337c;
+
+$color-tertiary: #006771;
+$color-tertiary-fixed: #92f1fe;
+$color-on-tertiary-fixed: #001f23;
+
+/* Acento celeste: chips, filtros y estados informativos */
+$fm-accent-100: #d9f0f7;
+$fm-accent-200: #b6e4f1;
+$fm-accent-300: #90e0f0;
+$fm-accent-400: #62cbe3;
+$fm-accent-500: #3aafcd;
+
+$color-accent-light: $fm-accent-100;
+$color-accent: $fm-accent-300;
+
+/* Base neutra: superficies M3 de tono calido */
+$color-base-50: #ffffff;
+$color-base-100: #fbf9f9;
+$color-base-200: #f5f3f3;
+$color-base-300: #efeded;
+$color-base-400: #e9e8e7;
+$color-base-500: #e3e2e2;
+$color-base-600: #c1c6d4;
+$color-base-700: #717783;
+$color-base-800: #414752;
+$color-base-900: #1b1c1c;
+
+/* Contenedores de superficie M3 */
+$surface-lowest: #ffffff;
+$surface-low: #f5f3f3;
+$surface-container: #efeded;
+$surface-high: #e9e8e7;
+$surface-highest: #e3e2e2;
+
+$color-outline: #717783;
+$color-outline-variant: #c1c6d4;
+
+/* Semantica */
+$color-success: #2e7d32;
+$color-success-light: #e8f5e9;
+$color-warning: #e65100;
+$color-warning-light: #fff3e0;
+$color-danger: #d32f2f;
+$color-danger-light: #ffebee;
+$color-info: #1976d2;
+$color-info-light: #bbdefb;
+
+$color-text-primary: $color-base-900;
+$color-text-secondary: $color-base-800;
+$color-text-tertiary: $color-base-700;
+$color-text-disabled: $color-base-600;
+$color-text-inverse: #ffffff;
+
+$color-bg-primary: $color-base-100;
+$color-bg-secondary: $surface-lowest;
+$color-bg-tertiary: $surface-low;
+$color-bg-inverse: $fm-primary-600;
+
+$color-border: $color-base-400;
+$color-border-strong: $color-base-600;
+
+/* Semaforo de vencimiento (RN04)
+   Valores exactos de los chips del code.html de Stitch */
+$semaforo-verde: #2e7d32;
+$semaforo-verde-bg: #e8f5e9;
+$semaforo-ambar: #e65100;
+$semaforo-ambar-bg: #fff3e0;
+$semaforo-rojo: #d32f2f;
+$semaforo-rojo-bg: #ffebee;
+$semaforo-negro: #212121;
+$semaforo-negro-bg: #212121;
+
+/* Espaciado: Stitch usa space-xs 4, sm 8, md 16, lg 24, xl 32 */
+$space-1: 0.25rem;
+$space-2: 0.5rem;
+$space-3: 0.75rem;
+$space-4: 1rem;
+$space-5: 1.25rem;
+$space-6: 1.5rem;
+$space-8: 2rem;
+$space-10: 2.5rem;
+$space-12: 3rem;
+
+/* Tipografia: Roboto Flex en toda la interfaz */
+$font-family-base: 'Roboto Flex', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$font-family-mono: 'Roboto Flex', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+
+$font-size-xs: 0.6875rem;
+$font-size-sm: 0.75rem;
+$font-size-base: 0.875rem;
+$font-size-lg: 1rem;
+$font-size-xl: 1.25rem;
+$font-size-2xl: 1.5rem;
+$font-size-3xl: 2rem;
+
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+$line-height-tight: 1.15;
+$line-height-normal: 1.43;
+$line-height-relaxed: 1.5;
+
+/* Radios segun borderRadius del tailwind.config de Stitch:
+   rounded-lg 4px, rounded-xl 8px, chips con pastilla completa */
+$radius-xs: 0.125rem;
+$radius-sm: 0.125rem;
+$radius-md: 0.25rem;
+$radius-lg: 0.25rem;
+$radius-xl: 0.5rem;
+$radius-full: 9999px;
+
+/* Elevacion: sombra neutra de baja opacidad sobre canvas calido */
+$shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+$shadow-shell: 0 1px 8px rgba(0, 0, 0, 0.04);
+$shadow-focus: 0 0 0 2px rgba(25, 118, 210, 0.35);
+
+/* Movimiento */
+$motion-fast: 120ms cubic-bezier(0.4, 0, 0.2, 1);
+$motion-base: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+$motion-slow: 260ms cubic-bezier(0.4, 0, 0.2, 1);
+
+$z-dropdown: 1000;
+$z-sticky: 1020;
+$z-fixed: 1030;
+$z-drawer: 1040;
+$z-overlay: 1050;
+$z-modal: 1060;
+$z-toast: 1070;
+
+/* Breakpoints: coinciden con los prefijos md/lg/xl de Stitch */
+$bp-sm: 640px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+$bp-xl: 1280px;
+
+/* Layout del shell segun master layout de Stitch */
+$sidebar-width: 256px;
+$sidebar-width-collapsed: 72px;
+$topbar-height: 64px;
+
+/* Ancho maximo del contenido: max-w-[1720px] del Stitch */
+$content-max-width: 1720px;
+$content-padding: 1.5rem;

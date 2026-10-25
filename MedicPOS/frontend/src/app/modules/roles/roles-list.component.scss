@@ -1,0 +1,79 @@
+@use 'styles/design-tokens' as *;
+
+:host {
+  display: block;
+}
+
+.rol-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: $space-4;
+}
+
+.rol-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.rol-card__icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: $radius-md;
+  background: $color-primary-light;
+  color: $color-primary-dark;
+}
+
+.rol-card__desc {
+  margin: 0 0 $space-4;
+  color: $color-text-secondary;
+  font-size: $font-size-sm;
+  min-height: 42px;
+}
+
+.rol-card__meta {
+  display: flex;
+  gap: $space-6;
+  margin: 0;
+}
+
+.rol-card__meta dd {
+  margin: 2px 0 0;
+}
+
+.rol-card__value {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  font-variant-numeric: tabular-nums;
+}
+
+.rol-card__value--sm {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+}
+
+.rol-total {
+  margin-top: $space-4;
+}
+
+.rol-total__value {
+  display: block;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: #{$bp-sm}) {
+  .rol-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rol-card__desc {
+    min-height: 0;
+  }
+
+  .rol-card__meta {
+    gap: $space-4;
+  }
+}

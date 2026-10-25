@@ -1,0 +1,264 @@
+<div class="fm-page">
+  <div class="fm-page-header">
+    <div>
+      <h1 class="fm-page-title">Inventario y lotes</h1>
+      <p class="fm-page-subtitle">
+        Todo medicamento ingresa por lote con fecha de vencimiento (RN01). El semaforo marca verde, ambar y rojo.
+      </p>
+    </div>
+    <div class="fm-page-actions">
+      <button
+        *ngIf="puedeRegistrar"
+        type="button"
+        class="fm-btn fm-btn--secondary"
+        [disabled]="sincronizando()"
+        (click)="sincronizarVencidos()"
+      >
+        <svg-icon name="refresh" [size]="16" />
+        {{ sincronizando() ? 'Sincronizando...' : 'Sincronizar vencidos' }}
+      </button>
+      <button *ngIf="puedeRegistrar" type="button" class="fm-btn fm-btn--primary" (click)="abrirModal()">
+        <svg-icon name="plus" [size]="16" />
+        Registrar ingreso de lote
+      </button>
+    </div>
+  </div>
+
+  <div class="fm-alert fm-alert--success" *ngIf="success()" role="status">
+    <svg-icon name="success" [size]="18" />
+    <span>{{ success() }}</span>
+  </div>
+
+  <div class="fm-alert fm-alert--error" *ngIf="error() && !loading()" role="alert">
+    <svg-icon name="error" [size]="18" />
+    <span>{{ error() }}</span>
+    <button type="button" class="fm-btn fm-btn--sm fm-btn--secondary inv-retry" (click)="refrescar()">Reintentar</button>
+  </div>
+
+  <div class="fm-stat-grid">
+    <div class="fm-stat">
+      <span class="fm-stat__icon"><svg-icon name="inventario" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ conteos().total }}</div>
+        <div class="fm-stat__label">Lotes</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--success">
+      <span class="fm-stat__icon"><svg-icon name="check" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ conteos().unidades }}</div>
+        <div class="fm-stat__label">Unidades vigentes</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--warning">
+      <span class="fm-stat__icon"><svg-icon name="clock" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ conteos().proximos }}</div>
+        <div class="fm-stat__label">Proximos a vencer</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--danger">
+      <span class="fm-stat__icon"><svg-icon name="warning" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ conteos().criticos + conteos().vencidos }}</div>
+        <div class="fm-stat__label">Criticos y vencidos</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fm-tabs" role="tablist" aria-label="Filtro rapido por estado de vencimiento">
+    <button
+      type="button"
+      class="fm-tab"
+      [class.fm-tab--active]="vista() === 'TODOS'"
+      (click)="cambiarVista('TODOS')"
+      role="tab"
+      aria-selected="vista() === 'TODOS'"
+    >
+      Todos
+    </button>
+    <button
+      type="button"
+      class="fm-tab"
+      [class.fm-tab--active]="vista() === 'PROXIMOS'"
+      (click)="cambiarVista('PROXIMOS')"
+      role="tab"
+      aria-selected="vista() === 'PROXIMOS'"
+    >
+      Proximos a vencer
+    </button>
+    <button
+      type="button"
+      class="fm-tab"
+      [class.fm-tab--active]="vista() === 'CRITICOS'"
+      (click)="cambiarVista('CRITICOS')"
+      role="tab"
+      aria-selected="vista() === 'CRITICOS'"
+    >
+      Criticos
+    </button>
+    <button
+      type="button"
+      class="fm-tab"
+      [class.fm-tab--active]="vista() === 'VENCIDOS'"
+      (click)="cambiarVista('VENCIDOS')"
+      role="tab"
+      aria-selected="vista() === 'VENCIDOS'"
+    >
+      Vencidos
+    </button>
+  </div>
+
+  <div class="fm-toolbar">
+    <div class="fm-field fm-toolbar__grow">
+      <label class="fm-label" for="inv-buscar">Buscar</label>
+      <input
+        id="inv-buscar"
+        class="fm-input"
+        type="search"
+        placeholder="Lote, medicamento o codigo"
+        [value]="texto()"
+        (input)="onTexto($event)"
+      />
+    </div>
+    <div class="fm-field">
+      <label class="fm-label" for="inv-medicamento">Medicamento</label>
+      <select id="inv-medicamento" class="fm-select" [value]="medicamentoFiltro() ?? ''" (change)="filtrarPorMedicamento($event)">
+        <option value="">Todos</option>
+        <option *ngFor="let medicamento of medicamentos()" [value]="medicamento.id">
+          {{ medicamento.codigo }} - {{ medicamento.nombre }}
+        </option>
+      </select>
+    </div>
+    <button type="button" class="fm-btn fm-btn--ghost fm-btn--sm" (click)="limpiarFiltros()">Limpiar</button>
+  </div>
+
+  <app-fm-loading *ngIf="loading()" text="Cargando inventario..."></app-fm-loading>
+
+  <div class="fm-card" *ngIf="!loading() && visibles().length > 0">
+    <div class="fm-table-wrap">
+      <table class="fm-table">
+        <thead>
+          <tr>
+            <th scope="col">Lote</th>
+            <th scope="col">Medicamento</th>
+            <th scope="col">Proveedor</th>
+            <th scope="col">Vencimiento</th>
+            <th scope="col">Semaforo</th>
+            <th scope="col" class="fm-num">Inicial</th>
+            <th scope="col" class="fm-num">Actual</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Etiqueta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let lote of visibles(); trackBy: trackByLote" [class.inv-row--negro]="lote.estadoVencimiento === 'NEGRO'">
+            <td class="fm-mono fm-strong">{{ lote.numeroLote }}</td>
+            <td>
+              <div>{{ lote.medicamentoNombre }}</div>
+              <div class="fm-xs fm-muted fm-mono">{{ lote.medicamentoCodigo }}</div>
+            </td>
+            <td class="inv-proveedor">{{ lote.proveedorRazonSocial || '---' }}</td>
+            <td class="fm-nowrap">
+              {{ lote.fechaVencimiento | fmDate }}
+              <div class="fm-xs fm-muted">Ingreso {{ lote.fechaIngreso | fmDate }}</div>
+            </td>
+            <td>
+              <app-fm-semaforo [estado]="lote.estadoVencimiento" [diasRestantes]="lote.diasRestantes" />
+            </td>
+            <td class="fm-num">{{ lote.cantidadInicial }}</td>
+            <td class="fm-num fm-strong">{{ lote.cantidadActual }}</td>
+            <td>
+              <span class="fm-badge" [class.fm-badge--success]="lote.estado === 'ACTIVO'" [class.fm-badge--danger]="lote.estado === 'VENCIDO'" [class.fm-badge--neutral]="lote.estado === 'BAJA'">
+                {{ lote.estado }}
+              </span>
+            </td>
+            <td>
+              <button type="button" class="fm-btn fm-btn--ghost fm-btn--sm fm-btn--icon" (click)="abrirCodigo(lote)" title="Etiqueta codigo de barras">
+                <svg-icon name="download" [size]="16" />
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <app-fm-empty
+    *ngIf="!loading() && visibles().length === 0"
+    title="No hay lotes que coincidan"
+    message="Ajusta los filtros o registra el ingreso de un lote nuevo."
+    [action]="puedeRegistrar ? 'Registrar ingreso' : ''"
+    (actionClick)="abrirModal()"
+  ></app-fm-empty>
+</div>
+
+<app-fm-modal *ngIf="modalAbierto()" title="Registrar ingreso de lote" (closed)="cerrarModal()">
+  <div class="fm-alert fm-alert--error" *ngIf="formError()" role="alert">
+    <svg-icon name="error" [size]="18" />
+    <span>{{ formError() }}</span>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+    <div class="fm-form-grid">
+      <div class="fm-field fm-field--full" [class.fm-field--invalid]="form.controls.medicamentoId.invalid && form.controls.medicamentoId.touched">
+        <label class="fm-label" for="lote-medicamento">Medicamento <span class="fm-label__required">*</span></label>
+        <select id="lote-medicamento" class="fm-select" formControlName="medicamentoId">
+          <option [ngValue]="0" disabled>Selecciona un medicamento</option>
+          <option *ngFor="let medicamento of medicamentos()" [ngValue]="medicamento.id">
+            {{ medicamento.codigo }} - {{ medicamento.nombre }}
+          </option>
+        </select>
+        <span class="fm-error" *ngIf="form.controls.medicamentoId.invalid && form.controls.medicamentoId.touched">
+          Selecciona el medicamento del lote.
+        </span>
+      </div>
+
+      <div class="fm-field" [class.fm-field--invalid]="form.controls.numeroLote.invalid && form.controls.numeroLote.touched">
+        <label class="fm-label" for="lote-numero">Numero de lote <span class="fm-label__required">*</span></label>
+        <input id="lote-numero" class="fm-input" type="text" formControlName="numeroLote" maxlength="30" />
+        <span class="fm-error" *ngIf="form.controls.numeroLote.invalid && form.controls.numeroLote.touched">
+          Ingresa el numero de lote del fabricante.
+        </span>
+      </div>
+
+      <div class="fm-field" [class.fm-field--invalid]="form.controls.cantidad.invalid && form.controls.cantidad.touched">
+        <label class="fm-label" for="lote-cantidad">Cantidad <span class="fm-label__required">*</span></label>
+        <input id="lote-cantidad" class="fm-input" type="number" formControlName="cantidad" min="1" />
+        <span class="fm-error" *ngIf="form.controls.cantidad.invalid && form.controls.cantidad.touched">
+          La cantidad debe ser mayor a cero.
+        </span>
+      </div>
+
+      <div class="fm-field" [class.fm-field--invalid]="form.controls.fechaIngreso.invalid && form.controls.fechaIngreso.touched">
+        <label class="fm-label" for="lote-ingreso">Fecha de ingreso <span class="fm-label__required">*</span></label>
+        <input id="lote-ingreso" class="fm-input" type="date" formControlName="fechaIngreso" />
+      </div>
+
+      <div class="fm-field" [class.fm-field--invalid]="form.controls.fechaVencimiento.invalid && form.controls.fechaVencimiento.touched">
+        <label class="fm-label" for="lote-vencimiento">Fecha de vencimiento <span class="fm-label__required">*</span></label>
+        <input id="lote-vencimiento" class="fm-input" type="date" formControlName="fechaVencimiento" />
+        <span class="fm-hint">Obligatoria: sin vencimiento no se puede registrar el lote (RN01).</span>
+      </div>
+
+      <div class="fm-field fm-field--full">
+        <label class="fm-label" for="lote-orden">Orden de compra (opcional)</label>
+        <input id="lote-orden" class="fm-input" type="number" formControlName="ordenCompraId" min="1" placeholder="ID de la orden" />
+      </div>
+    </div>
+  </form>
+
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarModal()">Cancelar</button>
+    <button type="button" class="fm-btn fm-btn--primary" [disabled]="guardando()" (click)="guardar()">
+      {{ guardando() ? 'Registrando...' : 'Registrar lote' }}
+    </button>
+  </ng-container>
+</app-fm-modal>
+
+<app-fm-modal *ngIf="loteCodigo() as lote" [title]="'Etiqueta del lote ' + lote.numeroLote" (closed)="cerrarCodigo()">
+  <app-codigo-barras tipo="lote" [id]="lote.id" [titulo]="'Codigo de barras del lote ' + lote.numeroLote" />
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarCodigo()">Cerrar</button>
+  </ng-container>
+</app-fm-modal>

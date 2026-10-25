@@ -1,0 +1,107 @@
+<div class="shell" [class.shell--collapsed]="isCollapsed()">
+  <div class="scrim" *ngIf="isMobile() && drawerOpen()" (click)="closeDrawer()"></div>
+
+  <aside class="sidebar" [class.sidebar--open]="drawerOpen()" aria-label="Navegacion principal">
+    <a class="sidebar__brand" [routerLink]="['/dashboard']">
+      <span class="brand__mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.5 20.5 3.5 13.5a5 5 0 0 1 7-7l7 7a5 5 0 0 1-7 7Z" />
+          <path d="m7 10 7 7" />
+        </svg>
+      </span>
+      <span class="sidebar__brand-text">
+        <span class="sidebar__brand-name">FarmaMed</span>
+        <span class="sidebar__brand-sub">Hosp. Santa Maria</span>
+      </span>
+    </a>
+
+    <div class="sidebar__unit" *ngIf="!isCollapsed()">
+      <span class="sidebar__unit-label">Unidad Farmaceutica</span>
+      <span class="sidebar__unit-value">Socorro Central #04</span>
+    </div>
+
+    <nav class="sidebar__nav">
+      <div class="sidebar__group" *ngFor="let group of groups()">
+        <span class="sidebar__group-label" *ngIf="!isCollapsed()">{{ group.label }}</span>
+        <span class="sidebar__group-rule" *ngIf="isCollapsed()"></span>
+        <a
+          *ngFor="let item of group.items"
+          class="sidebar__link"
+          [routerLink]="item.route"
+          routerLinkActive="sidebar__link--active"
+          [attr.title]="isCollapsed() ? item.label : null"
+        >
+          <svg-icon [name]="item.icon" [size]="20" />
+          <span class="sidebar__label" *ngIf="!isCollapsed()">{{ item.label }}</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar__footer" *ngIf="!isCollapsed()">
+      <svg-icon name="verificado" [size]="16" />
+      <span>Norma Sanitaria SIS-MED v2.4</span>
+    </div>
+  </aside>
+
+  <div class="shell__main">
+    <header class="topbar">
+      <button
+        *ngIf="isMobile()"
+        type="button"
+        class="topbar__icon-btn"
+        [attr.aria-expanded]="drawerOpen()"
+        aria-label="Abrir menu de navegacion"
+        (click)="toggleDrawer()"
+      >
+        <svg-icon [name]="drawerOpen() ? 'close' : 'menu'" [size]="22" />
+      </button>
+
+      <div class="topbar__breadcrumb" *ngIf="!isMobile()">
+        <span>Hospital Santa Maria del Socorro</span>
+        <svg-icon name="chevronRight" [size]="14" />
+        <span class="topbar__crumb-current">Servicio de Farmacia Central</span>
+      </div>
+
+      <label class="topbar__search" *ngIf="!isMobile()">
+        <svg-icon name="search" [size]="18" />
+        <input type="search" placeholder="Buscar lote, farmaco, DNI paciente..." />
+      </label>
+
+      <div class="topbar__spacer"></div>
+
+      <a class="topbar__icon-btn topbar__icon-btn--bell" routerLink="/alertas" aria-label="Alertas sanitary">
+        <svg-icon name="notificacion" [size]="22" />
+        <span class="topbar__dot" aria-hidden="true"></span>
+      </a>
+
+      <button
+        *ngIf="viewport() === 'desktop'"
+        type="button"
+        class="topbar__icon-btn topbar__icon-btn--collapse"
+        [attr.aria-label]="isCollapsed() ? 'Expandir menu' : 'Contraer menu'"
+        (click)="toggleCollapsed()"
+      >
+        <svg-icon [name]="'menu'" [size]="20" />
+      </button>
+
+      <div class="topbar__user" *ngIf="auth.currentUser$ | async as user">
+        <span class="topbar__avatar" aria-hidden="true">
+          {{ initials(user.fullName) }}
+          <span class="topbar__presence"></span>
+        </span>
+        <span class="topbar__user-info" *ngIf="!isMobile()">
+          <span class="topbar__user-name">{{ user.fullName }}</span>
+          <span class="topbar__user-role">{{ roleLabels[user.role] }}</span>
+        </span>
+      </div>
+
+      <button type="button" class="topbar__icon-btn" aria-label="Cerrar sesion" (click)="logout()">
+        <svg-icon name="logout" [size]="20" />
+      </button>
+    </header>
+
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

@@ -1,0 +1,355 @@
+<div class="fm-page">
+  <div class="fm-page-header">
+    <div>
+      <h1 class="fm-page-title">Reportes</h1>
+      <p class="fm-page-subtitle">Reportes de solo lectura: consumo, inventario, bajas y ordenes de compra.</p>
+    </div>
+    <div class="fm-page-actions">
+      <button type="button" class="fm-btn fm-btn--secondary" (click)="exportar('pdf')" [disabled]="descargando()">
+        <svg-icon name="download" [size]="16" />
+        PDF
+      </button>
+      <button type="button" class="fm-btn fm-btn--secondary" (click)="exportar('xlsx')" [disabled]="descargando()">
+        <svg-icon name="download" [size]="16" />
+        Excel
+      </button>
+      <button type="button" class="fm-btn fm-btn--secondary" (click)="refrescar()" [disabled]="loading()">
+        <svg-icon name="refresh" [size]="16" />
+        Actualizar
+      </button>
+    </div>
+  </div>
+
+  <div class="fm-alert fm-alert--error" *ngIf="error()" role="alert">
+    <svg-icon name="error" [size]="18" />
+    <span>{{ error() }}</span>
+  </div>
+
+  <div class="fm-tabs" role="tablist" aria-label="Tipo de reporte">
+    <button
+      type="button"
+      class="fm-tab"
+      [class.fm-tab--active]="tab() === 'INVENTARIO'"
+      (click)="cambiarTab('INVENTARIO')"
+      role="tab"
+      aria-selected="tab() === 'INVENTARIO'"
+    >
+      Inventario
+    </button>
+    <button
+      type="button"
+      class="fm-tab"
+      [class.fm-tab--active]="tab() === 'CONSUMO'"
+      (click)="cambiarTab('CONSUMO')"
+      role="tab"
+      aria-selected="tab() === 'CONSUMO'"
+    >
+      Consumo
+    </button>
+    <button
+      type="button"
+      class="fm-tab"
+      [class.fm-tab--active]="tab() === 'BAJAS'"
+      (click)="cambiarTab('BAJAS')"
+      role="tab"
+      aria-selected="tab() === 'BAJAS'"
+    >
+      Bajas
+    </button>
+    <button
+      type="button"
+      class="fm-tab"
+      [class.fm-tab--active]="tab() === 'ORDENES'"
+      (click)="cambiarTab('ORDENES')"
+      role="tab"
+      aria-selected="tab() === 'ORDENES'"
+    >
+      Ordenes de compra
+    </button>
+  </div>
+
+  <form class="fm-toolbar" [formGroup]="rango" (ngSubmit)="aplicarRango()" *ngIf="tab() !== 'INVENTARIO'">
+    <div class="fm-field">
+      <label class="fm-label" for="rep-desde">Desde</label>
+      <input id="rep-desde" class="fm-input" type="date" formControlName="desde" />
+    </div>
+    <div class="fm-field">
+      <label class="fm-label" for="rep-hasta">Hasta</label>
+      <input id="rep-hasta" class="fm-input" type="date" formControlName="hasta" />
+    </div>
+    <button type="submit" class="fm-btn fm-btn--primary fm-btn--sm">Aplicar</button>
+  </form>
+
+  <app-fm-loading *ngIf="loading()" text="Generando reporte..."></app-fm-loading>
+
+  <ng-container *ngIf="!loading() && tab() === 'INVENTARIO' && inventario() as data">
+    <div class="fm-stat-grid">
+      <div class="fm-stat">
+        <span class="fm-stat__icon"><svg-icon name="medicamento" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ data.totalMedicamentos }}</div>
+          <div class="fm-stat__label">Medicamentos</div>
+        </div>
+      </div>
+      <div class="fm-stat">
+        <span class="fm-stat__icon"><svg-icon name="inventario" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ data.totalLotes }}</div>
+          <div class="fm-stat__label">Lotes</div>
+        </div>
+      </div>
+      <div class="fm-stat fm-stat--success">
+        <span class="fm-stat__icon"><svg-icon name="check" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ data.totalUnidadesVigentes }}</div>
+          <div class="fm-stat__label">Unidades vigentes</div>
+        </div>
+      </div>
+      <div class="fm-stat fm-stat--danger">
+        <span class="fm-stat__icon"><svg-icon name="warning" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ data.totalUnidadesVencidas }}</div>
+          <div class="fm-stat__label">Unidades vencidas</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fm-card">
+      <div class="fm-table-wrap">
+        <table class="fm-table">
+          <thead>
+            <tr>
+              <th scope="col">Medicamento</th>
+              <th scope="col">Proveedor</th>
+              <th scope="col" class="fm-num">Vigente</th>
+              <th scope="col" class="fm-num">Vencido</th>
+              <th scope="col" class="fm-num">Minimo</th>
+              <th scope="col" class="fm-num">Maximo</th>
+              <th scope="col" class="fm-num">Lotes</th>
+              <th scope="col">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of data.items">
+              <td>
+                <div>{{ item.nombre }}</div>
+                <div class="fm-xs fm-muted fm-mono">{{ item.codigo }}</div>
+              </td>
+              <td class="rep-proveedor">{{ item.proveedorRazonSocial }}</td>
+              <td class="fm-num fm-strong">{{ item.stockVigente }}</td>
+              <td class="fm-num" [class.rep-vencido]="item.stockVencido > 0">{{ item.stockVencido }}</td>
+              <td class="fm-num">{{ item.stockMinimo }}</td>
+              <td class="fm-num">{{ item.stockMaximo }}</td>
+              <td class="fm-num">
+                {{ item.lotesActivos }}
+                <span class="fm-xs fm-muted" *ngIf="item.lotesVencidos > 0">+{{ item.lotesVencidos }} venc.</span>
+              </td>
+              <td>
+                <span class="fm-badge" [class.fm-badge--danger]="item.stockCritico" [class.fm-badge--success]="!item.stockCritico">
+                  {{ item.stockCritico ? 'Stock critico' : 'Normal' }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!loading() && tab() === 'CONSUMO' && consumo() as data">
+    <div class="fm-stat-grid">
+      <div class="fm-stat fm-stat--info">
+        <span class="fm-stat__icon"><svg-icon name="dispensacion" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ data.totalDispensaciones }}</div>
+          <div class="fm-stat__label">Dispensaciones</div>
+        </div>
+      </div>
+      <div class="fm-stat">
+        <span class="fm-stat__icon"><svg-icon name="medicamento" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ data.totalMedicamentos }}</div>
+          <div class="fm-stat__label">Medicamentos consumidos</div>
+        </div>
+      </div>
+      <div class="fm-stat">
+        <span class="fm-stat__icon"><svg-icon name="box" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ data.totalUnidades }}</div>
+          <div class="fm-stat__label">Unidades consumidas</div>
+        </div>
+      </div>
+      <div class="fm-stat">
+        <span class="fm-stat__icon"><svg-icon name="calendar" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ data.diasReporte }}</div>
+          <div class="fm-stat__label">Dias del rango</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fm-card">
+      <div class="fm-card-body--flush" *ngIf="data.items.length > 0">
+        <div class="fm-table-wrap">
+          <table class="fm-table">
+            <thead>
+              <tr>
+                <th scope="col">Medicamento</th>
+                <th scope="col" class="fm-num">Unidades</th>
+                <th scope="col" class="fm-num">Dispensaciones</th>
+                <th scope="col" class="fm-num">Promedio por dispensacion</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of data.items">
+                <td>
+                  <div>{{ item.nombre }}</div>
+                  <div class="fm-xs fm-muted fm-mono">{{ item.codigo }} - {{ item.unidadMedida }}</div>
+                </td>
+                <td class="fm-num fm-strong">{{ item.unidadesConsumidas }}</td>
+                <td class="fm-num">{{ item.dispensaciones }}</td>
+                <td class="fm-num">{{ item.promedioPorDispensacion }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="fm-card-body" *ngIf="data.items.length === 0">
+        <app-fm-empty title="Sin consumo en el rango" message="No hay dispensaciones en las fechas indicadas."></app-fm-empty>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!loading() && tab() === 'BAJAS' && bajas() as data">
+    <div class="fm-stat-grid">
+      <div class="fm-stat fm-stat--danger">
+        <span class="fm-stat__icon"><svg-icon name="baja" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ data.totalRegistros }}</div>
+          <div class="fm-stat__label">Bajas registradas</div>
+        </div>
+      </div>
+      <div class="fm-stat">
+        <span class="fm-stat__icon"><svg-icon name="box" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ data.totalUnidades }}</div>
+          <div class="fm-stat__label">Unidades dadas de baja</div>
+        </div>
+      </div>
+      <div class="fm-stat fm-stat--warning">
+        <span class="fm-stat__icon"><svg-icon name="warning" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ data.totalVencidoEnEstante }}</div>
+          <div class="fm-stat__label">Vencido en estante</div>
+        </div>
+      </div>
+      <div class="fm-stat">
+        <span class="fm-stat__icon"><svg-icon name="inventario" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ data.totalMerma + data.totalDevuelto }}</div>
+          <div class="fm-stat__label">Merma y devoluciones</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fm-card">
+      <div class="fm-table-wrap" *ngIf="data.bajas.length > 0">
+        <table class="fm-table">
+          <thead>
+            <tr>
+              <th scope="col">Fecha</th>
+              <th scope="col">Medicamento</th>
+              <th scope="col">Lote</th>
+              <th scope="col">Motivo</th>
+              <th scope="col" class="fm-num">Cantidad</th>
+              <th scope="col">Usuario</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let baja of data.bajas">
+              <td class="fm-nowrap">{{ baja.fechaHora | fmDate: 'datetime' }}</td>
+              <td>
+                <div>{{ baja.medicamentoNombre }}</div>
+                <div class="fm-xs fm-muted fm-mono">{{ baja.medicamentoCodigo }}</div>
+              </td>
+              <td class="fm-mono">
+                {{ baja.numeroLote }}
+                <div class="fm-xs fm-muted">vence {{ baja.fechaVencimientoLote | fmDate }}</div>
+              </td>
+              <td><span class="fm-badge fm-badge--neutral">{{ baja.motivo }}</span></td>
+              <td class="fm-num fm-strong">{{ baja.cantidad }}</td>
+              <td>{{ baja.usuarioNombre }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="fm-card-body" *ngIf="data.bajas.length === 0">
+        <app-fm-empty title="Sin bajas en el rango" message="No se registraron bajas en las fechas indicadas."></app-fm-empty>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!loading() && tab() === 'ORDENES' && ordenes() as data">
+    <div class="fm-stat-grid">
+      <div class="fm-stat">
+        <span class="fm-stat__icon"><svg-icon name="orden" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ data.totalOrdenes }}</div>
+          <div class="fm-stat__label">Ordenes</div>
+        </div>
+      </div>
+      <div class="fm-stat">
+        <span class="fm-stat__icon"><svg-icon name="box" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ data.totalUnidades }}</div>
+          <div class="fm-stat__label">Unidades ordenadas</div>
+        </div>
+      </div>
+      <div class="fm-stat fm-stat--success">
+        <span class="fm-stat__icon"><svg-icon name="check" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ data.totalAprobada }}</div>
+          <div class="fm-stat__label">Aprobadas</div>
+        </div>
+      </div>
+      <div class="fm-stat fm-stat--danger">
+        <span class="fm-stat__icon"><svg-icon name="error" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ data.totalRechazada }}</div>
+          <div class="fm-stat__label">Rechazadas</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fm-card">
+      <div class="fm-card-header">
+        <h2 class="fm-card-title">Resumen por proveedor</h2>
+      </div>
+      <div class="fm-table-wrap" *ngIf="data.resumenPorProveedor.length > 0; else ordenesVacio">
+        <table class="fm-table">
+          <thead>
+            <tr>
+              <th scope="col">Proveedor</th>
+              <th scope="col">RUC</th>
+              <th scope="col" class="fm-num">Ordenes</th>
+              <th scope="col" class="fm-num">Unidades</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let resumen of data.resumenPorProveedor">
+              <td>{{ resumen.razonSocial }}</td>
+              <td class="fm-mono">{{ resumen.ruc }}</td>
+              <td class="fm-num">{{ resumen.ordenes }}</td>
+              <td class="fm-num fm-strong">{{ resumen.unidades }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ng-template #ordenesVacio>
+        <div class="fm-card-body">
+          <app-fm-empty title="Sin ordenes en el rango" message="No se registraron ordenes en las fechas indicadas."></app-fm-empty>
+        </div>
+      </ng-template>
+    </div>
+  </ng-container>
+</div>

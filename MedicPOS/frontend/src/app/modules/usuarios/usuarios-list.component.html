@@ -1,0 +1,266 @@
+<div class="fm-page">
+  <header class="fm-page-header">
+    <div>
+      <h1 class="fm-page-title">Usuarios</h1>
+      <p class="fm-page-subtitle">Cuentas de acceso al sistema y sus roles</p>
+    </div>
+    <div class="fm-page-actions">
+      <button type="button" class="fm-btn fm-btn--ghost" (click)="refrescar()">
+        <svg-icon name="refresh" [size]="16" />
+        <span class="fm-hidden-mobile">Actualizar</span>
+      </button>
+      <button type="button" class="fm-btn fm-btn--primary" (click)="abrirAlta()">
+        <svg-icon name="plus" [size]="16" />
+        Nuevo usuario
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="success()" class="fm-alert fm-alert--success" role="status">
+    <svg-icon name="success" [size]="18" />
+    <span class="fm-spacer">{{ success() }}</span>
+    <button type="button" class="fm-btn fm-btn--ghost fm-btn--sm" aria-label="Cerrar aviso" (click)="success.set('')">
+      <svg-icon name="close" [size]="14" />
+    </button>
+  </div>
+
+  <div *ngIf="error()" class="fm-alert fm-alert--error" role="alert">
+    <svg-icon name="error" [size]="18" />
+    <span class="fm-spacer">{{ error() }}</span>
+    <button type="button" class="fm-btn fm-btn--secondary fm-btn--sm" (click)="refrescar()">Reintentar</button>
+  </div>
+
+  <div class="fm-card">
+    <div class="fm-card-header">
+      <h2 class="fm-card-title">Listado de usuarios</h2>
+      <span class="fm-muted fm-small">{{ usuarios().length }} usuario(s)</span>
+    </div>
+    <div class="fm-card-body fm-card-body--flush">
+      <app-fm-loading *ngIf="loading()" text="Cargando usuarios..."></app-fm-loading>
+
+      <app-fm-empty
+        *ngIf="!loading() && usuarios().length === 0"
+        title="Aun no hay usuarios registrados"
+        message="Crea la primera cuenta de acceso al sistema."
+        action="Crear usuario"
+        (actionClick)="abrirAlta()"
+      ></app-fm-empty>
+
+      <div *ngIf="!loading() && usuarios().length > 0" class="fm-table-wrap">
+        <table class="fm-table">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th class="fm-hidden-mobile">Nombres</th>
+              <th class="fm-hidden-mobile">Apellidos</th>
+              <th class="fm-hidden-mobile">Correo</th>
+              <th>Rol</th>
+              <th class="fm-nowrap">Ultimo acceso</th>
+              <th>Estado</th>
+              <th class="fm-right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let usuario of usuarios(); trackBy: trackById">
+              <td>
+                <span class="fm-row">
+                  <svg-icon name="user" [size]="16" />
+                  <span class="fm-mono fm-strong">{{ usuario.usuario }}</span>
+                </span>
+              </td>
+              <td class="fm-hidden-mobile">{{ usuario.nombres }}</td>
+              <td class="fm-hidden-mobile">{{ usuario.apellidos }}</td>
+              <td class="fm-hidden-mobile usu-mail" [title]="usuario.correo">{{ usuario.correo }}</td>
+              <td><span class="fm-badge fm-badge--info">{{ usuario.rolNombre }}</span></td>
+              <td class="fm-nowrap">
+                <span *ngIf="usuario.ultimoAcceso; else nuncaAcceso">{{ usuario.ultimoAcceso | fmDate: 'datetime' }}</span>
+                <ng-template #nuncaAcceso><span class="fm-muted">Nunca</span></ng-template>
+              </td>
+              <td>
+                <span
+                  class="fm-badge"
+                  [class.fm-badge--success]="usuario.activo"
+                  [class.fm-badge--neutral]="!usuario.activo"
+                >
+                  {{ usuario.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td class="fm-right fm-nowrap">
+                <button type="button" class="fm-btn fm-btn--ghost fm-btn--sm" (click)="abrirEdicion(usuario)">
+                  <svg-icon name="configuracion" [size]="14" />
+                  Editar
+                </button>
+                <button type="button" class="fm-btn fm-btn--ghost fm-btn--sm" (click)="abrirPassword(usuario)">
+                  <svg-icon name="user" [size]="14" />
+                  Contrasena
+                </button>
+                <button type="button" class="fm-btn fm-btn--ghost fm-btn--sm" (click)="pedirToggle(usuario)">
+                  <svg-icon [name]="usuario.activo ? 'close' : 'check'" [size]="14" />
+                  {{ usuario.activo ? 'Desactivar' : 'Activar' }}
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-fm-modal *ngIf="modalAbierto()" [title]="tituloModal()" (closed)="cerrarModal()">
+  <form id="usu-form" [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+    <div *ngIf="formError()" class="fm-alert fm-alert--error" role="alert">
+      <svg-icon name="error" [size]="18" />
+      <span>{{ formError() }}</span>
+    </div>
+
+    <div class="fm-form-grid">
+      <div *ngIf="modo() === 'alta'" class="fm-field">
+        <label class="fm-label" for="usu-usuario">Usuario <span class="fm-label__required">*</span></label>
+        <input id="usu-usuario" class="fm-input fm-mono" type="text" formControlName="usuario" placeholder="jperez" />
+        <span *ngIf="form.controls.usuario.touched && form.controls.usuario.invalid" class="fm-error">
+          Solo letras, numeros y guion bajo (obligatorio).
+        </span>
+      </div>
+
+      <div [class.fm-field--full]="modo() === 'edicion'" class="fm-field">
+        <label class="fm-label" for="usu-rol">Rol <span class="fm-label__required">*</span></label>
+        <select id="usu-rol" class="fm-select" formControlName="rolId">
+          <option [ngValue]="0">Selecciona un rol</option>
+          <option *ngFor="let rol of roles()" [ngValue]="rol.id">{{ rol.nombre }}</option>
+        </select>
+        <span *ngIf="form.controls.rolId.touched && form.controls.rolId.invalid" class="fm-error">
+          Selecciona el rol del usuario.
+        </span>
+      </div>
+
+      <div class="fm-field">
+        <label class="fm-label" for="usu-nombres">Nombres <span class="fm-label__required">*</span></label>
+        <input id="usu-nombres" class="fm-input" type="text" formControlName="nombres" placeholder="Juan" />
+        <span *ngIf="form.controls.nombres.touched && form.controls.nombres.invalid" class="fm-error">
+          Ingresa los nombres del usuario.
+        </span>
+      </div>
+
+      <div class="fm-field">
+        <label class="fm-label" for="usu-apellidos">Apellidos <span class="fm-label__required">*</span></label>
+        <input id="usu-apellidos" class="fm-input" type="text" formControlName="apellidos" placeholder="Perez Rojas" />
+        <span *ngIf="form.controls.apellidos.touched && form.controls.apellidos.invalid" class="fm-error">
+          Ingresa los apellidos del usuario.
+        </span>
+      </div>
+
+      <div class="fm-field fm-field--full">
+        <label class="fm-label" for="usu-correo">Correo <span class="fm-label__required">*</span></label>
+        <input id="usu-correo" class="fm-input" type="email" formControlName="correo" placeholder="jperez@farmamed.org" />
+        <span *ngIf="form.controls.correo.touched && form.controls.correo.invalid" class="fm-error">
+          Ingresa un correo valido.
+        </span>
+      </div>
+
+      <div *ngIf="modo() === 'alta'" class="fm-field fm-field--full">
+        <label class="fm-label" for="usu-password">Contrasena <span class="fm-label__required">*</span></label>
+        <input id="usu-password" class="fm-input" type="password" formControlName="password" autocomplete="new-password" />
+        <span *ngIf="form.controls.password.touched && form.controls.password.invalid" class="fm-error">
+          La contrasena debe tener al menos 8 caracteres.
+        </span>
+        <span class="fm-hint">La contrasena se cambia desde el boton Contrasena del listado.</span>
+      </div>
+    </div>
+  </form>
+
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarModal()">Cancelar</button>
+    <button type="submit" form="usu-form" class="fm-btn fm-btn--primary" [disabled]="guardando()">
+      {{ guardando() ? 'Guardando...' : 'Guardar' }}
+    </button>
+  </ng-container>
+</app-fm-modal>
+
+<app-fm-modal
+  *ngIf="passwordModalAbierto()"
+  [title]="'Cambiar contrasena'"
+  (closed)="cerrarPassword()"
+>
+  <form id="usu-pass-form" [formGroup]="passwordForm" (ngSubmit)="guardarPassword()" novalidate>
+    <div *ngIf="passwordError()" class="fm-alert fm-alert--error" role="alert">
+      <svg-icon name="error" [size]="18" />
+      <span>{{ passwordError() }}</span>
+    </div>
+
+    <p class="fm-muted fm-small">
+      Usuario: <span class="fm-mono fm-strong">{{ passwordObjetivo()?.usuario }}</span>
+    </p>
+
+    <div class="fm-field">
+      <label class="fm-label" for="pass-actual">Contrasena actual <span class="fm-label__required">*</span></label>
+      <input
+        id="pass-actual"
+        class="fm-input"
+        type="password"
+        formControlName="passwordActual"
+        autocomplete="current-password"
+      />
+      <span *ngIf="passwordForm.controls.passwordActual.touched && passwordForm.controls.passwordActual.invalid" class="fm-error">
+        Ingresa tu contrasena actual.
+      </span>
+    </div>
+
+    <div class="fm-field">
+      <label class="fm-label" for="pass-nuevo">Contrasena nueva <span class="fm-label__required">*</span></label>
+      <input
+        id="pass-nuevo"
+        class="fm-input"
+        type="password"
+        formControlName="passwordNuevo"
+        autocomplete="new-password"
+      />
+      <span *ngIf="passwordForm.controls.passwordNuevo.touched && passwordForm.controls.passwordNuevo.invalid" class="fm-error">
+        La contrasena nueva debe tener al menos 8 caracteres.
+      </span>
+    </div>
+
+    <div class="fm-field">
+      <label class="fm-label" for="pass-repetir">Repetir contrasena <span class="fm-label__required">*</span></label>
+      <input
+        id="pass-repetir"
+        class="fm-input"
+        type="password"
+        formControlName="repetirPassword"
+        autocomplete="new-password"
+      />
+      <span
+        *ngIf="passwordForm.controls.repetirPassword.touched && passwordForm.hasError('passwordsNoCoinciden')"
+        class="fm-error"
+      >
+        Las contrasenas no coinciden.
+      </span>
+      <span
+        *ngIf="passwordForm.controls.repetirPassword.touched && passwordForm.controls.repetirPassword.invalid && !passwordForm.hasError('passwordsNoCoinciden')"
+        class="fm-error"
+      >
+        Repite la contrasena nueva.
+      </span>
+    </div>
+  </form>
+
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarPassword()">Cancelar</button>
+    <button type="submit" form="usu-pass-form" class="fm-btn fm-btn--primary" [disabled]="guardando()">
+      {{ guardando() ? 'Guardando...' : 'Cambiar contrasena' }}
+    </button>
+  </ng-container>
+</app-fm-modal>
+
+<app-fm-confirm
+  *ngIf="objetivo() as usuario"
+  [title]="usuario.activo ? 'Desactivar usuario' : 'Activar usuario'"
+  [message]="
+    usuario.activo
+      ? 'El usuario ' + usuario.usuario + ' no podra iniciar sesion mientras este inactivo.'
+      : 'El usuario ' + usuario.usuario + ' podra volver a iniciar sesion.'
+  "
+  [confirmText]="usuario.activo ? 'Desactivar' : 'Activar'"
+  (accepted)="confirmarToggle()"
+  (cancelled)="cancelarToggle()"
+></app-fm-confirm>

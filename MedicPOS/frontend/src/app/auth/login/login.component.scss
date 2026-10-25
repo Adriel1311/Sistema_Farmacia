@@ -1,0 +1,250 @@
+@use '../../../styles/design-tokens' as *;
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: $space-4;
+  background: $color-bg-primary;
+}
+
+.login__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 384px;
+}
+
+.login__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: $space-6;
+  background: $color-bg-secondary;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-md;
+  overflow: hidden;
+
+  @media (min-width: 480px) {
+    padding: $space-8;
+  }
+}
+
+.login__accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: $color-primary;
+}
+
+.login__brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: $space-2 0 $space-6;
+}
+
+.login__mark {
+  display: grid;
+  place-items: center;
+  margin-bottom: $space-3;
+  color: $color-primary;
+}
+
+.login__title {
+  margin: 0;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  letter-spacing: -0.01em;
+  color: $color-primary;
+}
+
+.login__subtitle {
+  margin: 2px 0 0;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+}
+
+.login__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: $space-3;
+  padding: 4px $space-3;
+  border-radius: $radius-full;
+  background: $color-secondary-fixed;
+  color: $color-on-secondary-fixed;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.login__control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: $radius-md;
+  background: $surface-low;
+  box-shadow: $shadow-xs;
+  transition: background-color $motion-fast, box-shadow $motion-fast;
+
+  &:focus-within {
+    background: $color-bg-secondary;
+    box-shadow: $shadow-focus;
+  }
+}
+
+.login__control--invalid {
+  background: $color-bg-secondary;
+  box-shadow: inset 0 0 0 1px $color-danger;
+}
+
+.login__control-icon {
+  position: absolute;
+  left: $space-3;
+  color: $color-text-secondary;
+  pointer-events: none;
+}
+
+.login__input {
+  width: 100%;
+  padding: $space-3 $space-3 $space-3 40px;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  outline: none;
+
+  &::placeholder { color: $color-outline; }
+}
+
+.login__input--pad { padding-right: 44px; }
+
+.login__control-toggle {
+  position: absolute;
+  right: $space-2;
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  border: 0;
+  border-radius: $radius-full;
+  background: transparent;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: background-color $motion-fast, color $motion-fast;
+
+  &:hover {
+    background: $surface-container;
+    color: $color-primary;
+  }
+}
+
+.login__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-3;
+  padding: $space-1 0;
+  margin-bottom: $space-2;
+}
+
+.login__link {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-primary;
+  cursor: pointer;
+
+  &:hover { text-decoration: underline; }
+}
+
+.login__submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  width: 100%;
+  margin-top: $space-2;
+  padding: $space-3 $space-4;
+  border: 0;
+  border-radius: $radius-md;
+  background: $color-primary;
+  color: $color-text-inverse;
+  font: inherit;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  box-shadow: $shadow-md;
+  transition: background-color $motion-fast, box-shadow $motion-fast, transform $motion-fast;
+
+  &:hover:not(:disabled) {
+    background: $color-primary-container;
+    box-shadow: $shadow-lg;
+  }
+
+  &:active:not(:disabled) {
+    box-shadow: $shadow-sm;
+    transform: translateY(2px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.login__caption {
+  margin: $space-6 0 0;
+  padding-top: $space-4;
+  border-top: 1px solid $color-border;
+  text-align: center;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.login__compliance {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: $space-4;
+  text-align: center;
+  color: $color-outline;
+}
+
+.login__secure {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: $font-size-xs;
+}
+
+.login__version {
+  letter-spacing: 0.0625rem;
+  font-weight: $font-weight-medium;
+}
+
+.login__dept {
+  margin: 0;
+  font-size: $font-size-xs;
+  color: $color-outline;
+}

@@ -1,0 +1,143 @@
+<div class="fm-page">
+  <header class="fm-page-header">
+    <div>
+      <h1 class="fm-page-title">Pacientes</h1>
+      <p class="fm-page-subtitle">Directorio de pacientes atendidos en la farmacia</p>
+    </div>
+    <div class="fm-page-actions">
+      <button type="button" class="fm-btn fm-btn--ghost" (click)="refrescar()">
+        <svg-icon name="refresh" [size]="16" />
+        <span class="fm-hidden-mobile">Actualizar</span>
+      </button>
+      <button type="button" class="fm-btn fm-btn--primary" (click)="abrirAlta()">
+        <svg-icon name="plus" [size]="16" />
+        Nuevo paciente
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="success()" class="fm-alert fm-alert--success" role="status">
+    <svg-icon name="success" [size]="18" />
+    <span class="fm-spacer">{{ success() }}</span>
+    <button type="button" class="fm-btn fm-btn--ghost fm-btn--sm" aria-label="Cerrar aviso" (click)="success.set('')">
+      <svg-icon name="close" [size]="14" />
+    </button>
+  </div>
+
+  <div *ngIf="error()" class="fm-alert fm-alert--error" role="alert">
+    <svg-icon name="error" [size]="18" />
+    <span class="fm-spacer">{{ error() }}</span>
+    <button type="button" class="fm-btn fm-btn--secondary fm-btn--sm" (click)="refrescar()">Reintentar</button>
+  </div>
+
+  <div class="fm-toolbar">
+    <div class="fm-field fm-toolbar__grow">
+      <label class="fm-label" for="pac-busqueda">Buscar</label>
+      <input
+        id="pac-busqueda"
+        class="fm-input"
+        type="search"
+        placeholder="DNI, nombres o apellidos"
+        [formControl]="searchControl"
+      />
+    </div>
+    <div class="fm-field">
+      <span class="fm-label">{{ pacientes().length }} paciente(s)</span>
+    </div>
+  </div>
+
+  <div class="fm-card">
+    <div class="fm-card-header">
+      <h2 class="fm-card-title">Listado de pacientes</h2>
+      <span class="fm-muted fm-small">{{ pacientes().length }} registro(s)</span>
+    </div>
+    <div class="fm-card-body fm-card-body--flush">
+      <app-fm-loading *ngIf="loading()" text="Cargando pacientes..."></app-fm-loading>
+
+      <app-fm-empty
+        *ngIf="!loading() && pacientes().length === 0"
+        title="Aun no hay pacientes registrados"
+        message="Registra al paciente antes de emitir una receta medica."
+        action="Registrar paciente"
+        (actionClick)="abrirAlta()"
+      ></app-fm-empty>
+
+      <div *ngIf="!loading() && pacientes().length > 0" class="fm-table-wrap">
+        <table class="fm-table">
+          <thead>
+            <tr>
+              <th>DNI</th>
+              <th>Nombres</th>
+              <th class="fm-hidden-mobile">Apellidos</th>
+              <th>Nombre completo</th>
+              <th>Estado</th>
+              <th class="fm-num">Fecha de registro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let paciente of pacientes(); trackBy: trackById">
+              <td class="fm-mono fm-nowrap">{{ paciente.dni }}</td>
+              <td>{{ paciente.nombres }}</td>
+              <td class="fm-hidden-mobile">{{ paciente.apellidos }}</td>
+              <td class="fm-strong">{{ paciente.fullName }}</td>
+              <td>
+                <span
+                  class="fm-badge"
+                  [class.fm-badge--success]="paciente.activo"
+                  [class.fm-badge--neutral]="!paciente.activo"
+                >
+                  {{ paciente.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td class="fm-num fm-nowrap">{{ paciente.createdAt | fmDate: 'date' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-fm-modal *ngIf="modalAbierto()" title="Nuevo paciente" (closed)="cerrarModal()">
+  <form id="pac-form" [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+    <div *ngIf="formError()" class="fm-alert fm-alert--error" role="alert">
+      <svg-icon name="error" [size]="18" />
+      <span>{{ formError() }}</span>
+    </div>
+
+    <div class="fm-form-grid">
+      <div class="fm-field">
+        <label class="fm-label" for="pac-dni">DNI <span class="fm-label__required">*</span></label>
+        <input id="pac-dni" class="fm-input fm-mono" type="text" inputmode="numeric" formControlName="dni" placeholder="12345678" />
+        <span *ngIf="form.controls.dni.touched && form.controls.dni.invalid" class="fm-error">
+          El DNI debe tener exactamente 8 digitos.
+        </span>
+      </div>
+
+      <div class="fm-field"></div>
+
+      <div class="fm-field">
+        <label class="fm-label" for="pac-nombres">Nombres <span class="fm-label__required">*</span></label>
+        <input id="pac-nombres" class="fm-input" type="text" formControlName="nombres" placeholder="Maria" />
+        <span *ngIf="form.controls.nombres.touched && form.controls.nombres.invalid" class="fm-error">
+          Ingresa los nombres del paciente.
+        </span>
+      </div>
+
+      <div class="fm-field">
+        <label class="fm-label" for="pac-apellidos">Apellidos <span class="fm-label__required">*</span></label>
+        <input id="pac-apellidos" class="fm-input" type="text" formControlName="apellidos" placeholder="Quispe Ramirez" />
+        <span *ngIf="form.controls.apellidos.touched && form.controls.apellidos.invalid" class="fm-error">
+          Ingresa los apellidos del paciente.
+        </span>
+      </div>
+    </div>
+  </form>
+
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarModal()">Cancelar</button>
+    <button type="submit" form="pac-form" class="fm-btn fm-btn--primary" [disabled]="guardando()">
+      {{ guardando() ? 'Guardando...' : 'Registrar' }}
+    </button>
+  </ng-container>
+</app-fm-modal>

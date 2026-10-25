@@ -1,0 +1,36 @@
+@use 'styles/design-tokens' as *;
+
+.rep-tabs {
+  gap: $space-2;
+  margin-bottom: $space-4;
+
+  .fm-btn {
+    border: 1px solid $color-border-strong;
+    background: $color-bg-secondary;
+    color: $color-text-secondary;
+
+    &:hover { background: $color-bg-tertiary; }
+  }
+}
+
+.rep-tab--active {
+  background: $color-primary-light !important;
+  border-color: $color-primary !important;
+  color: $color-primary-dark !important;
+}
+
+.rep-proveedor {
+  max-width: 190px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rep-vencido {
+  color: $color-danger;
+  font-weight: $font-weight-semibold;
+}
+
+.fm-stat--warning {
+  .fm-stat__icon { color: $color-warning; }
+}

@@ -1,0 +1,182 @@
+<div class="fm-page">
+  <header class="fm-page-header">
+    <div>
+      <h1 class="fm-page-title">Recetas medicas</h1>
+      <p class="fm-page-subtitle">Recetas registradas y su estado de dispensacion</p>
+    </div>
+    <div class="fm-page-actions">
+      <button type="button" class="fm-btn fm-btn--ghost" (click)="refrescar()">
+        <svg-icon name="refresh" [size]="16" />
+        <span class="fm-hidden-mobile">Actualizar</span>
+      </button>
+      <button *ngIf="puedeCrear" type="button" class="fm-btn fm-btn--primary" (click)="abrirAlta()">
+        <svg-icon name="plus" [size]="16" />
+        Nueva receta
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="success()" class="fm-alert fm-alert--success" role="status">
+    <svg-icon name="success" [size]="18" />
+    <span class="fm-spacer">{{ success() }}</span>
+    <button type="button" class="fm-btn fm-btn--ghost fm-btn--sm" aria-label="Cerrar aviso" (click)="success.set('')">
+      <svg-icon name="close" [size]="14" />
+    </button>
+  </div>
+
+  <div *ngIf="error()" class="fm-alert fm-alert--error" role="alert">
+    <svg-icon name="error" [size]="18" />
+    <span class="fm-spacer">{{ error() }}</span>
+    <button type="button" class="fm-btn fm-btn--secondary fm-btn--sm" (click)="refrescar()">Reintentar</button>
+  </div>
+
+  <div class="fm-toolbar">
+    <div class="fm-field">
+      <label class="fm-label" for="rec-tipo">Tipo</label>
+      <select #filtroTipo id="rec-tipo" class="fm-select" [value]="tipoFiltro()" (change)="cambiarTipoFiltro(filtroTipo.value)">
+        <option value="">Todos</option>
+        <option *ngFor="let tipo of tipos" [value]="tipo">{{ tipoLabels[tipo] }}</option>
+      </select>
+    </div>
+    <div class="fm-field">
+      <label class="fm-label" for="rec-desde">Desde</label>
+      <input #desdeInput id="rec-desde" class="fm-input" type="date" [value]="desdeFiltro()" (change)="cambiarDesde(desdeInput.value)" />
+    </div>
+    <div class="fm-field">
+      <label class="fm-label" for="rec-hasta">Hasta</label>
+      <input #hastaInput id="rec-hasta" class="fm-input" type="date" [value]="hastaFiltro()" (change)="cambiarHasta(hastaInput.value)" />
+    </div>
+    <button type="button" class="fm-btn fm-btn--ghost" (click)="limpiarFiltros()">
+      <svg-icon name="close" [size]="16" />
+      Limpiar
+    </button>
+  </div>
+
+  <div class="fm-card">
+    <div class="fm-card-header">
+      <h2 class="fm-card-title">Listado de recetas</h2>
+      <span class="fm-muted fm-small">{{ recetas().length }} registro(s)</span>
+    </div>
+    <div class="fm-card-body fm-card-body--flush">
+      <app-fm-loading *ngIf="loading()" text="Cargando recetas..."></app-fm-loading>
+
+      <app-fm-empty
+        *ngIf="!loading() && recetas().length === 0"
+        title="No hay recetas para mostrar"
+        message="Ajusta los filtros o registra una nueva receta medica."
+        [action]="puedeCrear ? 'Registrar receta' : ''"
+        (actionClick)="abrirAlta()"
+      ></app-fm-empty>
+
+      <div *ngIf="!loading() && recetas().length > 0" class="fm-table-wrap">
+        <table class="fm-table">
+          <thead>
+            <tr>
+              <th>N. receta</th>
+              <th>Paciente</th>
+              <th class="fm-hidden-mobile">Medico</th>
+              <th>Tipo</th>
+              <th class="fm-nowrap">Fecha</th>
+              <th>Dispensacion</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let receta of recetas(); trackBy: trackById">
+              <td class="fm-mono fm-nowrap fm-strong">{{ receta.numeroReceta }}</td>
+              <td>
+                <div class="fm-mono fm-xs">{{ receta.pacienteDni }}</div>
+                <div>{{ receta.pacienteNombreCompleto }}</div>
+              </td>
+              <td class="fm-hidden-mobile">{{ receta.medico }}</td>
+              <td>
+                <span class="fm-badge" [ngClass]="tipoBadge(receta.tipoReceta)">
+                  {{ tipoLabels[receta.tipoReceta] }}
+                </span>
+              </td>
+              <td class="fm-nowrap">{{ receta.fechaReceta | fmDate: 'date' }}</td>
+              <td>
+                <span
+                  class="fm-badge"
+                  [class.fm-badge--success]="receta.tieneDispensacion"
+                  [class.fm-badge--warning]="!receta.tieneDispensacion"
+                >
+                  {{ receta.tieneDispensacion ? 'Dispensada' : 'Pendiente' }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-fm-modal *ngIf="modalAbierto()" title="Nueva receta medica" (closed)="cerrarModal()">
+  <form id="rec-form" [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+    <div *ngIf="formError()" class="fm-alert fm-alert--error" role="alert">
+      <svg-icon name="error" [size]="18" />
+      <span>{{ formError() }}</span>
+    </div>
+
+    <div class="fm-form-grid">
+      <div class="fm-field fm-field--full">
+        <label class="fm-label" for="rec-paciente">Paciente <span class="fm-label__required">*</span></label>
+        <select id="rec-paciente" class="fm-select" formControlName="pacienteId">
+          <option [ngValue]="0">Selecciona un paciente</option>
+          <option *ngFor="let paciente of pacientes()" [ngValue]="paciente.id">
+            {{ paciente.dni }} - {{ paciente.fullName }}
+          </option>
+        </select>
+        <span *ngIf="form.controls.pacienteId.touched && form.controls.pacienteId.invalid" class="fm-error">
+          Selecciona el paciente de la receta.
+        </span>
+      </div>
+
+      <div class="fm-field">
+        <label class="fm-label" for="rec-numero">N. receta <span class="fm-label__required">*</span></label>
+        <input id="rec-numero" class="fm-input fm-mono" type="text" formControlName="numeroReceta" placeholder="REC-0001" />
+        <span *ngIf="form.controls.numeroReceta.touched && form.controls.numeroReceta.invalid" class="fm-error">
+          Ingresa el numero de receta.
+        </span>
+      </div>
+
+      <div class="fm-field">
+        <label class="fm-label" for="rec-tipo-form">Tipo <span class="fm-label__required">*</span></label>
+        <select id="rec-tipo-form" class="fm-select" formControlName="tipoReceta">
+          <option *ngFor="let tipo of tipos" [ngValue]="tipo">{{ tipoLabels[tipo] }}</option>
+        </select>
+      </div>
+
+      <div class="fm-field fm-field--full">
+        <label class="fm-label" for="rec-medico">Medico <span class="fm-label__required">*</span></label>
+        <input id="rec-medico" class="fm-input" type="text" formControlName="medico" placeholder="Dr. Juan Perez" />
+        <span *ngIf="form.controls.medico.touched && form.controls.medico.invalid" class="fm-error">
+          Ingresa el medico que emite la receta.
+        </span>
+      </div>
+
+      <div class="fm-field">
+        <label class="fm-label" for="rec-fecha">Fecha de receta <span class="fm-label__required">*</span></label>
+        <input id="rec-fecha" class="fm-input" type="date" formControlName="fechaReceta" [max]="hoy" />
+        <span *ngIf="form.controls.fechaReceta.touched && form.controls.fechaReceta.hasError('fechaFutura')" class="fm-error">
+          La fecha de receta no puede ser futura.
+        </span>
+        <span
+          *ngIf="form.controls.fechaReceta.touched && form.controls.fechaReceta.invalid && !form.controls.fechaReceta.hasError('fechaFutura')"
+          class="fm-error"
+        >
+          Ingresa la fecha de receta.
+        </span>
+      </div>
+
+      <div class="fm-field"></div>
+    </div>
+  </form>
+
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarModal()">Cancelar</button>
+    <button type="submit" form="rec-form" class="fm-btn fm-btn--primary" [disabled]="guardando()">
+      {{ guardando() ? 'Guardando...' : 'Registrar receta' }}
+    </button>
+  </ng-container>
+</app-fm-modal>

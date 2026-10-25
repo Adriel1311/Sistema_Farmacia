@@ -1,0 +1,152 @@
+@use 'styles/design-tokens' as *;
+
+:host {
+  display: block;
+}
+
+.ale-grupo {
+  margin-top: $space-6;
+}
+
+.ale-grupo__header {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  margin-bottom: $space-3;
+}
+
+.ale-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: $space-4;
+}
+
+.ale-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-shadow: $shadow-xs;
+}
+
+.ale-card--alta {
+  border-left: 3px solid $color-danger;
+}
+
+.ale-card--atendida {
+  opacity: 0.62;
+  background: $color-bg-tertiary;
+  box-shadow: none;
+}
+
+.ale-card__head {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-3;
+}
+
+.ale-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: 0 0 auto;
+  border-radius: $radius-md;
+
+  &.fm-badge--danger {
+    background: $color-danger-light;
+    color: $color-danger;
+  }
+
+  &.fm-badge--warning {
+    background: $color-warning-light;
+    color: $color-warning;
+  }
+
+  &.fm-badge--neutral {
+    background: $color-bg-tertiary;
+    color: $color-text-secondary;
+  }
+}
+
+.ale-card__headline {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.ale-card__titulo {
+  margin: 0;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-tight;
+  color: $color-text-primary;
+}
+
+.ale-card__mensaje {
+  margin: $space-3 0 $space-2;
+  font-size: $font-size-sm;
+  line-height: $line-height-normal;
+  color: $color-text-secondary;
+}
+
+.ale-card__referencia {
+  margin: 0;
+  font-family: $font-family-mono;
+}
+
+.ale-card__atendida {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  margin-top: $space-3;
+  padding: $space-2 $space-3;
+  border-radius: $radius-sm;
+  background: $color-bg-secondary;
+  color: $color-text-secondary;
+  font-size: $font-size-xs;
+}
+
+.ale-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-3;
+  margin-top: auto;
+}
+
+.ale-contexto {
+  margin-bottom: $space-4;
+  padding: $space-3;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  background: $color-bg-tertiary;
+}
+
+.ale-contexto__mensaje {
+  margin: $space-2 0;
+}
+
+@media (max-width: #{$bp-lg}) {
+  .ale-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: #{$bp-sm}) {
+  .ale-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ale-card__head {
+    flex-wrap: wrap;
+  }
+
+  .ale-card__footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ale-contexto {
+    padding: $space-3;
+  }
+}

@@ -1,0 +1,209 @@
+<div class="fm-page">
+  <header class="fm-page-header">
+    <div>
+      <h1 class="fm-page-title">Bajas de inventario</h1>
+      <p class="fm-page-subtitle">Vencidos en estante, mermas y devoluciones a proveedores</p>
+    </div>
+    <div class="fm-page-actions">
+      <button type="button" class="fm-btn fm-btn--ghost" (click)="refrescar()">
+        <svg-icon name="refresh" [size]="16" />
+        <span class="fm-hidden-mobile">Actualizar</span>
+      </button>
+      <button type="button" class="fm-btn fm-btn--primary" (click)="abrirRegistro()">
+        <svg-icon name="plus" [size]="16" />
+        Registrar baja
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="success()" class="fm-alert fm-alert--success" role="status">
+    <svg-icon name="success" [size]="18" />
+    <span class="fm-spacer">{{ success() }}</span>
+    <button type="button" class="fm-btn fm-btn--ghost fm-btn--sm" aria-label="Cerrar aviso" (click)="success.set('')">
+      <svg-icon name="close" [size]="14" />
+    </button>
+  </div>
+
+  <div *ngIf="error()" class="fm-alert fm-alert--error" role="alert">
+    <svg-icon name="error" [size]="18" />
+    <span class="fm-spacer">{{ error() }}</span>
+    <button type="button" class="fm-btn fm-btn--secondary fm-btn--sm" (click)="refrescar()">Reintentar</button>
+  </div>
+
+  <div class="fm-stat-grid">
+    <div class="fm-stat">
+      <span class="fm-stat__icon"><svg-icon name="baja" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ visibles().length }}</div>
+        <div class="fm-stat__label">Bajas registradas</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--danger">
+      <span class="fm-stat__icon"><svg-icon name="warning" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ totalVencidos() }}</div>
+        <div class="fm-stat__label">Vencidos en estante</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--warning">
+      <span class="fm-stat__icon"><svg-icon name="box" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ totalMermas() }}</div>
+        <div class="fm-stat__label">Mermas</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--info">
+      <span class="fm-stat__icon"><svg-icon name="movimiento" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ totalUnidades() }}</div>
+        <div class="fm-stat__label">Unidades dadas de baja</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fm-toolbar">
+    <div class="fm-field fm-toolbar__grow">
+      <label class="fm-label" for="baj-busqueda">Buscar</label>
+      <input
+        id="baj-busqueda"
+        class="fm-input"
+        type="search"
+        placeholder="Medicamento, codigo, lote, observacion o usuario"
+        [formControl]="searchControl"
+      />
+    </div>
+    <div class="fm-field">
+      <label class="fm-label" for="baj-motivo">Motivo</label>
+      <select #filtroMotivo id="baj-motivo" class="fm-select" [value]="motivoSeleccionado()" (change)="cambiarMotivo(filtroMotivo.value)">
+        <option *ngFor="let opcion of opcionesMotivo" [value]="opcion.valor">{{ opcion.etiqueta }}</option>
+      </select>
+    </div>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="limpiarFiltros()">
+      <svg-icon name="close" [size]="16" />
+      Limpiar
+    </button>
+  </div>
+
+  <div class="fm-card">
+    <div class="fm-card-header">
+      <h2 class="fm-card-title">Historial de bajas</h2>
+      <span class="fm-muted fm-small">{{ visibles().length }} registro(s)</span>
+    </div>
+    <div class="fm-card-body fm-card-body--flush">
+      <app-fm-loading *ngIf="loading()" text="Cargando bajas..."></app-fm-loading>
+
+      <app-fm-empty
+        *ngIf="!loading() && visibles().length === 0"
+        title="Aun no hay bajas registradas"
+        message="Registra vencimientos, mermas o devoluciones para mantener el inventario cuadrando."
+        action="Registrar baja"
+        (actionClick)="abrirRegistro()"
+      ></app-fm-empty>
+
+      <div *ngIf="!loading() && visibles().length > 0" class="fm-table-wrap">
+        <table class="fm-table">
+          <thead>
+            <tr>
+              <th class="fm-nowrap">Fecha</th>
+              <th>Medicamento</th>
+              <th class="fm-nowrap">Lote</th>
+              <th class="fm-nowrap fm-hidden-mobile">Vencimiento del lote</th>
+              <th>Motivo</th>
+              <th class="fm-num">Cantidad</th>
+              <th class="fm-hidden-mobile">Observacion</th>
+              <th class="fm-hidden-mobile">Registrado por</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let baja of visibles(); trackBy: trackById">
+              <td class="fm-nowrap">{{ baja.fechaHora | fmDate: 'datetime' }}</td>
+              <td>
+                <span class="fm-mono fm-xs fm-muted">{{ baja.medicamentoCodigo }}</span>
+                <div class="fm-strong">{{ baja.medicamentoNombre }}</div>
+              </td>
+              <td class="fm-mono fm-nowrap">{{ baja.numeroLote }}</td>
+              <td class="fm-nowrap fm-hidden-mobile">{{ baja.fechaVencimientoLote | fmDate }}</td>
+              <td>
+                <span class="fm-badge" [ngClass]="claseMotivo(baja.motivo)">{{ etiquetaMotivo(baja.motivo) }}</span>
+              </td>
+              <td class="fm-num fm-strong">{{ baja.cantidad }}</td>
+              <td class="fm-hidden-mobile baj-observacion" [title]="baja.observacion">
+                <span *ngIf="baja.observacion; else sinObservacion">{{ baja.observacion }}</span>
+                <ng-template #sinObservacion><span class="fm-muted">Sin observacion</span></ng-template>
+              </td>
+              <td class="fm-hidden-mobile">
+                <div>{{ baja.usuarioNombre }}</div>
+                <div class="fm-xs fm-muted">{{ baja.usuarioRol }}</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-fm-modal *ngIf="modalAbierto()" [title]="'Registrar baja de inventario'" (closed)="cerrarModal()">
+  <form id="baj-form" [formGroup]="form" (ngSubmit)="registrar()" novalidate>
+    <div *ngIf="formError()" class="fm-alert fm-alert--error" role="alert">
+      <svg-icon name="error" [size]="18" />
+      <span>{{ formError() }}</span>
+    </div>
+
+    <div class="fm-form-grid">
+      <div class="fm-field fm-field--full">
+        <label class="fm-label" for="baj-lote">Lote <span class="fm-label__required">*</span></label>
+        <select id="baj-lote" class="fm-select" formControlName="loteId">
+          <option [ngValue]="0">Selecciona un lote</option>
+          <option *ngFor="let lote of lotes()" [ngValue]="lote.id">{{ etiquetaLote(lote) }}</option>
+        </select>
+        <span *ngIf="form.controls.loteId.touched && form.controls.loteId.invalid" class="fm-error">
+          Selecciona el lote que-genera la baja.
+        </span>
+        <span *ngIf="loteDelFormulario() as lote" class="fm-hint">
+          Vence el {{ lote.fechaVencimiento | fmDate }} y tiene {{ lote.cantidadActual }} {{ lote.unidadMedida }} disponibles.
+        </span>
+      </div>
+
+      <div class="fm-field">
+        <label class="fm-label" for="baj-motivo-form">Motivo <span class="fm-label__required">*</span></label>
+        <select id="baj-motivo-form" class="fm-select" formControlName="motivo">
+          <option *ngFor="let opcion of motivosRegistrables" [value]="opcion.valor">{{ opcion.etiqueta }}</option>
+        </select>
+        <span *ngIf="form.controls.motivo.touched && form.controls.motivo.invalid" class="fm-error">
+          Selecciona el motivo de la baja.
+        </span>
+      </div>
+
+      <div class="fm-field">
+        <label class="fm-label" for="baj-cantidad">Cantidad <span class="fm-label__required">*</span></label>
+        <input id="baj-cantidad" class="fm-input" type="number" min="1" step="1" formControlName="cantidad" />
+        <span *ngIf="form.controls.cantidad.touched && form.controls.cantidad.invalid" class="fm-error">
+          Ingresa una cantidad mayor o igual a 1.
+        </span>
+        <span *ngIf="form.hasError('cantidadExcedeLote') && (form.controls.cantidad.touched || form.controls.loteId.touched)" class="fm-error">
+          La cantidad no puede superar las unidades disponibles del lote.
+        </span>
+      </div>
+
+      <div class="fm-field fm-field--full">
+        <label class="fm-label" for="baj-observacion">Observacion</label>
+        <textarea
+          id="baj-observacion"
+          class="fm-textarea"
+          rows="3"
+          formControlName="observacion"
+          placeholder="Detalle del motivo o documento de respaldo"
+        ></textarea>
+        <span class="fm-hint">Opcional. Se guarda junto al movimiento de baja.</span>
+      </div>
+    </div>
+  </form>
+
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarModal()">Cancelar</button>
+    <button type="submit" form="baj-form" class="fm-btn fm-btn--primary" [disabled]="guardando()">
+      {{ guardando() ? 'Registrando...' : 'Registrar baja' }}
+    </button>
+  </ng-container>
+</app-fm-modal>

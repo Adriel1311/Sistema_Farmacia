@@ -1,0 +1,181 @@
+<div class="fm-page">
+  <header class="fm-page-header">
+    <div>
+      <h1 class="fm-page-title">Alertas</h1>
+      <p class="fm-page-subtitle">Stock critico, vencimientos y avisos de farmacia</p>
+    </div>
+    <div class="fm-page-actions">
+      <button type="button" class="fm-btn fm-btn--ghost" (click)="refrescar()">
+        <svg-icon name="refresh" [size]="16" />
+        <span class="fm-hidden-mobile">Actualizar</span>
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="success()" class="fm-alert fm-alert--success" role="status">
+    <svg-icon name="success" [size]="18" />
+    <span class="fm-spacer">{{ success() }}</span>
+    <button type="button" class="fm-btn fm-btn--ghost fm-btn--sm" aria-label="Cerrar aviso" (click)="success.set('')">
+      <svg-icon name="close" [size]="14" />
+    </button>
+  </div>
+
+  <div *ngIf="error()" class="fm-alert fm-alert--error" role="alert">
+    <svg-icon name="error" [size]="18" />
+    <span class="fm-spacer">{{ error() }}</span>
+    <button type="button" class="fm-btn fm-btn--secondary fm-btn--sm" (click)="refrescar()">Reintentar</button>
+  </div>
+
+  <div class="fm-stat-grid">
+    <div class="fm-stat">
+      <span class="fm-stat__icon"><svg-icon name="alerta" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ total() }}</div>
+        <div class="fm-stat__label">{{ soloPendientes() ? 'Alertas pendientes' : 'Alertas totales' }}</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--danger">
+      <span class="fm-stat__icon"><svg-icon name="warning" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ totalAlta() }}</div>
+        <div class="fm-stat__label">Prioridad alta</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--warning">
+      <span class="fm-stat__icon"><svg-icon name="box" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ totalStockCritico() }}</div>
+        <div class="fm-stat__label">Stock critico</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--info">
+      <span class="fm-stat__icon"><svg-icon name="calendar" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ totalVencimientos() }}</div>
+        <div class="fm-stat__label">Avisos de vencimiento</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fm-toolbar">
+    <span class="fm-muted fm-small">Ordenadas por prioridad: alta, media y baja (RN04).</span>
+    <span class="fm-spacer"></span>
+    <button
+      type="button"
+      class="fm-btn"
+      [class.fm-btn--primary]="soloPendientes()"
+      [class.fm-btn--secondary]="!soloPendientes()"
+      (click)="alternarSoloPendientes()"
+    >
+      <svg-icon name="filter" [size]="16" />
+      Solo pendientes
+    </button>
+  </div>
+
+  <app-fm-loading *ngIf="loading()" text="Cargando alertas..."></app-fm-loading>
+
+  <app-fm-empty
+    *ngIf="!loading() && visibles().length === 0"
+    title="No hay alertas pendientes"
+    message="Cuando el inventario o las recetas generen avisos, apareceran aqui."
+  ></app-fm-empty>
+
+  <section
+    *ngFor="let grupo of grupos()"
+    class="ale-grupo"
+    [attr.aria-label]="'Alertas de prioridad ' + etiquetaPrioridad(grupo.prioridad)"
+  >
+    <header class="ale-grupo__header">
+      <h2 class="fm-card-title">
+        Prioridad {{ etiquetaPrioridad(grupo.prioridad) }}
+      </h2>
+      <span class="fm-badge" [ngClass]="clasePrioridad(grupo.prioridad)">{{ grupo.alertas.length }}</span>
+    </header>
+
+    <div class="ale-grid">
+      <article
+        *ngFor="let alerta of grupo.alertas; trackBy: trackByClave"
+        class="fm-card ale-card"
+        [class.ale-card--atendida]="alerta.atendida"
+        [class.ale-card--alta]="esPrioridadAlta(grupo.prioridad) && !alerta.atendida"
+      >
+        <div class="fm-card-body">
+          <div class="ale-card__head">
+            <span class="ale-card__icon" [ngClass]="clasePrioridad(grupo.prioridad)">
+              <svg-icon [name]="iconoTipo(alerta.tipo)" [size]="20" />
+            </span>
+            <div class="ale-card__headline">
+              <h3 class="ale-card__titulo">{{ alerta.titulo }}</h3>
+              <p class="fm-xs fm-muted">{{ etiquetaTipo(alerta.tipo) }}</p>
+            </div>
+            <span class="fm-badge" [ngClass]="clasePrioridad(alerta.prioridad)">
+              {{ etiquetaPrioridad(alerta.prioridad) }}
+            </span>
+          </div>
+
+          <p class="ale-card__mensaje">{{ alerta.mensaje }}</p>
+
+          <p class="fm-xs fm-muted ale-card__referencia">Referencia: {{ referencia(alerta) }}</p>
+
+          <div *ngIf="alerta.atendida" class="ale-card__atendida">
+            <svg-icon name="check" [size]="14" />
+            <span>
+              Atendida por {{ alerta.atendidaPor || 'el sistema' }} el
+              {{ alerta.atendidaEn | fmDate: 'datetime' }}
+            </span>
+          </div>
+        </div>
+
+        <div *ngIf="puedeAtenderAlerta(alerta)" class="fm-card-footer ale-card__footer">
+          <span class="fm-xs fm-muted">
+            Registra el comentario con el que atendiste el aviso.
+          </span>
+          <button type="button" class="fm-btn fm-btn--primary fm-btn--sm" (click)="abrirAtender(alerta)">
+            <svg-icon name="check" [size]="14" />
+            Atender
+          </button>
+        </div>
+      </article>
+    </div>
+  </section>
+</div>
+
+<app-fm-modal *ngIf="objetivo() as alerta" [title]="'Atender alerta'" (closed)="cerrarAtender()">
+  <form id="ale-atender-form" [formGroup]="form" (ngSubmit)="atender()" novalidate>
+    <div *ngIf="formError()" class="fm-alert fm-alert--error" role="alert">
+      <svg-icon name="error" [size]="18" />
+      <span>{{ formError() }}</span>
+    </div>
+
+    <div class="ale-contexto">
+      <div class="fm-row">
+        <svg-icon [name]="iconoTipo(alerta.tipo)" [size]="18" />
+        <span class="fm-strong">{{ alerta.titulo }}</span>
+        <span class="fm-badge" [ngClass]="clasePrioridad(alerta.prioridad)">
+          {{ etiquetaPrioridad(alerta.prioridad) }}
+        </span>
+      </div>
+      <p class="fm-small fm-muted ale-contexto__mensaje">{{ alerta.mensaje }}</p>
+      <p class="fm-xs fm-muted">Referencia: {{ referencia(alerta) }}</p>
+    </div>
+
+    <div class="fm-field">
+      <label class="fm-label" for="ale-comentario">Comentario</label>
+      <textarea
+        id="ale-comentario"
+        class="fm-textarea"
+        rows="3"
+        formControlName="comentario"
+        placeholder="Detalle de la accion realizada (opcional)"
+      ></textarea>
+      <span class="fm-hint">Opcional. Se registra junto a la alerta atendida.</span>
+    </div>
+  </form>
+
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarAtender()">Cancelar</button>
+    <button type="submit" form="ale-atender-form" class="fm-btn fm-btn--primary" [disabled]="guardando()">
+      {{ guardando() ? 'Atendiendo...' : 'Confirmar atención' }}
+    </button>
+  </ng-container>
+</app-fm-modal>

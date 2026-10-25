@@ -1,0 +1,185 @@
+@use 'styles/design-tokens' as *;
+
+.dis-segments {
+  gap: $space-1;
+  padding: 3px;
+  background: $color-bg-tertiary;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+
+  .fm-btn {
+    background: transparent;
+    border: none;
+    color: $color-text-secondary;
+
+    &:hover { background: $color-bg-secondary; }
+  }
+}
+
+.dis-segment--active {
+  background: $color-bg-secondary !important;
+  color: $color-primary-dark !important;
+  box-shadow: $shadow-xs;
+}
+
+.dis-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+  gap: $space-4;
+  align-items: start;
+
+  @media (max-width: $bp-lg) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.dis-recetas {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.dis-receta {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px $space-2;
+  padding: $space-3;
+  text-align: left;
+  font: inherit;
+  background: $color-bg-secondary;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: border-color $motion-fast, background-color $motion-fast;
+
+  &:hover {
+    border-color: $color-primary-300;
+    background: $color-primary-light;
+  }
+}
+
+.dis-receta__numero {
+  font-weight: $font-weight-semibold;
+  font-size: $font-size-sm;
+}
+
+.dis-receta__paciente {
+  grid-column: 1;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.dis-receta__meta {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-2;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.dis-receta-activa {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-3;
+}
+
+.dis-detalle-receta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $space-3;
+  margin: $space-4 0 0;
+  padding-top: $space-3;
+  border-top: 1px solid $color-border;
+
+  dt {
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  dd {
+    margin: 2px 0 0;
+    font-size: $font-size-sm;
+  }
+
+  @media (max-width: $bp-sm) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.dis-catalogo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-2;
+  max-height: 160px;
+  overflow-y: auto;
+  margin-bottom: $space-4;
+}
+
+.dis-add {
+  max-width: 100%;
+  text-align: left;
+}
+
+.dis-items {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.dis-item {
+  padding: $space-3;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  background: $color-bg-secondary;
+}
+
+.dis-item__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-2;
+  margin-bottom: $space-3;
+}
+
+.dis-item__grid {
+  display: grid;
+  grid-template-columns: minmax(120px, 180px) minmax(0, 1fr);
+  gap: $space-3;
+
+  .fm-field { margin-bottom: 0; }
+
+  @media (max-width: $bp-sm) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.dis-fefo {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  margin-top: $space-3;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.dis-subtitulo {
+  margin: $space-5 0 $space-2;
+  font-size: $font-size-sm;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: $color-text-tertiary;
+}
+
+.dis-ticket__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-3;
+  margin-bottom: $space-3;
+}

@@ -1,0 +1,137 @@
+<div class="fm-page">
+  <header class="fm-page-header">
+    <div>
+      <h1 class="fm-page-title">Auditoria</h1>
+      <p class="fm-page-subtitle">Historial de cambios sobre los datos del sistema</p>
+    </div>
+    <div class="fm-page-actions">
+      <button type="button" class="fm-btn fm-btn--ghost" (click)="refrescar()">
+        <svg-icon name="refresh" [size]="16" />
+        <span class="fm-hidden-mobile">Actualizar</span>
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="error()" class="fm-alert fm-alert--error" role="alert">
+    <svg-icon name="error" [size]="18" />
+    <span class="fm-spacer">{{ error() }}</span>
+    <button type="button" class="fm-btn fm-btn--secondary fm-btn--sm" (click)="refrescar()">Reintentar</button>
+  </div>
+
+  <div class="fm-stat-grid">
+    <div class="fm-stat">
+      <span class="fm-stat__icon"><svg-icon name="auditoria" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ total() }}</div>
+        <div class="fm-stat__label">Registros</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--info">
+      <span class="fm-stat__icon"><svg-icon name="box" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ totalEntidades() }}</div>
+        <div class="fm-stat__label">Entidades</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--warning">
+      <span class="fm-stat__icon"><svg-icon name="user" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ totalUsuarios() }}</div>
+        <div class="fm-stat__label">Usuarios</div>
+      </div>
+    </div>
+  </div>
+
+  <form class="fm-card aud-filtros" [formGroup]="filtros" (ngSubmit)="buscar()" novalidate>
+    <div class="fm-card-header">
+      <h2 class="fm-card-title">Filtros</h2>
+      <span class="fm-muted fm-small">{{ descripcionOrigen() }}</span>
+    </div>
+    <div class="fm-card-body">
+      <div class="fm-form-grid">
+        <div class="fm-field">
+          <label class="fm-label" for="aud-entidad">Entidad</label>
+          <input id="aud-entidad" class="fm-input" type="search" formControlName="entidad" placeholder="Lote, Dispensacion..." />
+        </div>
+
+        <div class="fm-field">
+          <label class="fm-label" for="aud-usuario">Usuario (ID)</label>
+          <input id="aud-usuario" class="fm-input" type="number" min="0" step="1" formControlName="usuarioId" />
+          <span *ngIf="filtros.controls.usuarioId.touched && filtros.controls.usuarioId.invalid" class="fm-error">
+            Ingresa un identificador valido o dejalo en 0.
+          </span>
+        </div>
+
+        <div class="fm-field">
+          <label class="fm-label" for="aud-desde">Desde</label>
+          <input id="aud-desde" class="fm-input" type="datetime-local" formControlName="desde" />
+        </div>
+
+        <div class="fm-field">
+          <label class="fm-label" for="aud-hasta">Hasta</label>
+          <input id="aud-hasta" class="fm-input" type="datetime-local" formControlName="hasta" />
+        </div>
+      </div>
+    </div>
+    <div class="fm-card-footer aud-filtros__footer">
+      <span class="fm-xs fm-muted">Los filtros se cruzan: se consulta el mas restrictivo y se acota el resto.</span>
+      <div class="aud-filtros__acciones">
+        <button type="button" class="fm-btn fm-btn--secondary fm-btn--sm" (click)="limpiarFiltros()">Limpiar</button>
+        <button type="submit" class="fm-btn fm-btn--primary fm-btn--sm" [disabled]="loading()">
+          <svg-icon name="search" [size]="14" />
+          {{ loading() ? 'Consultando...' : 'Aplicar filtros' }}
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <div class="fm-card">
+    <div class="fm-card-header">
+      <h2 class="fm-card-title">Registros de auditoria</h2>
+      <span class="fm-muted fm-small">{{ visibles().length }} registro(s)</span>
+    </div>
+    <div class="fm-card-body fm-card-body--flush">
+      <app-fm-loading *ngIf="loading()" text="Cargando auditoria..."></app-fm-loading>
+
+      <app-fm-empty
+        *ngIf="!loading() && visibles().length === 0"
+        title="No hay registros de auditoria para los filtros indicados"
+        message="Ajusta el rango de fechas, la entidad o el usuario para ampliar la busqueda."
+        action="Limpiar filtros"
+        (actionClick)="limpiarFiltros()"
+      ></app-fm-empty>
+
+      <div *ngIf="!loading() && visibles().length > 0" class="fm-table-wrap">
+        <table class="fm-table">
+          <thead>
+            <tr>
+              <th class="fm-nowrap">Fecha y hora</th>
+              <th>Usuario</th>
+              <th class="fm-nowrap">Entidad</th>
+              <th class="fm-nowrap">Accion</th>
+              <th class="fm-hidden-mobile">Descripcion</th>
+              <th class="aud-valor">Valor anterior</th>
+              <th class="aud-valor">Valor nuevo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let registro of visibles(); trackBy: trackById">
+              <td class="fm-nowrap">{{ registro.fechaHora | fmDate: 'datetime' }}</td>
+              <td>
+                <div>{{ registro.usuarioNombre }}</div>
+                <div class="fm-xs fm-muted">{{ registro.usuarioRol }}</div>
+              </td>
+              <td class="fm-nowrap fm-strong">{{ registro.entidad }}</td>
+              <td class="fm-nowrap">
+                <span class="fm-badge fm-badge--info">{{ registro.accion }}</span>
+              </td>
+              <td class="fm-hidden-mobile aud-descripcion" [title]="registro.descripcion">{{ registro.descripcion }}</td>
+              <td class="aud-valor" [title]="registro.valorAnterior">{{ registro.valorAnterior || '-' }}</td>
+              <td class="aud-valor" [title]="registro.valorNuevo">{{ registro.valorNuevo || '-' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
