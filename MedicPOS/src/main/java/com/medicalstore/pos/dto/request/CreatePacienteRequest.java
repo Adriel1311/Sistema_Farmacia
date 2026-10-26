@@ -1,5 +1,6 @@
 package com.medicalstore.pos.dto.request;
 
+import com.medicalstore.pos.validator.UniqueDni;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -12,6 +13,7 @@ import lombok.Data;
 public class CreatePacienteRequest {
     @NotBlank(message = "El DNI es obligatorio")
     @Pattern(regexp = "^[0-9]{8}$", message = "El DNI debe tener 8 digitos")
+    @UniqueDni
     private String dni;
     
     @NotBlank(message = "Los nombres son obligatorios")

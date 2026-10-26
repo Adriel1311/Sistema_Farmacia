@@ -2,6 +2,7 @@ package com.medicalstore.pos.controller;
 
 import com.medicalstore.pos.dto.request.CreatePacienteRequest;
 import com.medicalstore.pos.dto.response.PacienteResponse;
+import com.medicalstore.pos.repository.PacienteRepository;
 import com.medicalstore.pos.repository.UsuarioRepository;
 import com.medicalstore.pos.service.PacienteService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/pacientes")
@@ -20,10 +22,14 @@ import java.util.List;
 public class PacienteController extends BaseController {
     
     private final PacienteService pacienteService;
+    private final PacienteRepository pacienteRepository;
     
-    public PacienteController(PacienteService pacienteService, UsuarioRepository usuarioRepository) {
+    public PacienteController(PacienteService pacienteService, 
+                              UsuarioRepository usuarioRepository,
+                              PacienteRepository pacienteRepository) {
         super(usuarioRepository);
         this.pacienteService = pacienteService;
+        this.pacienteRepository = pacienteRepository;
     }
     
     @GetMapping
@@ -50,5 +56,12 @@ public class PacienteController extends BaseController {
             @Valid @RequestBody CreatePacienteRequest request, HttpServletRequest httpRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(pacienteService.create(request, currentUser(), httpRequest));
+    }
+
+    @GetMapping("/exists/{dni}")
+    @Operation(summary = "Verificar si DNI existe en BD")
+    public ResponseEntity<Map<String, Boolean>> existsDni(@PathVariable String dni) {
+        boolean exists = pacienteRepository.existsByDni(dni);
+        return ResponseEntity.ok(Map.of("exists", exists));
     }
 }

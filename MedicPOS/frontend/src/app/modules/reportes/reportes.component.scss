@@ -26,6 +26,12 @@
   white-space: nowrap;
 }
 
+@media (max-width: #{$bp-sm}) {
+  .rep-proveedor {
+    max-width: 140px;
+  }
+}
+
 .rep-vencido {
   color: $color-danger;
   font-weight: $font-weight-semibold;

@@ -128,11 +128,16 @@
   }
 
   .fm-table {
-    min-width: 560px;
+    min-width: 0;
   }
 
   .fm-table th,
   .fm-table td {
     padding: $space-2 $space-3;
+    min-width: 0;
+  }
+
+  .con-descripcion {
+    max-width: 200px;
   }
 }

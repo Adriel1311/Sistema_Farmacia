@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions>
+  <!-- Suppress false positives for internal/test dependencies -->
+  <suppress>
+    <notes>Internal test dependency, not exposed to production</notes>
+    <gav regex="true" groupId="org.springframework.boot" artifactId="spring-boot-starter-test" version=".*"/>
+  </suppress>
+  <suppress>
+    <notes>Test dependency, not in production classpath</notes>
+    <gav regex="true" groupId="org.mockito" artifactId="mockito.*" version=".*"/>
+  </suppress>
+</suppressions>

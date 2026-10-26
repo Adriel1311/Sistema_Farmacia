@@ -13,12 +13,13 @@
 
 @media (max-width: #{$bp-sm}) {
   .fm-table {
-    min-width: 700px;
+    min-width: 0;
   }
 
   .fm-table th,
   .fm-table td {
     padding: $space-2 $space-3;
+    min-width: 0;
   }
 
   .baj-observacion {

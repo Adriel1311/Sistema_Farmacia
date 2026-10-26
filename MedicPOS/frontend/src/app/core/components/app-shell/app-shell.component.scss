@@ -32,7 +32,11 @@
     &.sidebar--open { transform: translateX(0); }
   }
 
-  @media (min-width: #{$bp-sm + 1px}) and (max-width: #{$bp-lg}) {
+  @media (min-width: #{$bp-sm + 1px}) and (max-width: #{$bp-md}) {
+    width: $sidebar-width-tablet;
+  }
+
+  @media (min-width: #{$bp-md + 1px}) and (max-width: #{$bp-lg}) {
     width: $sidebar-width-collapsed;
   }
 }
@@ -50,6 +54,7 @@
   height: $topbar-height;
   padding: 0 $space-4;
   flex: 0 0 auto;
+  min-width: 0;
   text-decoration: none;
 
   &:hover { text-decoration: none; }
@@ -70,6 +75,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  overflow: hidden;
 }
 
 .sidebar__brand-name {
@@ -78,6 +84,9 @@
   letter-spacing: -0.01em;
   line-height: 1.1;
   color: $color-primary;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sidebar__brand-sub {
@@ -208,6 +217,10 @@
     padding-left: $sidebar-width-collapsed;
   }
 
+  @media (max-width: #{$bp-md}) {
+    padding-left: $sidebar-width-tablet;
+  }
+
   @media (max-width: #{$bp-sm}) {
     padding-left: 0;
   }
@@ -263,7 +276,8 @@
   display: flex;
   align-items: center;
   gap: $space-2;
-  width: 288px;
+  width: 100%;
+  max-width: 288px;
   margin-left: $space-4;
   padding: 6px $space-3;
   border-radius: $radius-md;
@@ -291,7 +305,12 @@
   }
 
   @media (min-width: #{$bp-lg}) {
-    width: 384px;
+    max-width: 384px;
+  }
+
+  @media (max-width: #{$bp-md}) {
+    max-width: 100%;
+    margin-left: $space-2;
   }
 }
 

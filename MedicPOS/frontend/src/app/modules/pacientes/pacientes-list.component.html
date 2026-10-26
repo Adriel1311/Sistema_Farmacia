@@ -108,9 +108,43 @@
     <div class="fm-form-grid">
       <div class="fm-field">
         <label class="fm-label" for="pac-dni">DNI <span class="fm-label__required">*</span></label>
-        <input id="pac-dni" class="fm-input fm-mono" type="text" inputmode="numeric" formControlName="dni" placeholder="12345678" />
-        <span *ngIf="form.controls.dni.touched && form.controls.dni.invalid" class="fm-error">
+        <div class="dni-input-group">
+          <input 
+            #dniInput
+            id="pac-dni" 
+            class="fm-input fm-mono" 
+            type="text" 
+            inputmode="numeric" 
+            formControlName="dni" 
+            placeholder="12345678"
+            maxlength="8"
+            (input)="onDniChange()"
+            [class.fm-field--invalid]="form.controls.dni.touched && form.controls.dni.invalid"
+            [class.dni-loading]="consultandoDni()"
+            [class.dni-success]="dniConsultadoExitosamente()"
+            [class.dni-exists]="form.controls.dni.hasError('dniTaken')"
+          />
+          <button 
+            type="button" 
+            class="fm-btn fm-btn--icon dni-consult-btn"
+            (click)="consultarDniManual()"
+            [disabled]="consultandoDni() || form.controls.dni.invalid"
+            aria-label="Consultar DNI en RENIEC"
+            title="Consultar DNI en RENIEC"
+          >
+            <svg-icon *ngIf="!consultandoDni() && !dniConsultadoExitosamente()" name="search" [size]="16" />
+            <svg-icon *ngIf="consultandoDni()" name="refresh" [size]="16" class="spin" />
+            <svg-icon *ngIf="!consultandoDni() && dniConsultadoExitosamente()" name="check" [size]="16" class="text-success" />
+          </button>
+        </div>
+        <span *ngIf="form.controls.dni.touched && form.controls.dni.hasError('pattern')" class="fm-error">
           El DNI debe tener exactamente 8 digitos.
+        </span>
+        <span *ngIf="form.controls.dni.touched && form.controls.dni.hasError('dniTaken')" class="fm-error">
+          El DNI ya está registrado en el sistema.
+        </span>
+        <span *ngIf="form.controls.dni.touched && form.controls.dni.hasError('required')" class="fm-error">
+          El DNI es obligatorio.
         </span>
       </div>
 

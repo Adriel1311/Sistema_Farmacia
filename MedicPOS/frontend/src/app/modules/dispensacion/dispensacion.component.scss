@@ -28,8 +28,12 @@
   gap: $space-4;
   align-items: start;
 
-  @media (max-width: $bp-lg) {
+  @media (max-width: $bp-md) {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  @media (min-width: #{$bp-md + 1px}) and (max-width: #{$bp-lg}) {
+    grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
   }
 }
 

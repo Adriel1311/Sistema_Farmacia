@@ -4,15 +4,96 @@
   display: block;
 }
 
-:host {
-  @media (max-width: #{$bp-sm}) {
-    .fm-table {
-      min-width: 600px;
-    }
+.dni-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
 
-    .fm-table th,
-    .fm-table td {
-      padding: $space-2 $space-3;
-    }
+.dni-input-group .fm-input {
+  flex: 1;
+  padding-right: 52px;
+  transition: border-color $motion-fast, box-shadow $motion-fast;
+}
+
+.dni-input-group .fm-input:focus {
+  border-color: $color-primary;
+  box-shadow: $shadow-focus;
+}
+
+.dni-input-group .fm-input.dni-loading {
+  background-image: none;
+}
+
+.dni-input-group .fm-input.dni-success {
+  border-color: $color-success;
+}
+
+.dni-input-group .fm-input.dni-exists {
+  border-color: $color-danger;
+}
+
+.dni-consult-btn {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $surface-low;
+  color: $color-text-secondary;
+  transition: background-color $motion-fast, color $motion-fast;
+  z-index: 1;
+}
+
+.dni-consult-btn:hover:not(:disabled) {
+  background: $color-primary-light;
+  color: $color-primary;
+}
+
+.dni-consult-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.dni-consult-btn .spin {
+  animation: spin 1s linear infinite;
+}
+
+.dni-consult-btn .text-success {
+  color: $color-success;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.fm-field--invalid .fm-input {
+  border-color: $color-danger;
+}
+
+@media (max-width: #{$bp-sm}) {
+  .fm-table {
+    min-width: 0;
+  }
+
+  .fm-table th,
+  .fm-table td {
+    padding: $space-2 $space-3;
+    min-width: 0;
+  }
+
+  .dni-input-group .fm-input {
+    padding-right: 48px;
+  }
+
+  .dni-consult-btn {
+    width: 32px;
+    height: 32px;
   }
 }

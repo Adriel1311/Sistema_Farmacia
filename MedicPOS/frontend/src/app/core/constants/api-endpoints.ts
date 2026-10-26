@@ -68,6 +68,10 @@ export const API = {
     buscar: '/pacientes/buscar',
     byId: (id: number) => `/pacientes/${id}`
   },
+  dni: {
+    base: '/dni',
+    consultar: (dni: string) => `/dni/${dni}`
+  },
   proveedores: {
     base: '/proveedores',
     buscar: '/proveedores/buscar',

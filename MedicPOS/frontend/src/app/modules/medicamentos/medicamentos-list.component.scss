@@ -33,12 +33,25 @@
 :host {
   @media (max-width: #{$bp-sm}) {
     .fm-table {
-      min-width: 620px;
+      min-width: 0;
     }
 
     .fm-table th,
     .fm-table td {
       padding: $space-2 $space-3;
+      min-width: 0;
+    }
+
+    .med-desc {
+      max-width: 200px;
+    }
+
+    .fm-btn--ghost .fm-hidden-mobile {
+      display: none;
+    }
+
+    .fm-btn--ghost {
+      padding: $space-1 $space-2;
     }
   }
 }

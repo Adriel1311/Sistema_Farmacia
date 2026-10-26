@@ -1,16 +1,6 @@
 package com.medicalstore.pos;
 
-import com.medicalstore.pos.dto.request.CreateDispensacionRequest;
-import com.medicalstore.pos.dto.request.DispensacionItemRequest;
-import com.medicalstore.pos.dto.response.DispensacionResponse;
-import com.medicalstore.pos.entity.Lote;
-import com.medicalstore.pos.entity.Usuario;
-import com.medicalstore.pos.repository.LoteRepository;
-import com.medicalstore.pos.repository.UsuarioRepository;
-import com.medicalstore.pos.service.DispensacionService;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -23,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -34,7 +23,6 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -46,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * dispensacion por FEFO con el ticket generado por la base de datos.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 class FarmamedIntegrationTest {
 
     private static final String PASSWORD = "FarmaMed2026";

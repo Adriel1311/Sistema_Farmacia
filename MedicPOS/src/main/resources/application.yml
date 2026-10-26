@@ -42,6 +42,17 @@ farmamed:
   cors:
     origins: ${CORS_ORIGINS:http://localhost:4200}
 
+  rate-limit:
+    requests-per-minute: ${RATE_LIMIT_RPM:100}
+    login-requests-per-minute: ${RATE_LIMIT_LOGIN_RPM:5}
+
+factiliza:
+  base-url: ${FACTILIZA_BASE_URL:https://api.factiliza.com}
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MjYxOCJ9.dMhTEx_V7iqhmCKI3tVsQcG3y9EzmExiPD0hkkdY-K0
+  timeout-ms: ${FACTILIZA_TIMEOUT_MS:5000}
+  connect-timeout-ms: ${FACTILIZA_CONNECT_TIMEOUT_MS:3000}
+  mock-enabled: ${FACTILIZA_MOCK_ENABLED:false}
+
 springdoc:
   api-docs:
     path: /v3/api-docs

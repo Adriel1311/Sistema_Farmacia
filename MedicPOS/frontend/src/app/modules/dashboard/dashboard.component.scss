@@ -32,3 +32,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+@media (max-width: #{$bp-sm}) {
+  .das-proveedor {
+    max-width: 140px;
+  }
+}
