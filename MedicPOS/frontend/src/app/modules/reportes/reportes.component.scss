@@ -1,5 +1,9 @@
 @use 'styles/design-tokens' as *;
 
+.fm-tabs {
+  margin-bottom: $space-8;
+}
+
 .rep-tabs {
   gap: $space-2;
   margin-bottom: $space-4;
