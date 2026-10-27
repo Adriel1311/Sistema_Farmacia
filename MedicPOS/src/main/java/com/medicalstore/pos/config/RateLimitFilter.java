@@ -12,7 +12,11 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 public class RateLimitFilter extends OncePerRequestFilter {
@@ -21,12 +25,19 @@ public class RateLimitFilter extends OncePerRequestFilter {
     private final int loginRequestsPerMinute;
 
     private final Map<String, RateLimitBucket> buckets = new ConcurrentHashMap<>();
+    private final ScheduledExecutorService cleanupExecutor = Executors.newSingleThreadScheduledExecutor(r -> {
+        Thread t = new Thread(r, "rate-limit-cleanup");
+        t.setDaemon(true);
+        return t;
+    });
 
     public RateLimitFilter(
             @Value("${farmamed.rate-limit.requests-per-minute:100}") int requestsPerMinute,
             @Value("${farmamed.rate-limit.login-requests-per-minute:5}") int loginRequestsPerMinute) {
         this.requestsPerMinute = requestsPerMinute;
         this.loginRequestsPerMinute = loginRequestsPerMinute;
+
+        cleanupExecutor.scheduleAtFixedRate(this::cleanupOldBuckets, 5, 5, TimeUnit.MINUTES);
     }
 
     @Override
@@ -72,37 +83,48 @@ public class RateLimitFilter extends OncePerRequestFilter {
         return request.getRemoteAddr();
     }
 
+    private void cleanupOldBuckets() {
+        long now = Instant.now().toEpochMilli();
+        long maxAgeMs = 10 * 60 * 1000; // 10 minutes
+        buckets.entrySet().removeIf(entry -> now - entry.getValue().getLastAccess() > maxAgeMs);
+    }
+
     private static class RateLimitBucket {
         private final int maxTokens;
         private final AtomicInteger tokens;
-        private volatile long lastRefill = Instant.now().toEpochMilli();
+        private final AtomicLong lastRefill;
+        private final AtomicLong lastAccess;
         private final long refillIntervalMs = 60_000; // 1 minute
 
         RateLimitBucket(int maxTokens) {
             this.maxTokens = maxTokens;
             this.tokens = new AtomicInteger(maxTokens);
+            long now = Instant.now().toEpochMilli();
+            this.lastRefill = new AtomicLong(now);
+            this.lastAccess = new AtomicLong(now);
         }
 
         boolean tryConsume() {
             refillIfNeeded();
-            int current = tokens.get();
-            if (current > 0) {
-                return tokens.decrementAndGet() >= 0;
-            }
-            return false;
+            lastAccess.set(Instant.now().toEpochMilli());
+            int current = tokens.decrementAndGet();
+            return current >= 0;
         }
 
         private void refillIfNeeded() {
             long now = Instant.now().toEpochMilli();
-            if (now - lastRefill >= refillIntervalMs) {
-                long elapsed = now - lastRefill;
+            long last = lastRefill.get();
+            if (now - last >= refillIntervalMs) {
+                long elapsed = now - last;
                 long intervals = elapsed / refillIntervalMs;
-                if (intervals > 0) {
-                    int newTokens = Math.min(maxTokens, tokens.get() + (int) intervals);
-                    tokens.set(newTokens);
-                    lastRefill += intervals * refillIntervalMs;
+                if (intervals > 0 && lastRefill.compareAndSet(last, last + intervals * refillIntervalMs)) {
+                    tokens.updateAndGet(current -> Math.min(maxTokens, current + (int) intervals));
                 }
             }
+        }
+
+        long getLastAccess() {
+            return lastAccess.get();
         }
     }
 }

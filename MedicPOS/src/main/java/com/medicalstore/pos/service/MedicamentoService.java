@@ -7,6 +7,9 @@ import com.medicalstore.pos.entity.Auditoria;
 import com.medicalstore.pos.entity.Medicamento;
 import com.medicalstore.pos.entity.Proveedor;
 import com.medicalstore.pos.entity.Usuario;
+import com.medicalstore.pos.exception.BusinessRuleException;
+import com.medicalstore.pos.exception.ConflictException;
+import com.medicalstore.pos.exception.ResourceNotFoundException;
 import com.medicalstore.pos.repository.MedicamentoRepository;
 import com.medicalstore.pos.repository.ProveedorRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -71,20 +74,20 @@ public class MedicamentoService {
     @Transactional(readOnly = true)
     public Medicamento obtenerEntidad(Long id) {
         return medicamentoRepository.findByIdWithProveedor(id)
-                .orElseThrow(() -> new RuntimeException("Medicamento not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Medicamento not found with id: " + id));
     }
     
     @Transactional
     public MedicamentoResponse create(CreateMedicamentoRequest request, Usuario user, HttpServletRequest httpRequest) {
         if (medicamentoRepository.existsByCodigo(request.getCodigo())) {
-            throw new RuntimeException("El codigo " + request.getCodigo() + " ya esta registrado");
+            throw new ConflictException("El codigo " + request.getCodigo() + " ya esta registrado");
         }
         validarRangos(request.getStockMinimo(), request.getStockMaximo());
         
         Proveedor proveedor = proveedorRepository.findById(request.getProveedorId())
-                .orElseThrow(() -> new RuntimeException("Proveedor not found with id: " + request.getProveedorId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Proveedor not found with id: " + request.getProveedorId()));
         if (!proveedor.getActivo()) {
-            throw new RuntimeException("No se puede asignar un proveedor inactivo: " + proveedor.getRazonSocial());
+            throw new BusinessRuleException("PROVEEDOR_INACTIVO", "No se puede asignar un proveedor inactivo: " + proveedor.getRazonSocial());
         }
         
         Medicamento medicamento = Medicamento.builder()
@@ -114,12 +117,12 @@ public class MedicamentoService {
         Medicamento medicamento = obtenerEntidad(id);
         
         if (!medicamento.getCodigo().equals(request.getCodigo()) && medicamentoRepository.existsByCodigo(request.getCodigo())) {
-            throw new RuntimeException("El codigo " + request.getCodigo() + " ya esta registrado");
+            throw new ConflictException("El codigo " + request.getCodigo() + " ya esta registrado");
         }
         validarRangos(request.getStockMinimo(), request.getStockMaximo());
         
         Proveedor proveedor = proveedorRepository.findById(request.getProveedorId())
-                .orElseThrow(() -> new RuntimeException("Proveedor not found with id: " + request.getProveedorId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Proveedor not found with id: " + request.getProveedorId()));
         
         String valorAnterior = medicamento.toString();
         boolean estabaActivo = medicamento.getActivo();
@@ -165,7 +168,7 @@ public class MedicamentoService {
         if (!nuevoEstado) {
             int stockVigente = stockService.getStockVigente(id, LocalDate.now());
             if (stockVigente > 0) {
-                throw new RuntimeException("No se puede desactivar un medicamento con " + stockVigente 
+                throw new BusinessRuleException("MEDICAMENTO_CON_STOCK", "No se puede desactivar un medicamento con " + stockVigente 
                         + " unidades vigentes en inventario");
             }
         }
@@ -188,7 +191,7 @@ public class MedicamentoService {
     
     private void validarRangos(Integer stockMinimo, Integer stockMaximo) {
         if (stockMaximo <= stockMinimo) {
-            throw new RuntimeException("El stock maximo debe ser mayor al stock minimo");
+            throw new BusinessRuleException("RANGO_INVALIDO", "El stock maximo debe ser mayor al stock minimo");
         }
     }
     

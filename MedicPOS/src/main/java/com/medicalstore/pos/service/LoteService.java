@@ -1,5 +1,6 @@
 package com.medicalstore.pos.service;
 
+import com.medicalstore.pos.config.AlertScheduler;
 import com.medicalstore.pos.dto.request.RegistrarLoteRequest;
 import com.medicalstore.pos.dto.response.LoteResponse;
 import com.medicalstore.pos.entity.Auditoria;
@@ -7,6 +8,9 @@ import com.medicalstore.pos.entity.Lote;
 import com.medicalstore.pos.entity.Medicamento;
 import com.medicalstore.pos.entity.MovimientoInventario;
 import com.medicalstore.pos.entity.Usuario;
+import com.medicalstore.pos.exception.BusinessRuleException;
+import com.medicalstore.pos.exception.ConflictException;
+import com.medicalstore.pos.exception.ResourceNotFoundException;
 import com.medicalstore.pos.repository.LoteRepository;
 import com.medicalstore.pos.repository.MedicamentoRepository;
 import com.medicalstore.pos.repository.MovimientoInventarioRepository;
@@ -29,17 +33,20 @@ public class LoteService {
     private final MovimientoInventarioRepository movimientoRepository;
     private final ConfiguracionService configuracionService;
     private final AuditoriaService auditoriaService;
+    private final AlertScheduler alertScheduler;
     
     public LoteService(LoteRepository loteRepository,
                        MedicamentoRepository medicamentoRepository,
                        MovimientoInventarioRepository movimientoRepository,
                        ConfiguracionService configuracionService,
-                       AuditoriaService auditoriaService) {
+                       AuditoriaService auditoriaService,
+                       AlertScheduler alertScheduler) {
         this.loteRepository = loteRepository;
         this.medicamentoRepository = medicamentoRepository;
         this.movimientoRepository = movimientoRepository;
         this.configuracionService = configuracionService;
         this.auditoriaService = auditoriaService;
+        this.alertScheduler = alertScheduler;
     }
     
     /**
@@ -48,23 +55,23 @@ public class LoteService {
     @Transactional
     public LoteResponse registrarIngreso(RegistrarLoteRequest request, Usuario user, HttpServletRequest httpRequest) {
         Medicamento medicamento = medicamentoRepository.findByIdWithProveedor(request.getMedicamentoId())
-                .orElseThrow(() -> new RuntimeException("Medicamento not found with id: " + request.getMedicamentoId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Medicamento not found with id: " + request.getMedicamentoId()));
         
         if (!medicamento.getActivo()) {
-            throw new RuntimeException("No se puede registrar lotes de un medicamento inactivo: " + medicamento.getNombre());
+            throw new BusinessRuleException("MEDICAMENTO_INACTIVO", "No se puede registrar lotes de un medicamento inactivo: " + medicamento.getNombre());
         }
         
         // RN01b: un lote es de un solo medicamento y no se repite
         if (loteRepository.existsByMedicamentoIdAndNumeroLote(medicamento.getId(), request.getNumeroLote())) {
-            throw new RuntimeException("El lote " + request.getNumeroLote() + " ya esta registrado para " + medicamento.getNombre());
+            throw new ConflictException("El lote " + request.getNumeroLote() + " ya esta registrado para " + medicamento.getNombre());
         }
         
         // RN01c: todo lote entra valido y en positivo
         if (!request.getFechaVencimiento().isAfter(request.getFechaIngreso())) {
-            throw new RuntimeException("La fecha de vencimiento debe ser posterior a la fecha de ingreso");
+            throw new BusinessRuleException("FECHA_VENCIMIENTO_INVALIDA", "La fecha de vencimiento debe ser posterior a la fecha de ingreso");
         }
         if (request.getCantidad() == null || request.getCantidad() <= 0) {
-            throw new RuntimeException("La cantidad debe ser mayor a cero");
+            throw new BusinessRuleException("CANTIDAD_INVALIDA", "La cantidad debe ser mayor a cero");
         }
         
         Lote lote = Lote.builder()
@@ -90,6 +97,9 @@ public class LoteService {
                 "Ingreso de lote " + lote.getNumeroLote() + " de " + medicamento.getNombre()
                         + " (" + request.getCantidad() + " " + medicamento.getUnidadMedida() + ")",
                 null, lote.toString(), httpRequest);
+        
+        // RN05.2: evaluar alertas tras ingreso de lote
+        alertScheduler.evaluarAlertasPostOperacion();
         
         return mapToResponse(lote);
     }
@@ -175,6 +185,8 @@ public class LoteService {
             lote.setEstado(Lote.Estado.VENCIDO);
             loteRepository.save(lote);
         }
+        // RN05.2: evaluar alertas tras sincronización de vencidos
+        alertScheduler.evaluarAlertasPostOperacion();
         return vencidos.size();
     }
     

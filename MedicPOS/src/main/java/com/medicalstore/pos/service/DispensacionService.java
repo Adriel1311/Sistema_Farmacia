@@ -1,5 +1,6 @@
 package com.medicalstore.pos.service;
 
+import com.medicalstore.pos.config.AlertScheduler;
 import com.medicalstore.pos.dto.request.CreateDispensacionRequest;
 import com.medicalstore.pos.dto.request.DispensacionItemRequest;
 import com.medicalstore.pos.dto.response.DispensacionDetalleResponse;
@@ -13,6 +14,9 @@ import com.medicalstore.pos.entity.Medicamento;
 import com.medicalstore.pos.entity.MovimientoInventario;
 import com.medicalstore.pos.entity.Receta;
 import com.medicalstore.pos.entity.Usuario;
+import com.medicalstore.pos.exception.BusinessRuleException;
+import com.medicalstore.pos.exception.ResourceNotFoundException;
+import com.medicalstore.pos.exception.StockInsufficientException;
 import com.medicalstore.pos.repository.DispensacionRepository;
 import com.medicalstore.pos.repository.LoteRepository;
 import com.medicalstore.pos.repository.MedicamentoRepository;
@@ -52,6 +56,7 @@ public class DispensacionService {
     private final MovimientoInventarioRepository movimientoRepository;
     private final AuditoriaService auditoriaService;
     private final ConfiguracionService configuracionService;
+    private final AlertScheduler alertScheduler;
     
     public DispensacionService(DispensacionRepository dispensacionRepository,
                                RecetaRepository recetaRepository,
@@ -59,7 +64,8 @@ public class DispensacionService {
                                LoteRepository loteRepository,
                                MovimientoInventarioRepository movimientoRepository,
                                AuditoriaService auditoriaService,
-                               ConfiguracionService configuracionService) {
+                               ConfiguracionService configuracionService,
+                               AlertScheduler alertScheduler) {
         this.dispensacionRepository = dispensacionRepository;
         this.recetaRepository = recetaRepository;
         this.medicamentoRepository = medicamentoRepository;
@@ -67,6 +73,7 @@ public class DispensacionService {
         this.movimientoRepository = movimientoRepository;
         this.auditoriaService = auditoriaService;
         this.configuracionService = configuracionService;
+        this.alertScheduler = alertScheduler;
     }
     
     /**
@@ -133,6 +140,9 @@ public class DispensacionService {
                     "Excepcion FEFO autorizada para " + excepcion.getKey(), null, excepcion.getValue(), httpRequest);
         }
         
+        // RN05.2: evaluar alertas tras cada venta
+        alertScheduler.evaluarAlertasPostOperacion();
+        
         return mapToResponse(dispensacionRepository.findByIdDetallado(dispensacion.getId())
                 .orElse(dispensacion));
     }
@@ -147,7 +157,7 @@ public class DispensacionService {
         List<Lote> lotes = loteRepository.findVigentesFEFOParaLockear(medicamento.getId(), hoy);
         
         if (lotes.isEmpty()) {
-            throw new RuntimeException("No hay lotes vigentes de " + medicamento.getNombre() + " para dispensar");
+            throw new StockInsufficientException(medicamento.getNombre(), cantidad, 0);
         }
         
         for (Lote lote : lotes) {
@@ -183,9 +193,7 @@ public class DispensacionService {
         
         if (pendiente > 0) {
             int disponible = lotes.stream().mapToInt(Lote::getCantidadActual).sum();
-            throw new RuntimeException("Stock insuficiente de " + medicamento.getNombre() 
-                    + ": se solicitan " + cantidad + " " + medicamento.getUnidadMedida() 
-                    + " y solo hay " + disponible + " vigentes");
+            throw new StockInsufficientException(medicamento.getNombre(), cantidad, disponible);
         }
     }
     
@@ -195,11 +203,17 @@ public class DispensacionService {
      */
     private String dispensarLoteForzado(Dispensacion dispensacion, Medicamento medicamento,
                                         DispensacionItemRequest item, Usuario user) {
+        // RN04: verificar si las excepciones FEFO están habilitadas
+        if (!configuracionService.getBoolean(ConfiguracionService.CLAVE_PERMITIR_EXCEPCION_FEFO, true)) {
+            throw new BusinessRuleException("FEFO_EXCEPCION_DESHABILITADA", 
+                "Las excepciones al FEFO están deshabilitadas en la configuración del sistema");
+        }
+        
         if (user.getNombreRol() == null || !ROL_JEFE_FARMACIA.equals(user.getNombreRol())) {
-            throw new RuntimeException("Solo el Jefe de Farmacia puede elegir un lote distinto al FEFO");
+            throw new BusinessRuleException("SOLO_JEFE_FARMACIA", "Solo el Jefe de Farmacia puede elegir un lote distinto al FEFO");
         }
         if (item.getMotivoExcepcionFefo() == null || item.getMotivoExcepcionFefo().trim().isEmpty()) {
-            throw new RuntimeException("La excepcion FEFO requiere un motivo obligatorio");
+            throw new BusinessRuleException("MOTIVO_OBLIGATORIO", "La excepcion FEFO requiere un motivo obligatorio");
         }
         
         LocalDate hoy = LocalDate.now();
@@ -207,21 +221,21 @@ public class DispensacionService {
         Lote loteFefo = lotes.isEmpty() ? null : lotes.get(0);
         
         Lote loteElegido = loteRepository.findByIdParaActualizar(item.getLoteId())
-                .orElseThrow(() -> new RuntimeException("Lote not found with id: " + item.getLoteId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Lote not found with id: " + item.getLoteId()));
         
         if (!loteElegido.getMedicamento().getId().equals(medicamento.getId())) {
-            throw new RuntimeException("El lote " + loteElegido.getNumeroLote() + " no corresponde al medicamento " + medicamento.getNombre());
+            throw new BusinessRuleException("LOTE_NO_CORRESPONDE", "El lote " + loteElegido.getNumeroLote() + " no corresponde al medicamento " + medicamento.getNombre());
         }
         
         // RN03: un lote vencido nunca puede dispensarse
         if (loteElegido.isVencido() || loteElegido.getEstado() == Lote.Estado.BAJA) {
-            throw new RuntimeException("El lote " + loteElegido.getNumeroLote() + " esta vencido y no puede dispensarse");
+            throw new BusinessRuleException("LOTE_VENCIDO", "El lote " + loteElegido.getNumeroLote() + " esta vencido y no puede dispensarse");
         }
         if (loteFefo != null && loteFefo.getId().equals(loteElegido.getId())) {
-            throw new RuntimeException("El lote seleccionado ya es el que indica el FEFO, no requiere excepcion");
+            throw new BusinessRuleException("LOTE_YA_ES_FEFO", "El lote seleccionado ya es el que indica el FEFO, no requiere excepcion");
         }
         if (!loteElegido.tieneStock(item.getCantidad())) {
-            throw new RuntimeException("El lote " + loteElegido.getNumeroLote() + " no tiene stock suficiente");
+            throw new BusinessRuleException("STOCK_INSUFICIENTE_LOTE", "El lote " + loteElegido.getNumeroLote() + " no tiene stock suficiente");
         }
         
         int stockAnterior = loteElegido.getCantidadActual();
@@ -289,16 +303,16 @@ public class DispensacionService {
     @Transactional(rollbackFor = Exception.class)
     public DispensacionResponse anular(Long id, Usuario user, HttpServletRequest httpRequest) {
         Dispensacion dispensacion = dispensacionRepository.findByIdDetallado(id)
-                .orElseThrow(() -> new RuntimeException("Dispensacion not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Dispensacion not found with id: " + id));
         
         if (dispensacion.getEstado() == Dispensacion.Estado.ANULADA) {
-            throw new RuntimeException("La dispensacion ya se encuentra anulada");
+            throw new BusinessRuleException("DISPENSACION_YA_ANULADA", "La dispensacion ya se encuentra anulada");
         }
         
         LocalDate hoy = LocalDate.now();
         for (DetalleDispensacion detalle : dispensacion.getDetalles()) {
             Lote lote = loteRepository.findByIdParaActualizar(detalle.getLote().getId())
-                    .orElseThrow(() -> new RuntimeException("Lote not found with id: " + detalle.getLote().getId()));
+                    .orElseThrow(() -> new ResourceNotFoundException("Lote not found with id: " + detalle.getLote().getId()));
             
             int stockAnterior = lote.getCantidadActual();
             lote.setCantidadActual(Math.min(lote.getCantidadInicial(), stockAnterior + detalle.getCantidad()));
@@ -326,6 +340,9 @@ public class DispensacionService {
         auditoriaService.log(Auditoria.Accion.DISPENSACION_ANULADA, user, "Dispensacion", id.toString(),
                 "Dispensacion anulada: receta " + dispensacion.getReceta().getNumeroReceta(),
                 valorAnterior, Dispensacion.Estado.ANULADA.toString(), httpRequest);
+        
+        // RN05.2: evaluar alertas tras anulación (stock vuelve)
+        alertScheduler.evaluarAlertasPostOperacion();
         
         return mapToResponse(dispensacionRepository.findByIdDetallado(id).orElse(dispensacion));
     }

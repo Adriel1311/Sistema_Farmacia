@@ -68,6 +68,10 @@ export const API = {
     buscar: '/pacientes/buscar',
     byId: (id: number) => `/pacientes/${id}`
   },
+  medicos: {
+    base: '/medicos',
+    byId: (id: number) => `/medicos/${id}`
+  },
   dni: {
     base: '/dni',
     consultar: (dni: string) => `/dni/${dni}`
@@ -80,7 +84,8 @@ export const API = {
   },
   recetas: {
     base: '/recetas',
-    byId: (id: number) => `/recetas/${id}`
+    byId: (id: number) => `/recetas/${id}`,
+    proximoNumero: '/recetas/proximo-numero'
   },
   reportes: {
     consumo: '/reportes/consumo',

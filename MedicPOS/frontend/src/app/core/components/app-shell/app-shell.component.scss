@@ -16,14 +16,17 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: $z-drawer;
+  z-index: $z-modal;
   display: flex;
   flex-direction: column;
   width: $sidebar-width;
-  height: 100vh;
+  height: 100dvh;
+  max-height: 100vh;
   background: $color-bg-secondary;
   box-shadow: $shadow-shell;
   transition: width $motion-base, transform $motion-base;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
 
   @media (max-width: #{$bp-sm}) {
     width: $sidebar-width;
@@ -156,6 +159,7 @@
   justify-content: space-between;
   gap: $space-2;
   padding: $space-2 $space-4;
+  min-height: 48px;
   border-radius: $radius-md;
   color: $color-text-secondary;
   text-decoration: none;
@@ -409,14 +413,13 @@
   min-width: 0;
 }
 
-/* ---------- Scrim movil ---------- */
-
 .scrim {
   position: fixed;
   inset: 0;
   z-index: $z-overlay;
   background: rgba(48, 48, 49, 0.45);
   animation: shell-fade $motion-base ease-out;
+  cursor: pointer;
 }
 
 @keyframes shell-fade {

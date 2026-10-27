@@ -233,7 +233,7 @@
       <div class="fm-field"></div>
 
       <div class="fm-field">
-        <label class="fm-label" for="med-minimo">Stock minimo <span class="fm-label__required">*</span></label>
+        <label class="fm-label" for="med-minimo">Mínimo <span class="fm-label__required">*</span></label>
         <input id="med-minimo" class="fm-input" type="number" min="0" step="1" formControlName="stockMinimo" />
         <span *ngIf="form.controls.stockMinimo.touched && form.controls.stockMinimo.invalid" class="fm-error">
           Ingresa un valor mayor o igual a 0.
@@ -241,13 +241,13 @@
       </div>
 
       <div class="fm-field">
-        <label class="fm-label" for="med-maximo">Stock maximo <span class="fm-label__required">*</span></label>
+        <label class="fm-label" for="med-maximo">Máximo <span class="fm-label__required">*</span></label>
         <input id="med-maximo" class="fm-input" type="number" min="0" step="1" formControlName="stockMaximo" />
         <span
           *ngIf="form.hasError('stockMaximoMenorAlMinimo') && (form.controls.stockMaximo.touched || form.controls.stockMinimo.touched)"
           class="fm-error"
         >
-          El stock maximo debe ser mayor o igual al stock minimo.
+          El máximo debe ser mayor o igual al mínimo.
         </span>
         <span
           *ngIf="form.controls.stockMaximo.touched && form.controls.stockMaximo.invalid && !form.hasError('stockMaximoMenorAlMinimo')"

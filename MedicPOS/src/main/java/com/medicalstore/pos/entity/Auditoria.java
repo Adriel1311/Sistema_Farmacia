@@ -58,6 +58,9 @@ public class Auditoria {
         MEDICAMENTO_CREADO,
         MEDICAMENTO_ACTUALIZADO,
         MEDICAMENTO_DESACTIVADO,
+        MEDICO_CREADO,
+        MEDICO_ACTUALIZADO,
+        MEDICO_DESACTIVADO,
         // Inventario
         LOTE_INGRESADO,
         LOTE_ACTUALIZADO,

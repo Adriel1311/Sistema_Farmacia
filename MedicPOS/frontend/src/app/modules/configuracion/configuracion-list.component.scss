@@ -1,9 +1,435 @@
 @use 'styles/design-tokens' as *;
 
+$ease-micro: cubic-bezier(0.4, 0, 0.2, 1);
+
 :host {
   display: block;
 }
 
+/* ============================================================
+   SECCIÓN SEMAFORO (arriba, siempre visible)
+   ============================================================ */
+.cfg-semaforo {
+  margin-bottom: $space-6;
+
+  &__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: $space-4;
+  }
+
+  &__title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+  }
+
+  &__subtitle {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: $space-4;
+  }
+
+  .cfg-umbral {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+    padding: $space-4;
+    border: 1px solid $color-border;
+    border-left-width: 4px;
+    border-radius: $radius-md;
+background: $color-bg-secondary;
+    position: relative;
+
+    &--rojo {
+      border-left-color: $semaforo-rojo;
+    }
+
+    &--ambar {
+      border-left-color: $semaforo-ambar;
+    }
+  }
+
+  .cfg-umbral__label {
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+  }
+
+  .cfg-umbral__name {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: $color-text-secondary;
+  }
+
+  .cfg-umbral__hint {
+    font-size: $font-size-xs;
+    color: $color-text-secondary;
+  }
+
+  .cfg-umbral__input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+  }
+
+  .cfg-umbral__input {
+    flex: 1;
+    font-family: $font-family-mono;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    text-align: center;
+    padding: $space-2 $space-3;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    background: $color-bg-primary;
+    color: $color-text-primary;
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+      box-shadow: 0 0 0 2px $color-primary-light;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .cfg-umbral__unit {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    font-weight: $font-weight-medium;
+  }
+
+  .cfg-umbral__save {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: none;
+    border-radius: $radius-md;
+    background: $color-primary;
+    color: $color-on-primary;
+    cursor: pointer;
+    transition: all 150ms $ease-micro;
+
+    &:hover:not(:disabled) {
+      background: $color-primary-dark;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  .cfg-umbral__saving {
+    position: absolute;
+    top: $space-2;
+    right: $space-2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: $radius-md;
+    background: $color-bg-primary;
+    box-shadow: $shadow-sm;
+  }
+
+  .cfg-umbral__saving .spinning {
+    animation: spin 1s linear infinite;
+  }
+}
+
+.cfg-leyenda {
+  list-style: none;
+  margin: $space-4 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $space-2 $space-4;
+}
+
+.cfg-leyenda__item {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+
+  &--verde .cfg-leyenda__dot { background: $semaforo-verde; }
+  &--ambar .cfg-leyenda__dot { background: $semaforo-ambar; }
+  &--rojo .cfg-leyenda__dot { background: $semaforo-rojo; }
+  &--negro .cfg-leyenda__dot { background: $semaforo-negro; }
+}
+
+.cfg-leyenda__dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  flex: 0 0 auto;
+  border-radius: $radius-full;
+  box-shadow: inset 0 0 0 1px rgba(19, 27, 33, 0.18);
+}
+
+/* ============================================================
+   ESTADÍSTICAS
+   ============================================================ */
+.fm-stat-grid {
+  margin-bottom: $space-5;
+}
+
+/* ============================================================
+   CATEGORÍAS: Tarjetas por parámetro
+   ============================================================ */
+.cfg-categoria {
+  margin-top: $space-5;
+}
+
+.cfg-categoria__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: $space-3;
+  padding-bottom: $space-2;
+  border-bottom: 1px solid $color-border;
+}
+
+.cfg-categoria__title {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.cfg-categoria__count {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.cfg-categoria__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: $space-4;
+}
+
+.cfg-param {
+  background: $color-bg-primary;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  padding: $space-4;
+  transition: box-shadow all 150ms $ease-micro, border-color all 150ms $ease-micro;
+
+  &:hover {
+    box-shadow: $shadow-md;
+    border-color: $color-border-strong;
+  }
+
+  &--editado {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 2px $color-primary-light;
+  }
+}
+
+.cfg-param__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $space-3;
+}
+
+.cfg-param__name {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.cfg-param__badge {
+  font-size: $font-size-xs;
+  padding: 0.125rem 0.5rem;
+}
+
+.cfg-param__body {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.cfg-param__desc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin: 0;
+}
+
+.cfg-param__input-row {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+}
+
+.cfg-param__label-visual {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cfg-param__input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.cfg-param__input {
+  flex: 1;
+  font-family: $font-family-mono;
+  font-size: $font-size-base;
+  padding: $space-2 $space-3;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  background: $color-bg-primary;
+  color: $color-text-primary;
+  min-width: 0;
+
+  &[type="checkbox"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    accent-color: $color-primary;
+    flex: 0 0 auto;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 2px $color-primary-light;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.cfg-param__type {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  font-weight: $font-weight-medium;
+  padding: 0 $space-2;
+  background: $color-bg-tertiary;
+  border-radius: $radius-sm;
+  white-space: nowrap;
+}
+
+.cfg-param__input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  flex: 1;
+}
+
+.cfg-param__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-2;
+  padding-top: $space-2;
+  border-top: 1px solid $color-border;
+}
+
+.cfg-param__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.cfg-param__save {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  padding: $space-2 $space-4;
+  border: none;
+  border-radius: $radius-md;
+  background: $color-primary;
+  color: $color-on-primary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: background all 150ms $ease-micro, opacity all 150ms $ease-micro;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    background: $color-primary-dark;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.cfg-param__saving {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.cfg-param__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: $space-2;
+  padding-top: $space-3;
+  border-top: 1px solid $color-border;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.cfg-param__saving {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  padding: $space-2 $space-3;
+  background: $color-primary-light;
+  border-radius: $radius-md;
+  color: $color-primary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   SECCIÓN SEMAFORO (legacy - mantener compatibilidad)
+   ============================================================ */
 .con-semaforo__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -20,13 +446,8 @@
   border-radius: $radius-md;
   background: $color-bg-secondary;
 
-  &--rojo {
-    border-left-color: $semaforo-rojo;
-  }
-
-  &--ambar {
-    border-left-color: $semaforo-ambar;
-  }
+  &--rojo { border-left-color: $semaforo-rojo; }
+  &--ambar { border-left-color: $semaforo-ambar; }
 }
 
 .con-umbral__valor {
@@ -60,21 +481,10 @@
   font-size: $font-size-sm;
   color: $color-text-secondary;
 
-  &--verde .con-leyenda__dot {
-    background: $semaforo-verde;
-  }
-
-  &--ambar .con-leyenda__dot {
-    background: $semaforo-ambar;
-  }
-
-  &--rojo .con-leyenda__dot {
-    background: $semaforo-rojo;
-  }
-
-  &--negro .con-leyenda__dot {
-    background: $semaforo-negro;
-  }
+  &--verde .con-leyenda__dot { background: $semaforo-verde; }
+  &--ambar .con-leyenda__dot { background: $semaforo-ambar; }
+  &--rojo .con-leyenda__dot { background: $semaforo-rojo; }
+  &--negro .con-leyenda__dot { background: $semaforo-negro; }
 }
 
 .con-leyenda__dot {
@@ -112,32 +522,19 @@
 }
 
 @media (max-width: #{$bp-sm}) {
+  .cfg-semaforo__grid,
   .con-semaforo__grid,
-  .con-leyenda {
+  .con-leyenda,
+  .cfg-categoria__grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .con-grupo__footer {
+  .cfg-param__input-wrapper {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .con-input {
-    min-width: 0;
+  .cfg-param__input {
     width: 100%;
-  }
-
-  .fm-table {
-    min-width: 0;
-  }
-
-  .fm-table th,
-  .fm-table td {
-    padding: $space-2 $space-3;
-    min-width: 0;
-  }
-
-  .con-descripcion {
-    max-width: 200px;
   }
 }

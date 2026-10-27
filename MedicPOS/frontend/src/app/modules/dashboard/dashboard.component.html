@@ -3,8 +3,7 @@
     <div>
       <h1 class="fm-page-title">Panel de control</h1>
       <p class="fm-page-subtitle">
-        Semaforo configurado: critico a {{ data()?.diasCritico ?? 30 }} dias, proximo a vencer a
-        {{ data()?.diasProximo ?? 60 }} dias (RN04).
+        Semáforo: rojo ≤ {{ data()?.diasCritico ?? 30 }} días, ámbar {{ (data()?.diasCritico ?? 30) + 1 }}-{{ data()?.diasProximo ?? 60 }} días.
       </p>
     </div>
     <div class="fm-page-actions">

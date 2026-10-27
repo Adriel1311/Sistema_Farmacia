@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { ApiService } from './api.service';
 import { API } from '../constants/api-endpoints';
 import { Alerta, AtenderAlertaRequest, Configuracion, SemaforoConfig, UpdateConfiguracionRequest } from '../models/alerta.model';
@@ -31,6 +31,11 @@ export class ConfiguracionService {
 
   getSemaforo(): Observable<SemaforoConfig> {
     return this.api.get<SemaforoConfig>(API.configuracion.semaforo);
+  }
+
+  getFefoPermitirExcepcion(): Observable<boolean> {
+    return this.api.get<{ valor: string }>(API.configuracion.base + '/fefo.permitir.excepcion')
+      .pipe(map(r => r.valor === 'true'));
   }
 
   update(request: UpdateConfiguracionRequest): Observable<Configuracion[]> {

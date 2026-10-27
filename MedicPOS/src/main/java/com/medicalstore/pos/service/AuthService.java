@@ -1,5 +1,6 @@
 package com.medicalstore.pos.service;
 
+import com.medicalstore.pos.service.ConfiguracionService;
 import com.medicalstore.pos.dto.request.LoginRequest;
 import com.medicalstore.pos.dto.response.AuthResponse;
 import com.medicalstore.pos.entity.Auditoria;
@@ -14,8 +15,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * M01 Autenticacion (RF-12, RN08). Sesion unica por usuario dentro de la farmacia.
+ * La expiración del token se toma de la configuración del sistema (sesion.timeout.minutos).
  */
 @Service
 public class AuthService {
@@ -25,17 +29,20 @@ public class AuthService {
     private final UsuarioRepository usuarioRepository;
     private final UsuarioService usuarioService;
     private final AuditoriaService auditoriaService;
+    private final ConfiguracionService configuracionService;
     
     public AuthService(AuthenticationManager authenticationManager,
                        JwtTokenProvider jwtTokenProvider,
                        UsuarioRepository usuarioRepository,
                        UsuarioService usuarioService,
-                       AuditoriaService auditoriaService) {
+                       AuditoriaService auditoriaService,
+                       ConfiguracionService configuracionService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.usuarioRepository = usuarioRepository;
         this.usuarioService = usuarioService;
         this.auditoriaService = auditoriaService;
+        this.configuracionService = configuracionService;
     }
     
     @Transactional
@@ -51,7 +58,11 @@ public class AuthService {
         // Trazabilidad del ultimo acceso (M09)
         usuarioService.registrarAcceso(usuario);
         
-        return mapToResponse(usuario, jwtTokenProvider.generateToken(usuario));
+        // RNF-07: expiración de sesión configurable (default 30 min)
+        int timeoutMinutos = configuracionService.getInt(ConfiguracionService.CLAVE_TIMEOUT_SESION, 30);
+        long expirationMs = TimeUnit.MINUTES.toMillis(timeoutMinutos);
+        
+        return mapToResponse(usuario, jwtTokenProvider.generateToken(usuario, expirationMs));
     }
     
     @Transactional(readOnly = true)

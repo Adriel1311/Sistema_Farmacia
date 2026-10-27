@@ -2,7 +2,7 @@
   <div class="fm-page-header">
     <div>
       <h1 class="fm-page-title">Reportes</h1>
-      <p class="fm-page-subtitle">Reportes de solo lectura: consumo, inventario, bajas y ordenes de compra.</p>
+      <p class="fm-page-subtitle">Reportes de inventario, consumo, bajas y órdenes de compra.</p>
     </div>
     <div class="fm-page-actions">
       <button type="button" class="fm-btn fm-btn--secondary" (click)="exportar('pdf')" [disabled]="descargando()">
@@ -77,7 +77,7 @@
       <label class="fm-label" for="rep-hasta">Hasta</label>
       <input id="rep-hasta" class="fm-input" type="date" formControlName="hasta" />
     </div>
-    <button type="submit" class="fm-btn fm-btn--primary fm-btn--sm">Aplicar</button>
+    <button type="submit" class="fm-btn fm-btn--primary fm-btn--sm">Aplicar periodo</button>
   </form>
 
   <app-fm-loading *ngIf="loading()" text="Generando reporte..."></app-fm-loading>
@@ -121,10 +121,10 @@
             <tr>
               <th scope="col">Medicamento</th>
               <th scope="col">Proveedor</th>
-              <th scope="col" class="fm-num">Vigente</th>
+              <th scope="col" class="fm-num">Disponible</th>
               <th scope="col" class="fm-num">Vencido</th>
-              <th scope="col" class="fm-num">Minimo</th>
-              <th scope="col" class="fm-num">Maximo</th>
+              <th scope="col" class="fm-num">Mínimo</th>
+              <th scope="col" class="fm-num">Máximo</th>
               <th scope="col" class="fm-num">Lotes</th>
               <th scope="col">Estado</th>
             </tr>
@@ -146,7 +146,7 @@
               </td>
               <td>
                 <span class="fm-badge" [class.fm-badge--danger]="item.stockCritico" [class.fm-badge--success]="!item.stockCritico">
-                  {{ item.stockCritico ? 'Stock critico' : 'Normal' }}
+                  {{ item.stockCritico ? 'Stock bajo' : 'Normal' }}
                 </span>
               </td>
             </tr>
@@ -195,9 +195,9 @@
             <thead>
               <tr>
                 <th scope="col">Medicamento</th>
-                <th scope="col" class="fm-num">Unidades</th>
+                <th scope="col" class="fm-num">Consumidas</th>
                 <th scope="col" class="fm-num">Dispensaciones</th>
-                <th scope="col" class="fm-num">Promedio por dispensacion</th>
+                <th scope="col" class="fm-num">Promedio por ticket</th>
               </tr>
             </thead>
             <tbody>

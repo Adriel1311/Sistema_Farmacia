@@ -8,7 +8,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { SvgIconComponent } from '../../core/components/svg-icon/svg-icon.component';
 import { PacienteRecetaService } from '../../core/services/paciente-receta.service';
 import { AuthService } from '../../core/services/auth.service';
-import { CreateRecetaRequest, Paciente, Receta, TIPO_RECETA_LABELS, TipoReceta } from '../../core/models/receta.model';
+import { CreateRecetaRequest, Medico, Paciente, Receta, TIPO_RECETA_LABELS, TipoReceta } from '../../core/models/receta.model';
 import { UserRole } from '../../core/models/user.model';
 
 function todayIso(): string {
@@ -46,6 +46,7 @@ export class RecetasListComponent {
 
   readonly recetas = signal<Receta[]>([]);
   readonly pacientes = signal<Paciente[]>([]);
+  readonly medicos = signal<Medico[]>([]);
   readonly loading = signal(false);
   readonly error = signal('');
   readonly success = signal('');
@@ -53,6 +54,7 @@ export class RecetasListComponent {
   readonly tipoFiltro = signal<TipoReceta | ''>('');
   readonly desdeFiltro = signal('');
   readonly hastaFiltro = signal('');
+  readonly soloPendientes = signal(true);
 
   readonly modalAbierto = signal(false);
   readonly guardando = signal(false);
@@ -60,11 +62,14 @@ export class RecetasListComponent {
 
   readonly form = this.fb.nonNullable.group({
     pacienteId: [0, [Validators.required, Validators.min(1)]],
-    numeroReceta: ['', [Validators.required, Validators.maxLength(30)]],
-    medico: ['', [Validators.required, Validators.maxLength(120)]],
+    numeroReceta: ['', [Validators.maxLength(50)]],
+    medicoId: [0, [Validators.required, Validators.min(1)]],
     tipoReceta: [TipoReceta.ASEGURADO, [Validators.required]],
     fechaReceta: [todayIso(), [Validators.required, noFutureDate]]
   });
+
+  // Preview del proximo numero de receta auto-generado
+  readonly proximoNumeroReceta = signal<string>('');
 
   private readonly reload$ = new Subject<void>();
 
@@ -80,6 +85,14 @@ export class RecetasListComponent {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(lista => this.pacientes.set(lista));
+
+    this.service
+      .getMedicosActivos()
+      .pipe(
+        catchError(() => of([] as Medico[])),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(lista => this.medicos.set(lista));
   }
 
   refrescar(): void {
@@ -95,8 +108,9 @@ export class RecetasListComponent {
     const tipo = this.tipoFiltro();
     const desde = this.desdeFiltro();
     const hasta = this.hastaFiltro();
+    const pendiente = this.soloPendientes();
 
-    return this.service.getRecetas({ tipo: tipo || undefined, desde: desde || undefined, hasta: hasta || undefined }).pipe(
+    return this.service.getRecetas({ tipo: tipo || undefined, desde: desde || undefined, hasta: hasta || undefined, pendiente }).pipe(
       catchError((err: Error) => {
         this.error.set(err.message || 'No se pudieron cargar las recetas.');
         return of([] as Receta[]);
@@ -125,6 +139,12 @@ export class RecetasListComponent {
     this.tipoFiltro.set('');
     this.desdeFiltro.set('');
     this.hastaFiltro.set('');
+    this.soloPendientes.set(true);
+    this.refrescar();
+  }
+
+  cambiarSoloPendientes(valor: boolean): void {
+    this.soloPendientes.set(valor);
     this.refrescar();
   }
 
@@ -133,9 +153,17 @@ export class RecetasListComponent {
     this.form.reset({
       pacienteId: 0,
       numeroReceta: '',
-      medico: '',
+      medicoId: 0,
       tipoReceta: TipoReceta.ASEGURADO,
       fechaReceta: todayIso()
+    });
+    // Cargar el proximo numero de receta sugerido y setearlo en el formulario
+    this.service.getProximoNumeroReceta().subscribe({
+      next: (resp: { valor: string }) => {
+        this.proximoNumeroReceta.set(resp.valor);
+        this.form.controls.numeroReceta.setValue(resp.valor);
+      },
+      error: () => this.proximoNumeroReceta.set('')
     });
     this.modalAbierto.set(true);
   }
@@ -154,8 +182,8 @@ export class RecetasListComponent {
     const valor = this.form.getRawValue();
     const payload: CreateRecetaRequest = {
       pacienteId: Number(valor.pacienteId),
-      numeroReceta: valor.numeroReceta.trim(),
-      medico: valor.medico.trim(),
+      numeroReceta: valor.numeroReceta?.trim() || '',
+      medicoId: Number(valor.medicoId),
       tipoReceta: valor.tipoReceta,
       fechaReceta: valor.fechaReceta
     };
@@ -172,7 +200,21 @@ export class RecetasListComponent {
           this.success.set(`Receta ${creada.numeroReceta} registrada para ${creada.pacienteNombreCompleto}.`);
           this.reload$.next();
         },
-        error: (err: Error) => this.formError.set(err.message || 'No se pudo registrar la receta.')
+        error: (err: Error) => {
+          const msg = err.message || 'No se pudo registrar la receta.';
+          // Reintento automático si es duplicado de numero de receta (race condition al abrir modal dos veces)
+          if (msg.includes('ya esta registrada') && !this.formError()) {
+            this.service.getProximoNumeroReceta().subscribe({
+              next: (resp: { valor: string }) => {
+                this.form.controls.numeroReceta.setValue(resp.valor);
+                this.guardar(); // reintento
+              },
+              error: () => this.formError.set(msg)
+            });
+          } else {
+            this.formError.set(msg);
+          }
+        }
       });
   }
 

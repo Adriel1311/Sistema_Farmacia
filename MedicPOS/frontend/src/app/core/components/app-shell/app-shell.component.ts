@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, computed, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { navItemsForRole, NavItem } from '../../constants/nav-items';
 import { USER_ROLE_LABELS } from '../../models/user.model';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
+import { DOCUMENT } from '@angular/common';
 
 type Viewport = 'mobile' | 'tablet' | 'desktop';
 
@@ -28,6 +29,7 @@ const TABLET_MAX = 1024;
 export class AppShellComponent {
   readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly document = inject(DOCUMENT);
 
   readonly roleLabels = USER_ROLE_LABELS;
   readonly viewport = signal<Viewport>('desktop');
@@ -68,11 +70,28 @@ export class AppShellComponent {
         this.drawerOpen.set(false);
         this.collapsed.set(false);
       });
+
+    // Body scroll lock when drawer opens/closes
+    effect(() => {
+      const isOpen = this.drawerOpen();
+      if (isOpen) {
+        this.document.body.style.overflow = 'hidden';
+      } else {
+        this.document.body.style.overflow = '';
+      }
+    });
   }
 
   @HostListener('window:resize')
   onResize(): void {
     this.updateViewport();
+  }
+
+  @HostListener('window:keydown.escape')
+  onEscape(): void {
+    if (this.drawerOpen()) {
+      this.closeDrawer();
+    }
   }
 
   toggleDrawer(): void {

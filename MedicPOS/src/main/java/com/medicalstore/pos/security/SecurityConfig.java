@@ -114,6 +114,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Publicos
                 .requestMatchers("/api/auth/login").permitAll()
+                .requestMatchers("/api/auth/logout").permitAll()
                 .requestMatchers("/api/dni/**").permitAll()
                 .requestMatchers(
                     "/swagger-ui.html",
@@ -125,50 +126,53 @@ public class SecurityConfig {
                     "/error"
                 ).permitAll()
                 
-                // M11 Configuracion: solo el Jefe de Farmacia cambia los parametros (RN04, RN06)
-                .requestMatchers("/api/configuracion/**").hasRole(JEFE)
+                // Configuración: lectura de parámetro fefo.permitir.excepcion para dispensación
+                .requestMatchers(HttpMethod.GET, "/api/configuracion/fefo.permitir.excepcion").hasAnyRole(JEFE, TECNICO, LOGISTICA, ADMIN_TI)
+                
+                // M11 Configuracion: Jefe y Admin TI cambian parametros (RN04, RN06)
+                .requestMatchers("/api/configuracion/**").hasAnyRole(JEFE, ADMIN_TI)
                 
                 // M09 Usuarios y M10 Roles: solo Administrador TI (RN08)
                 .requestMatchers("/api/usuarios/**").hasRole(ADMIN_TI)
                 .requestMatchers("/api/roles/**").hasRole(ADMIN_TI)
-                // M15 Auditoria: lectura para Jefe de Farmacia y Administrador TI
+                // M15 Auditoria: lectura y escritura para Jefe de Farmacia y Administrador TI
                 .requestMatchers(HttpMethod.GET, "/api/auditoria/**").hasAnyRole(JEFE, ADMIN_TI)
-                .requestMatchers("/api/auditoria/**").hasRole(JEFE)
+                .requestMatchers("/api/auditoria/**").hasAnyRole(JEFE, ADMIN_TI)
                 
-                // M06 Abastecimiento: Logistica gestiona proveedores y pedidos (RN07)
-                .requestMatchers(HttpMethod.GET, "/api/proveedores/**").hasAnyRole(JEFE, LOGISTICA, TECNICO)
-                .requestMatchers("/api/proveedores/**").hasRole(LOGISTICA)
+                // M06 Abastecimiento: Logistica gestiona proveedores y pedidos (RN07), Admin TI acceso completo
+                .requestMatchers(HttpMethod.GET, "/api/proveedores/**").hasAnyRole(JEFE, LOGISTICA, TECNICO, ADMIN_TI)
+                .requestMatchers("/api/proveedores/**").hasAnyRole(LOGISTICA, ADMIN_TI)
                 // Aprobar o rechazar una orden es potestad del Jefe de Farmacia.
                 // Debe declararse ANTES del matcher general de ordenes o nunca se evalua.
                 .requestMatchers(HttpMethod.PATCH, "/api/ordenes/*/resolver").hasRole(JEFE)
                 .requestMatchers(HttpMethod.POST, "/api/ordenes/*/resolver").hasRole(JEFE)
-                .requestMatchers(HttpMethod.GET, "/api/ordenes/**").hasAnyRole(JEFE, LOGISTICA)
-                .requestMatchers("/api/ordenes/**").hasRole(LOGISTICA)
+                .requestMatchers(HttpMethod.GET, "/api/ordenes/**").hasAnyRole(JEFE, LOGISTICA, ADMIN_TI)
+                .requestMatchers("/api/ordenes/**").hasAnyRole(LOGISTICA, ADMIN_TI)
                 
-                // M02 Medicamentos: el Jefe registra y modifica (RN07)
-                .requestMatchers(HttpMethod.GET, "/api/medicamentos/**").hasAnyRole(JEFE, TECNICO, LOGISTICA)
-                .requestMatchers("/api/medicamentos/**").hasRole(JEFE)
+                // M02 Medicamentos: el Jefe registra y modifica (RN07), Admin TI acceso completo
+                .requestMatchers(HttpMethod.GET, "/api/medicamentos/**").hasAnyRole(JEFE, TECNICO, LOGISTICA, ADMIN_TI)
+                .requestMatchers("/api/medicamentos/**").hasAnyRole(JEFE, ADMIN_TI)
                 
-                // M03 Inventario y lotes: Jefe y Tecnico (ADMIN_TI no toca inventario)
-                .requestMatchers("/api/lotes/**").hasAnyRole(JEFE, TECNICO)
-                .requestMatchers("/api/bajas/**").hasAnyRole(JEFE, TECNICO)
-                .requestMatchers("/api/movimientos/**").hasAnyRole(JEFE, TECNICO)
+                // M03 Inventario y lotes: Jefe, Tecnico y Admin TI acceso completo
+                .requestMatchers("/api/lotes/**").hasAnyRole(JEFE, TECNICO, ADMIN_TI)
+                .requestMatchers("/api/bajas/**").hasAnyRole(JEFE, TECNICO, ADMIN_TI)
+                .requestMatchers("/api/movimientos/**").hasAnyRole(JEFE, TECNICO, ADMIN_TI)
                 
-                // M04 Dispensacion: atencion en caja. ADMIN_TI no vende (RN08)
-                .requestMatchers("/api/dispensaciones/**").hasAnyRole(JEFE, TECNICO)
-                .requestMatchers("/api/recetas/**").hasAnyRole(JEFE, TECNICO)
-                .requestMatchers("/api/pacientes/**").hasAnyRole(JEFE, TECNICO)
+                // M04 Dispensacion: atencion en caja. Admin TI acceso completo para pruebas
+                .requestMatchers("/api/dispensaciones/**").hasAnyRole(JEFE, TECNICO, ADMIN_TI)
+                .requestMatchers("/api/recetas/**").hasAnyRole(JEFE, TECNICO, ADMIN_TI)
+                .requestMatchers("/api/pacientes/**").hasAnyRole(JEFE, TECNICO, ADMIN_TI)
                 
-                // M05 Alertas: el Tecnico solo consulta, Jefe y Logistic a atienden
-                .requestMatchers(HttpMethod.GET, "/api/alertas/**").hasAnyRole(JEFE, TECNICO, LOGISTICA)
-                .requestMatchers("/api/alertas/**").hasAnyRole(JEFE, LOGISTICA)
+                // M05 Alertas: el Tecnico solo consulta, Jefe, Logistic y Admin TI atienden
+                .requestMatchers(HttpMethod.GET, "/api/alertas/**").hasAnyRole(JEFE, TECNICO, LOGISTICA, ADMIN_TI)
+                .requestMatchers("/api/alertas/**").hasAnyRole(JEFE, LOGISTICA, ADMIN_TI)
                 
                 // M07 Dashboard y M08 Reportes
                 .requestMatchers("/api/dashboard/**").hasAnyRole(JEFE, TECNICO, LOGISTICA, ADMIN_TI)
                 .requestMatchers("/api/reportes/**").hasAnyRole(JEFE, LOGISTICA, ADMIN_TI)
                 
                 // Etiquetas de codigo de barras y QR: las imprime quien atiende en caja o inventario
-                .requestMatchers("/api/codigos-barras/**").hasAnyRole(JEFE, TECNICO, LOGISTICA)
+                .requestMatchers("/api/codigos-barras/**").hasAnyRole(JEFE, TECNICO, LOGISTICA, ADMIN_TI)
                 
                 .anyRequest().authenticated()
             )

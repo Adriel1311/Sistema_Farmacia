@@ -38,18 +38,24 @@
         <option *ngFor="let tipo of tipos" [value]="tipo">{{ tipoLabels[tipo] }}</option>
       </select>
     </div>
+
     <div class="fm-field">
       <label class="fm-label" for="rec-desde">Desde</label>
-      <input #desdeInput id="rec-desde" class="fm-input" type="date" [value]="desdeFiltro()" (change)="cambiarDesde(desdeInput.value)" />
+      <input id="rec-desde" class="fm-input" type="date" [value]="desdeFiltro()" (input)="cambiarDesde($any($event.target).value)" />
     </div>
+
     <div class="fm-field">
       <label class="fm-label" for="rec-hasta">Hasta</label>
-      <input #hastaInput id="rec-hasta" class="fm-input" type="date" [value]="hastaFiltro()" (change)="cambiarHasta(hastaInput.value)" />
+      <input id="rec-hasta" class="fm-input" type="date" [value]="hastaFiltro()" (input)="cambiarHasta($any($event.target).value)" />
     </div>
-    <button type="button" class="fm-btn fm-btn--ghost" (click)="limpiarFiltros()">
-      <svg-icon name="close" [size]="16" />
-      Limpiar
-    </button>
+
+    <div class="fm-field">
+      <label class="fm-label fm-label--checkbox">
+        <input type="checkbox" id="rec-pendientes" [checked]="soloPendientes()" (change)="cambiarSoloPendientes($any($event.target).checked)" />
+        <span>Solo pendientes</span>
+      </label>
+    </div>
+    <button type="button" class="fm-btn fm-btn--ghost" (click)="limpiarFiltros()">Limpiar</button>
   </div>
 
   <div class="fm-card">
@@ -133,50 +139,70 @@
       </div>
 
       <div class="fm-field">
-        <label class="fm-label" for="rec-numero">N. receta <span class="fm-label__required">*</span></label>
-        <input id="rec-numero" class="fm-input fm-mono" type="text" formControlName="numeroReceta" placeholder="REC-0001" />
+        <label class="fm-label" for="rec-numero">Numero de receta <span class="fm-label__required">*</span></label>
+        <input
+          id="rec-numero"
+          class="fm-input"
+          type="text"
+          formControlName="numeroReceta"
+          placeholder="Se genera automaticamente si se deja vacio"
+          maxlength="50"
+        />
+        <span class="fm-hint fm-small" *ngIf="proximoNumeroReceta()">
+          Sugerido: <strong>{{ proximoNumeroReceta() }}</strong>
+        </span>
         <span *ngIf="form.controls.numeroReceta.touched && form.controls.numeroReceta.invalid" class="fm-error">
-          Ingresa el numero de receta.
+          El numero de receta no puede exceder 50 caracteres.
         </span>
       </div>
 
       <div class="fm-field">
-        <label class="fm-label" for="rec-tipo-form">Tipo <span class="fm-label__required">*</span></label>
-        <select id="rec-tipo-form" class="fm-select" formControlName="tipoReceta">
-          <option *ngFor="let tipo of tipos" [ngValue]="tipo">{{ tipoLabels[tipo] }}</option>
+        <label class="fm-label" for="rec-medico">Medico <span class="fm-label__required">*</span></label>
+        <select id="rec-medico" class="fm-select" formControlName="medicoId">
+          <option [ngValue]="0">Selecciona un medico</option>
+          <option *ngFor="let medico of medicos()" [ngValue]="medico.id">
+            {{ medico.nombre }}{{ medico.especialidad ? ' - ' + medico.especialidad : '' }}
+          </option>
+        </select>
+        <span *ngIf="form.controls.medicoId.touched && form.controls.medicoId.invalid" class="fm-error">
+          Selecciona el medico que receta.
+        </span>
+      </div>
+
+      <div class="fm-field">
+        <label class="fm-label" for="rec-tipo-receta">Tipo <span class="fm-label__required">*</span></label>
+        <select id="rec-tipo-receta" class="fm-select" formControlName="tipoReceta">
+          <option *ngFor="let tipo of tipos" [value]="tipo">{{ tipoLabels[tipo] }}</option>
         </select>
       </div>
 
-      <div class="fm-field fm-field--full">
-        <label class="fm-label" for="rec-medico">Medico <span class="fm-label__required">*</span></label>
-        <input id="rec-medico" class="fm-input" type="text" formControlName="medico" placeholder="Dr. Juan Perez" />
-        <span *ngIf="form.controls.medico.touched && form.controls.medico.invalid" class="fm-error">
-          Ingresa el medico que emite la receta.
-        </span>
-      </div>
-
       <div class="fm-field">
-        <label class="fm-label" for="rec-fecha">Fecha de receta <span class="fm-label__required">*</span></label>
-        <input id="rec-fecha" class="fm-input" type="date" formControlName="fechaReceta" [max]="hoy" />
+        <label class="fm-label" for="rec-fecha">Fecha <span class="fm-label__required">*</span></label>
+        <input
+          id="rec-fecha"
+          class="fm-input"
+          type="date"
+          formControlName="fechaReceta"
+          [max]="hoy"
+        />
         <span *ngIf="form.controls.fechaReceta.touched && form.controls.fechaReceta.hasError('fechaFutura')" class="fm-error">
-          La fecha de receta no puede ser futura.
+          La fecha no puede ser futura.
         </span>
-        <span
-          *ngIf="form.controls.fechaReceta.touched && form.controls.fechaReceta.invalid && !form.controls.fechaReceta.hasError('fechaFutura')"
-          class="fm-error"
-        >
-          Ingresa la fecha de receta.
+        <span *ngIf="form.controls.fechaReceta.touched && form.controls.fechaReceta.hasError('required')" class="fm-error">
+          La fecha es obligatoria.
         </span>
       </div>
+    </div>
 
-      <div class="fm-field"></div>
+    <div class="fm-card-footer">
+      <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarModal()">Cancelar</button>
+      <button
+        type="submit"
+        class="fm-btn fm-btn--primary"
+        [disabled]="guardando()"
+      >
+        {{ guardando() ? 'Registrando...' : 'Registrar receta' }}
+      </button>
     </div>
   </form>
-
-  <ng-container modalFooter>
-    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarModal()">Cancelar</button>
-    <button type="submit" form="rec-form" class="fm-btn fm-btn--primary" [disabled]="guardando()">
-      {{ guardando() ? 'Guardando...' : 'Registrar receta' }}
-    </button>
-  </ng-container>
 </app-fm-modal>

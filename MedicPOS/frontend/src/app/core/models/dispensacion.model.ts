@@ -1,6 +1,6 @@
 /* ============================================
    M05 DISPENSACION (caja)
-   Reglas: RN02 FEFO, RN03 nunca vencido, RN05.0 una receta una dispensacion.
+   Reglas: RN02 lote que vence primero, RN03 nunca vencido, RN05.0 una receta una dispensacion.
    ============================================ */
 
 import { Lote } from './inventario.model';
@@ -14,7 +14,7 @@ export interface DispensacionItemRequest {
   medicamentoId: number;
   cantidad: number;
   loteId?: number | null;
-  motivoExcepcionFefo?: string | null;
+  motivoExcepcionLoteDistinto?: string | null; // API field: motivoExcepcionFefo
 }
 
 export interface CreateDispensacionRequest {
@@ -33,8 +33,8 @@ export interface DispensacionDetalle {
   fechaVencimiento: string;
   estadoVencimiento: string;
   cantidad: number;
-  excepcionFefo: boolean;
-  motivoExcepcionFefo: string | null;
+  excepcionLoteDistinto: boolean;
+  motivoExcepcionLoteDistinto: string | null;
 }
 
 export interface Dispensacion {
@@ -67,7 +67,7 @@ export interface DispensacionFormItem {
   lotesDisponibles: Lote[];
   loteSeleccionadoId: number | null;
   cantidad: number;
-  excepcionFefo: boolean;
-  motivoExcepcionFefo: string;
+  excepcionLoteDistinto: boolean;
+  motivoExcepcionLoteDistinto: string;
   error?: string;
 }

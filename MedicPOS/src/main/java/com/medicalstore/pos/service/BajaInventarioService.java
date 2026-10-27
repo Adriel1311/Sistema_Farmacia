@@ -1,5 +1,6 @@
 package com.medicalstore.pos.service;
 
+import com.medicalstore.pos.config.AlertScheduler;
 import com.medicalstore.pos.dto.request.RegistrarBajaRequest;
 import com.medicalstore.pos.dto.response.BajaInventarioResponse;
 import com.medicalstore.pos.entity.Auditoria;
@@ -7,6 +8,8 @@ import com.medicalstore.pos.entity.BajaInventario;
 import com.medicalstore.pos.entity.Lote;
 import com.medicalstore.pos.entity.MovimientoInventario;
 import com.medicalstore.pos.entity.Usuario;
+import com.medicalstore.pos.exception.BusinessRuleException;
+import com.medicalstore.pos.exception.ResourceNotFoundException;
 import com.medicalstore.pos.repository.BajaInventarioRepository;
 import com.medicalstore.pos.repository.LoteRepository;
 import com.medicalstore.pos.repository.MovimientoInventarioRepository;
@@ -33,35 +36,38 @@ public class BajaInventarioService {
     private final LoteRepository loteRepository;
     private final MovimientoInventarioRepository movimientoRepository;
     private final AuditoriaService auditoriaService;
+    private final AlertScheduler alertScheduler;
     
     public BajaInventarioService(BajaInventarioRepository bajaRepository,
                                  LoteRepository loteRepository,
                                  MovimientoInventarioRepository movimientoRepository,
-                                 AuditoriaService auditoriaService) {
+                                 AuditoriaService auditoriaService,
+                                 AlertScheduler alertScheduler) {
         this.bajaRepository = bajaRepository;
         this.loteRepository = loteRepository;
         this.movimientoRepository = movimientoRepository;
         this.auditoriaService = auditoriaService;
+        this.alertScheduler = alertScheduler;
     }
     
     @Transactional(rollbackFor = Exception.class)
     public BajaInventarioResponse registrar(RegistrarBajaRequest request, Usuario user, HttpServletRequest httpRequest) {
         Lote lote = loteRepository.findByIdParaActualizar(request.getLoteId())
-                .orElseThrow(() -> new RuntimeException("Lote not found with id: " + request.getLoteId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Lote not found with id: " + request.getLoteId()));
         
         if (lote.getEstado() == Lote.Estado.BAJA) {
-            throw new RuntimeException("El lote " + lote.getNumeroLote() + " ya fue dado de baja");
+            throw new BusinessRuleException("LOTE_YA_DADO_DE_BAJA", "El lote " + lote.getNumeroLote() + " ya fue dado de baja");
         }
         if (request.getCantidad() > lote.getCantidadActual()) {
-            throw new RuntimeException("No se puede dar de baja " + request.getCantidad() 
+            throw new BusinessRuleException("CANTIDAD_EXCEDE_STOCK", "No se puede dar de baja " + request.getCantidad() 
                     + " unidades, el lote " + lote.getNumeroLote() + " solo tiene " + lote.getCantidadActual());
         }
         if (request.getMotivo() == BajaInventario.Motivo.VENCIDO_EN_ESTANTE && !lote.isVencido()) {
-            throw new RuntimeException("El lote " + lote.getNumeroLote() + " aun no esta vencido, "
+            throw new BusinessRuleException("MOTIVO_INCORRECTO_VENCIDO", "El lote " + lote.getNumeroLote() + " aun no esta vencido, "
                     + "use otro motivo de baja");
         }
         if (request.getMotivo() != BajaInventario.Motivo.VENCIDO_EN_ESTANTE && lote.isVencido()) {
-            throw new RuntimeException("El lote " + lote.getNumeroLote() + " esta vencido, "
+            throw new BusinessRuleException("MOTIVO_DEBE_SER_VENCIDO", "El lote " + lote.getNumeroLote() + " esta vencido, "
                     + "el motivo debe ser VENCIDO_EN_ESTANTE");
         }
         
@@ -102,6 +108,9 @@ public class BajaInventarioService {
                 "Baja de " + request.getCantidad() + " unidades del lote " + lote.getNumeroLote() 
                         + " (" + request.getMotivo() + ")",
                 String.valueOf(stockAnterior), String.valueOf(stockNuevo), httpRequest);
+        
+        // RN05.2: evaluar alertas tras baja de inventario
+        alertScheduler.evaluarAlertasPostOperacion();
         
         return mapToResponse(baja);
     }

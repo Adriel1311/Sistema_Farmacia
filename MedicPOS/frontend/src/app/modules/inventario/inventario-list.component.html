@@ -3,7 +3,7 @@
     <div>
       <h1 class="fm-page-title">Inventario y lotes</h1>
       <p class="fm-page-subtitle">
-        Todo medicamento ingresa por lote con fecha de vencimiento (RN01). El semaforo marca verde, ambar y rojo.
+        Todo medicamento se registra por lote con su fecha de vencimiento. El semáforo muestra: verde (vigente), ámbar (próximo a vencer), rojo (crítico).
       </p>
     </div>
     <div class="fm-page-actions">
@@ -15,7 +15,7 @@
         (click)="sincronizarVencidos()"
       >
         <svg-icon name="refresh" [size]="16" />
-        {{ sincronizando() ? 'Sincronizando...' : 'Sincronizar vencidos' }}
+        {{ sincronizando() ? 'Actualizando...' : 'Actualizar vencidos' }}
       </button>
       <button *ngIf="puedeRegistrar" type="button" class="fm-btn fm-btn--primary" (click)="abrirModal()">
         <svg-icon name="plus" [size]="16" />
@@ -170,7 +170,7 @@
             <td class="fm-num fm-strong">{{ lote.cantidadActual }}</td>
             <td>
               <span class="fm-badge" [class.fm-badge--success]="lote.estado === 'ACTIVO'" [class.fm-badge--danger]="lote.estado === 'VENCIDO'" [class.fm-badge--neutral]="lote.estado === 'BAJA'">
-                {{ lote.estado }}
+                {{ lote.estado === 'BAJA' ? 'Dado de baja' : lote.estado }}
               </span>
             </td>
             <td>
@@ -238,7 +238,7 @@
       <div class="fm-field" [class.fm-field--invalid]="form.controls.fechaVencimiento.invalid && form.controls.fechaVencimiento.touched">
         <label class="fm-label" for="lote-vencimiento">Fecha de vencimiento <span class="fm-label__required">*</span></label>
         <input id="lote-vencimiento" class="fm-input" type="date" formControlName="fechaVencimiento" />
-        <span class="fm-hint">Obligatoria: sin vencimiento no se puede registrar el lote (RN01).</span>
+        <span class="fm-hint">Obligatoria: sin fecha de vencimiento no se puede registrar el lote.</span>
       </div>
 
       <div class="fm-field fm-field--full">

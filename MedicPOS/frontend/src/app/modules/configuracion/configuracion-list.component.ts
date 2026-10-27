@@ -13,6 +13,19 @@ interface GrupoConfiguracion {
   items: Configuracion[];
 }
 
+// Mapeo de claves técnicas a nombres amigables para el usuario
+const NOMBRES_AMIGABLES: Record<string, string> = {
+  'vencimiento.dias.critico': 'Días para alerta roja',
+  'vencimiento.dias.proximo': 'Días para alerta ámbar',
+  'sesion.timeout.minutos': 'Minutos antes de cerrar sesión',
+  'alertas.hora.evaluacion': 'Hora de revisión diaria',
+  'orden.sugerida.automatica': 'Generar órdenes automáticamente',
+  'fefo.permitir.excepcion': 'Permitir cambiar lote sugerido',
+};
+
+// Qué claves pertenecen al semáforo (se muestran arriba con estilo especial)
+const CLAVES_SEMAFORO = ['vencimiento.dias.critico', 'vencimiento.dias.proximo'];
+
 @Component({
   selector: 'app-configuracion-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,10 +44,21 @@ export class ConfiguracionListComponent {
 
   readonly borrador = signal<Record<string, string>>({});
   readonly guardandoCategoria = signal('');
+  readonly guardandoClave = signal('');
 
-  readonly grupos = computed<GrupoConfiguracion[]>(() => {
+  readonly totalActivas = computed(() => this.configuraciones().filter(item => item.activo).length);
+  readonly totalInactivas = computed(() => this.configuraciones().length - this.totalActivas());
+
+  // Parámetros del semáforo (siempre visibles arriba)
+  readonly parametrosSemaforo = computed(() => 
+    this.configuraciones().filter(c => CLAVES_SEMAFORO.includes(c.clave))
+  );
+
+  // Resto de parámetros agrupados por categoría (excluyendo semáforo)
+  readonly gruposOtros = computed<GrupoConfiguracion[]>(() => {
     const mapa = new Map<string, Configuracion[]>();
     for (const item of this.configuraciones()) {
+      if (CLAVES_SEMAFORO.includes(item.clave)) continue;
       const lista = mapa.get(item.categoria);
       if (lista) {
         lista.push(item);
@@ -46,9 +70,6 @@ export class ConfiguracionListComponent {
       .map(([categoria, items]) => ({ categoria, items }))
       .sort((a, b) => a.categoria.localeCompare(b.categoria, 'es'));
   });
-
-  readonly totalActivas = computed(() => this.configuraciones().filter(item => item.activo).length);
-  readonly totalInactivas = computed(() => this.configuraciones().length - this.totalActivas());
 
   constructor() {
     this.cargar();
@@ -132,12 +153,54 @@ export class ConfiguracionListComponent {
       )
       .subscribe({
         next: actualizadas => {
-          this.configuraciones.set(actualizadas);
+          // Merge: actualizar solo los items modificados, mantener el resto
+          const nuevos = new Map(actualizadas.map(a => [a.clave, a]));
+          this.configuraciones.update(actual => 
+            actual.map(item => nuevos.has(item.clave) ? nuevos.get(item.clave)! : item)
+          );
           this.limpiarBorrador(grupo);
           this.success.set(`Configuracion de "${grupo.categoria}" actualizada.`);
           this.cargarSemaforo();
         },
         error: (err: Error) => this.error.set(err.message || 'No se pudo guardar la configuracion.')
+      });
+  }
+
+  /** Guarda un único parámetro individualmente */
+  guardarIndividual(item: Configuracion): void {
+    const valor = this.valorEditado(item);
+    if (!valor || valor.trim().length === 0) {
+      this.error.set(`El valor de "${this.nombreAmigable(item.clave)}" no puede quedar vacío.`);
+      return;
+    }
+
+    this.guardandoClave.set(item.clave);
+    this.error.set('');
+
+    const request: UpdateConfiguracionRequest = { valores: { [item.clave]: valor.trim() } };
+
+    this.servicio
+      .update(request)
+      .pipe(
+        finalize(() => this.guardandoClave.set('')),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        next: actualizadas => {
+          // Merge: actualizar solo los items modificados, mantener el resto
+          const nuevos = new Map(actualizadas.map(a => [a.clave, a]));
+          this.configuraciones.update(actual => 
+            actual.map(item => nuevos.has(item.clave) ? nuevos.get(item.clave)! : item)
+          );
+          this.borrador.update(actual => {
+            const siguiente = { ...actual };
+            delete siguiente[item.clave];
+            return siguiente;
+          });
+          this.success.set(`"${this.nombreAmigable(item.clave)}" actualizado.`);
+          this.cargarSemaforo();
+        },
+        error: (err: Error) => this.error.set(err.message || 'No se pudo guardar la configuración.')
       });
   }
 
@@ -170,5 +233,15 @@ export class ConfiguracionListComponent {
 
   trackByClave(_index: number, item: Configuracion): number {
     return item.id;
+  }
+
+  /** Devuelve el nombre amigable para una clave técnica */
+  nombreAmigable(clave: string): string {
+    return NOMBRES_AMIGABLES[clave] ?? clave;
+  }
+
+  /** Verifica si una clave pertenece al semáforo */
+  esSemaforo(clave: string): boolean {
+    return CLAVES_SEMAFORO.includes(clave);
   }
 }

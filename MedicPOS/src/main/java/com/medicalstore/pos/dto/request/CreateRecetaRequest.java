@@ -11,23 +11,24 @@ import java.time.LocalDate;
 
 /**
  * RF-05A / RF-05B: receta de paciente asegurado o particular (RN05.0).
+ * El numero de receta es opcional: si no se proporciona, se genera automaticamente
+ * con formato REC-YYYY-NNNNN (ej: REC-2026-00001).
+ * El medico se referencia por ID (FK a la tabla medico).
  */
 @Data
 public class CreateRecetaRequest {
     @NotNull(message = "El paciente es obligatorio")
     private Long pacienteId;
-    
-    @NotBlank(message = "El numero de receta es obligatorio")
+
     @Size(max = 50, message = "El numero de receta no debe superar 50 caracteres")
     private String numeroReceta;
-    
-    @NotBlank(message = "El medico responsable es obligatorio")
-    @Size(max = 200, message = "El medico no debe superar 200 caracteres")
-    private String medico;
-    
+
+    @NotNull(message = "El medico responsable es obligatorio")
+    private Long medicoId;
+
     @NotNull(message = "El tipo de receta es obligatorio")
     private Receta.TipoReceta tipoReceta;
-    
+
     @NotNull(message = "La fecha de receta es obligatoria")
     @PastOrPresent(message = "La fecha de receta no puede ser futura")
     private LocalDate fechaReceta;

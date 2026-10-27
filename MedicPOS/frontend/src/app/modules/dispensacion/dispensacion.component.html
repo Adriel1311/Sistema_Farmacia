@@ -1,9 +1,9 @@
 <div class="fm-page">
   <div class="fm-page-header">
     <div>
-      <h1 class="fm-page-title">Dispensacion en caja</h1>
+      <h1 class="fm-page-title">Dispensación en caja</h1>
       <p class="fm-page-subtitle">
-        Cada receta origina una sola dispensacion (RN05.0). El descuento se hace por FEFO y nunca toca lotes vencidos (RN02, RN03).
+        Cada receta genera un ticket. El sistema elige automáticamente el lote que vence primero y nunca usa lotes vencidos.
       </p>
     </div>
     <div class="fm-page-actions dis-segments">
@@ -150,7 +150,7 @@
                 />
               </div>
               <div class="fm-field">
-                <label class="fm-label" [for]="'lote-' + item.medicamentoId">Lote (FEFO)</label>
+                <label class="fm-label" [for]="'lote-' + item.medicamentoId">Lote (sugerido: el que vence primero)</label>
                 <select
                   [id]="'lote-' + item.medicamentoId"
                   class="fm-select"
@@ -162,7 +162,7 @@
                     *ngFor="let lote of item.lotesDisponibles; let i = index"
                     [ngValue]="lote.id"
                   >
-                    {{ lote.numeroLote }} - vence {{ lote.fechaVencimiento | fmDate }} ({{ lote.cantidadActual }}){{ i === 0 ? ' *FEFO' : '' }}
+                    {{ lote.numeroLote }} - vence {{ lote.fechaVencimiento | fmDate }} ({{ lote.cantidadActual }}){{ i === 0 ? ' (sugerido)' : '' }}
                   </option>
                 </select>
               </div>
@@ -170,20 +170,20 @@
 
             <div class="dis-fefo" *ngIf="item.lotesDisponibles.length > 1">
               <svg-icon name="clock" [size]="15" />
-              <span>FEFO sugiere el lote con vencimiento mas proximo. Usar otro lote es una excepcion.</span>
+              <span>El sistema sugiere el lote que vence primero. Usar otro lote requiere autorización.</span>
               <button
-                *ngIf="puedeExcepcionFefo && !item.excepcionFefo"
+                *ngIf="puedeExcepcionLoteDistinto() && !item.excepcionLoteDistinto"
                 type="button"
                 class="fm-btn fm-btn--sm fm-btn--secondary"
                 (click)="abrirExcepcion(item)"
               >
-                Autorizar excepcion
+                Autorizar lote distinto
               </button>
             </div>
 
-            <div class="fm-alert fm-alert--warning" *ngIf="item.excepcionFefo">
+            <div class="fm-alert fm-alert--warning" *ngIf="item.excepcionLoteDistinto">
               <svg-icon name="warning" [size]="16" />
-              <span>Excepcion FEFO: {{ item.motivoExcepcionFefo }}</span>
+              <span>Excepción (lote distinto al sugerido): {{ item.motivoExcepcionLoteDistinto }}</span>
             </div>
 
             <div class="fm-alert fm-alert--error" *ngIf="item.error">
@@ -193,8 +193,8 @@
           </article>
         </div>
 
-        <p class="fm-muted fm-small" *ngIf="items().length === 0" style="margin: 0">
-              Agrega los medicamentos a dispensar. El sistema descontara por lote segun FEFO.
+<p class="fm-muted fm-small" *ngIf="items().length === 0" style="margin: 0">
+          Agrega los medicamentos a dispensar. El sistema descontará por lote según el que vence primero.
         </p>
       </div>
       <div class="fm-card-footer">
@@ -296,7 +296,7 @@
           <tr *ngFor="let detalle of ticket.detalles">
             <td>
               <div>{{ detalle.medicamentoNombre }}</div>
-              <div class="fm-xs fm-muted" *ngIf="detalle.excepcionFefo">Excepcion FEFO: {{ detalle.motivoExcepcionFefo }}</div>
+              <div class="fm-xs fm-muted" *ngIf="detalle.excepcionLoteDistinto">Excepción (lote distinto al sugerido): {{ detalle.motivoExcepcionLoteDistinto }}</div>
             </td>
             <td class="fm-mono">{{ detalle.numeroLote }}</td>
             <td class="fm-num">{{ detalle.cantidad }}</td>
@@ -316,12 +316,12 @@
   </ng-container>
 </app-fm-modal>
 
-<app-fm-modal *ngIf="excepcionModal()" title="Autorizar excepcion al orden FEFO" (closed)="cerrarExcepcion()">
+<app-fm-modal *ngIf="excepcionModal()" title="Autorizar lote distinto al sugerido" (closed)="cerrarExcepcion()">
   <div class="fm-alert fm-alert--warning">
     <svg-icon name="warning" [size]="18" />
     <span>
-      Se descontara un lote distinto al que vence primero. Solo el Jefe de Farmacia puede autorizarlo y queda
-      registrado en auditoria con el motivo.
+      Se usará un lote distinto al que vence primero. Solo el Jefe de Farmacia puede autorizarlo y queda
+      registrado en el historial con el motivo.
     </span>
   </div>
   <form [formGroup]="excepcionForm" (ngSubmit)="confirmarExcepcion()" novalidate>

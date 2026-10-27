@@ -38,6 +38,13 @@ public class ConfiguracionController extends BaseController {
     public ResponseEntity<Map<String, Object>> getSemaforo() {
         return ResponseEntity.ok(configuracionService.getSemaforoVigente());
     }
+
+    @GetMapping("/fefo.permitir.excepcion")
+    @Operation(summary = "Verificar si se permiten excepciones FEFO", description = "Devuelve true si el Jefe de Farmacia puede forzar un lote distinto al FEFO")
+    public ResponseEntity<Map<String, String>> getFefoPermitirExcepcion() {
+        boolean permitido = configuracionService.getBoolean(ConfiguracionService.CLAVE_PERMITIR_EXCEPCION_FEFO, true);
+        return ResponseEntity.ok(Map.of("valor", String.valueOf(permitido)));
+    }
     
     @PutMapping
     @Operation(summary = "Actualizar parametros", description = "Valida que el umbral critico sea menor que el proximo")

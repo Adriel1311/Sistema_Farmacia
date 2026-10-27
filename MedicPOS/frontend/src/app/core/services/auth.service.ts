@@ -99,8 +99,8 @@ export class AuthService {
 export const DEFAULT_ROUTE_BY_ROLE: Record<UserRole, string> = {
   [UserRole.JEFE_FARMACIA]: '/dashboard',
   [UserRole.TECNICO_FARMACIA]: '/dispensacion',
-  [UserRole.LOGISTICA]: '/inventario',
-  [UserRole.ADMIN_TI]: '/usuarios'
+  [UserRole.LOGISTICA]: '/dashboard',
+  [UserRole.ADMIN_TI]: '/dashboard'
 };
 
 export function defaultRouteForRole(role: UserRole | null): string {

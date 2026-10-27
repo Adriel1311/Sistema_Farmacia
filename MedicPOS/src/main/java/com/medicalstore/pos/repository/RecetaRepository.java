@@ -42,8 +42,21 @@ public interface RecetaRepository extends JpaRepository<Receta, Long> {
                                                @Param("desde") LocalDate desde,
                                                @Param("hasta") LocalDate hasta);
 
+    @Query("SELECT r FROM Receta r JOIN FETCH r.paciente " +
+            "WHERE NOT EXISTS (SELECT 1 FROM Dispensacion d WHERE d.receta.id = r.id) " +
+            "ORDER BY r.fechaReceta DESC, r.id DESC")
+    List<Receta> findPendientesWithPaciente();
+
     @Query("SELECT COUNT(r) FROM Receta r WHERE r.fechaReceta >= :desde")
     long countDesde(@Param("desde") LocalDate desde);
 
     boolean existsByNumeroRecetaAndIdNot(String numeroReceta, Long id);
+
+    /**
+     * Obtiene el maximo numero de secuencia de receta para un ano dado.
+     * El formato esperado es REC-YYYY-NNNNN.
+     */
+    @Query("SELECT COALESCE(MAX(CAST(SUBSTRING(r.numeroReceta, 10) AS INTEGER)), 0) " +
+           "FROM Receta r WHERE r.numeroReceta LIKE :pattern")
+    Integer findMaxSecuenciaByAno(@Param("pattern") String pattern);
 }

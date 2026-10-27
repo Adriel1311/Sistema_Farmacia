@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { API } from '../constants/api-endpoints';
-import { CreatePacienteRequest, CreateRecetaRequest, Paciente, Receta, TipoReceta } from '../models/receta.model';
+import { CreatePacienteRequest, CreateRecetaRequest, Medico, Paciente, Receta, TipoReceta } from '../models/receta.model';
 
 @Injectable({ providedIn: 'root' })
 export class PacienteRecetaService {
@@ -24,11 +24,12 @@ export class PacienteRecetaService {
     return this.api.post<Paciente>(API.pacientes.base, request);
   }
 
-  getRecetas(filtros?: { tipo?: TipoReceta; desde?: string; hasta?: string }): Observable<Receta[]> {
+  getRecetas(filtros?: { tipo?: TipoReceta; desde?: string; hasta?: string; pendiente?: boolean }): Observable<Receta[]> {
     return this.api.get<Receta[]>(API.recetas.base, {
       tipo: filtros?.tipo,
       desde: filtros?.desde,
-      hasta: filtros?.hasta
+      hasta: filtros?.hasta,
+      pendiente: filtros?.pendiente
     });
   }
 
@@ -38,5 +39,13 @@ export class PacienteRecetaService {
 
   createReceta(request: CreateRecetaRequest): Observable<Receta> {
     return this.api.post<Receta>(API.recetas.base, request);
+  }
+
+  getProximoNumeroReceta(): Observable<{ valor: string }> {
+    return this.api.get<{ valor: string }>(API.recetas.proximoNumero);
+  }
+
+  getMedicosActivos(): Observable<Medico[]> {
+    return this.api.get<Medico[]>(API.medicos.base);
   }
 }

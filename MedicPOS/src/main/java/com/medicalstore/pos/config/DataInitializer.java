@@ -57,7 +57,19 @@ public class DataInitializer {
     private void crearUsuario(UsuarioRepository usuarioRepository,
                               String usuario, String nombres, String apellidos,
                               String correo, Rol rol, String claveHash) {
-        if (usuarioRepository.existsByUsuario(usuario)) {
+        Usuario usuarioExistente = usuarioRepository.findByUsuario(usuario).orElse(null);
+        if (usuarioExistente != null) {
+            // Actualizar rol si es diferente
+            if (!rol.getNombre().equals(usuarioExistente.getNombreRol())) {
+                usuarioExistente.setRol(rol);
+                usuarioExistente.setPasswordHash(claveHash);
+                usuarioExistente.setNombres(nombres);
+                usuarioExistente.setApellidos(apellidos);
+                usuarioExistente.setCorreo(correo);
+                usuarioExistente.setActivo(true);
+                usuarioRepository.save(usuarioExistente);
+                log.info("FarmaMed: usuario existente actualizado -> {}", usuario);
+            }
             return;
         }
         usuarioRepository.save(Usuario.builder()

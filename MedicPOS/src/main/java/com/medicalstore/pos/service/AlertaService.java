@@ -97,7 +97,7 @@ public class AlertaService {
             
             alertas.add(AlertaResponse.builder()
                     .clave(VENCIMIENTO_CRITICO)
-                    .tipo(AlertaResponse.TipoAlerta.VENCIMIENTO)
+                    .tipo(AlertaResponse.TipoAlerta.PROXIMO_VENCER)
                     .prioridad(AlertaResponse.Prioridad.ALTA)
                     .titulo("Lotes por vencer en " + diasCritico + " dias o menos")
                     .mensaje(criticos.size() + " lote(s) vencen dentro de " + diasCritico
@@ -116,7 +116,7 @@ public class AlertaService {
             
             alertas.add(AlertaResponse.builder()
                     .clave(VENCIMIENTO_PROXIMO)
-                    .tipo(AlertaResponse.TipoAlerta.VENCIMIENTO)
+                    .tipo(AlertaResponse.TipoAlerta.PROXIMO_VENCER)
                     .prioridad(AlertaResponse.Prioridad.MEDIA)
                     .titulo("Lotes proximos a vencer")
                     .mensaje(proximos.size() + " lote(s) vencen entre " + (diasCritico + 1)
@@ -147,7 +147,7 @@ public class AlertaService {
             
             alertas.add(AlertaResponse.builder()
                     .clave(LOTE_VENCIDO_ESTANTE + ":" + lote.getId())
-                    .tipo(AlertaResponse.TipoAlerta.VENCIMIENTO)
+                    .tipo(AlertaResponse.TipoAlerta.VENCIDO)
                     .prioridad(AlertaResponse.Prioridad.ALTA)
                     .titulo("Lote vencido en el estante: " + lote.getNumeroLote())
                     .mensaje(lote.getMedicamento().getNombre() + " tiene " + lote.getCantidadActual()
@@ -185,7 +185,7 @@ public class AlertaService {
             
             alertas.add(AlertaResponse.builder()
                     .clave(STOCK_CRITICO + ":" + medicamento.getId())
-                    .tipo(AlertaResponse.TipoAlerta.STOCK)
+                    .tipo(AlertaResponse.TipoAlerta.STOCK_CRITICO)
                     .prioridad(AlertaResponse.Prioridad.ALTA)
                     .titulo("Stock critico: " + medicamento.getNombre())
                     .mensaje(medicamento.getNombre() + " tiene " + stockVigente + " "
@@ -219,7 +219,7 @@ public class AlertaService {
         
         return List.of(AlertaResponse.builder()
                 .clave(ORDEN_SUGERIDA)
-                .tipo(AlertaResponse.TipoAlerta.ORDEN)
+                .tipo(AlertaResponse.TipoAlerta.ORDEN_SUGERIDA)
                 .prioridad(AlertaResponse.Prioridad.MEDIA)
                 .titulo("Pedido sugerido disponible")
                 .mensaje("El sistema propone abastecer " + sugerencias.size() + " medicamento(s). "

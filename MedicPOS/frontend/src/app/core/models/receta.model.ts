@@ -24,6 +24,13 @@ export interface CreatePacienteRequest {
   apellidos: string;
 }
 
+export interface Medico {
+  id: number;
+  nombre: string;
+  especialidad: string;
+  activo: boolean;
+}
+
 export interface Receta {
   id: number;
   numeroReceta: string;
@@ -43,7 +50,7 @@ export interface Receta {
 export interface CreateRecetaRequest {
   pacienteId: number;
   numeroReceta: string;
-  medico: string;
+  medicoId: number;
   tipoReceta: TipoReceta;
   fechaReceta: string;
 }

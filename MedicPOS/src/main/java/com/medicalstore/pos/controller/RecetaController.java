@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/recetas")
@@ -30,18 +31,26 @@ public class RecetaController extends BaseController {
     }
     
     @GetMapping
-    @Operation(summary = "Listar recetas", description = "Filtros opcionales por tipo y rango de fecha")
+    @Operation(summary = "Listar recetas", description = "Filtros opcionales por tipo, rango de fecha y pendientes")
     public ResponseEntity<List<RecetaResponse>> getAll(
             @RequestParam(required = false) Receta.TipoReceta tipo,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate desde,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate hasta) {
-        return ResponseEntity.ok(recetaService.getAll(tipo, desde, hasta));
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate hasta,
+            @RequestParam(required = false) Boolean pendiente) {
+        return ResponseEntity.ok(recetaService.getAll(tipo, desde, hasta, pendiente));
     }
     
     @GetMapping("/{id}")
     @Operation(summary = "Detalle de una receta")
     public ResponseEntity<RecetaResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(recetaService.getById(id));
+    }
+    
+    @GetMapping("/proximo-numero")
+    @Operation(summary = "Obtener proximo numero de receta", description = "Genera el siguiente numero de receta auto-incremental con formato REC-YYYY-NNNNN")
+    public ResponseEntity<Map<String, String>> getProximoNumeroReceta() {
+        String proximo = recetaService.generarSiguienteNumeroReceta();
+        return ResponseEntity.ok(Map.of("valor", proximo));
     }
     
     @PostMapping

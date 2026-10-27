@@ -1,7 +1,7 @@
 <div class="fm-page">
   <header class="fm-page-header">
     <div>
-      <h1 class="fm-page-title">Auditoria</h1>
+      <h1 class="fm-page-title">Auditoría</h1>
       <p class="fm-page-subtitle">Historial de cambios sobre los datos del sistema</p>
     </div>
     <div class="fm-page-actions">
@@ -74,7 +74,7 @@
       </div>
     </div>
     <div class="fm-card-footer aud-filtros__footer">
-      <span class="fm-xs fm-muted">Los filtros se cruzan: se consulta el mas restrictivo y se acota el resto.</span>
+      <span class="fm-xs fm-muted">Los filtros se cruzan: se consulta el más restrictivo y se acota el resto.</span>
       <div class="aud-filtros__acciones">
         <button type="button" class="fm-btn fm-btn--secondary fm-btn--sm" (click)="limpiarFiltros()">Limpiar</button>
         <button type="submit" class="fm-btn fm-btn--primary fm-btn--sm" [disabled]="loading()">
@@ -87,15 +87,15 @@
 
   <div class="fm-card">
     <div class="fm-card-header">
-      <h2 class="fm-card-title">Registros de auditoria</h2>
+      <h2 class="fm-card-title">Registros de auditoría</h2>
       <span class="fm-muted fm-small">{{ visibles().length }} registro(s)</span>
     </div>
     <div class="fm-card-body fm-card-body--flush">
-      <app-fm-loading *ngIf="loading()" text="Cargando auditoria..."></app-fm-loading>
+      <app-fm-loading *ngIf="loading()" text="Cargando auditoría..."></app-fm-loading>
 
       <app-fm-empty
         *ngIf="!loading() && visibles().length === 0"
-        title="No hay registros de auditoria para los filtros indicados"
+        title="No hay registros de auditoría para los filtros indicados"
         message="Ajusta el rango de fechas, la entidad o el usuario para ampliar la busqueda."
         action="Limpiar filtros"
         (actionClick)="limpiarFiltros()"
@@ -108,10 +108,9 @@
               <th class="fm-nowrap">Fecha y hora</th>
               <th>Usuario</th>
               <th class="fm-nowrap">Entidad</th>
-              <th class="fm-nowrap">Accion</th>
-              <th class="fm-hidden-mobile">Descripcion</th>
-              <th class="aud-valor">Valor anterior</th>
-              <th class="aud-valor">Valor nuevo</th>
+              <th class="fm-nowrap">Acción</th>
+              <th class="fm-hidden-mobile">Descripción</th>
+              <th class="fm-nowrap"></th>
             </tr>
           </thead>
           <tbody>
@@ -123,11 +122,20 @@
               </td>
               <td class="fm-nowrap fm-strong">{{ registro.entidad }}</td>
               <td class="fm-nowrap">
-                <span class="fm-badge fm-badge--info">{{ registro.accion }}</span>
+                <span class="fm-badge fm-badge--info">{{ accionLegible(registro.accion) }}</span>
               </td>
               <td class="fm-hidden-mobile aud-descripcion" [title]="registro.descripcion">{{ registro.descripcion }}</td>
-              <td class="aud-valor" [title]="registro.valorAnterior">{{ registro.valorAnterior || '-' }}</td>
-              <td class="aud-valor" [title]="registro.valorNuevo">{{ registro.valorNuevo || '-' }}</td>
+              <td class="fm-nowrap fm-right">
+                <button
+                  type="button"
+                  class="fm-btn fm-btn--ghost fm-btn--sm aud-ver-cambios"
+                  (click)="abrirDetalle(registro)"
+                  [attr.aria-label]="'Ver cambios en ' + registro.entidad"
+                >
+                  <svg-icon name="eye" [size]="16" />
+                  <span class="fm-hidden-mobile">Ver cambios</span>
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -135,3 +143,52 @@
     </div>
   </div>
 </div>
+
+<!-- Modal: Ver cambios -->
+<app-fm-modal
+  *ngIf="detalleAbierto() as registro"
+  [title]="'Cambios en ' + registro.entidad"
+  (closed)="cerrarDetalle()"
+>
+  <div class="aud-detalle">
+    <div class="aud-detalle__header">
+      <dl class="aud-detalle__meta">
+        <div><dt>Entidad</dt><dd>{{ registro.entidad }}</dd></div>
+        <div><dt>Acción</dt><dd><span class="fm-badge fm-badge--info">{{ accionLegible(registro.accion) }}</span></dd></div>
+        <div><dt>Usuario</dt><dd>{{ registro.usuarioNombre }} ({{ registro.usuarioRol }})</dd></div>
+        <div><dt>Fecha y hora</dt><dd>{{ registro.fechaHora | fmDate: 'datetime' }}</dd></div>
+      </dl>
+    </div>
+
+    <div class="aud-detalle__cambios" *ngIf="cambiosDetalle().length > 0; else sinCambios">
+      <table class="aud-detalle__tabla">
+        <thead>
+          <tr>
+            <th scope="col">Campo</th>
+            <th scope="col">Antes</th>
+            <th scope="col">Después</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cambio of cambiosDetalle(); trackBy: trackCambio">
+            <td class="aud-detalle__campo">{{ cambio.campo }}</td>
+            <td class="aud-detalle__valor aud-detalle__valor--antes">{{ cambio.antes }}</td>
+            <td class="aud-detalle__valor aud-detalle__valor--despues">{{ cambio.despues }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #sinCambios>
+      <div class="aud-detalle__sin-cambios">
+        <svg-icon name="info" [size]="24" />
+        <p>No hay cambios detallados en este registro.</p>
+        <p class="fm-xs fm-muted">La descripción indica qué ocurrió: {{ detalleAbierto()?.descripcion }}</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarDetalle()">Cerrar</button>
+  </ng-container>
+</app-fm-modal>

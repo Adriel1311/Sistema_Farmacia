@@ -1,7 +1,7 @@
 <div class="shell" [class.shell--collapsed]="isCollapsed()">
-  <div class="scrim" *ngIf="isMobile() && drawerOpen()" (click)="closeDrawer()"></div>
+  <div class="scrim" *ngIf="isMobile() && drawerOpen()" (click)="closeDrawer()" style="cursor: pointer;"></div>
 
-  <aside class="sidebar" [class.sidebar--open]="drawerOpen()" aria-label="Navegacion principal">
+  <aside class="sidebar" [class.sidebar--open]="drawerOpen()" aria-label="Navegacion principal" role="dialog" aria-modal="true" aria-label="Menú de navegación">
     <a class="sidebar__brand" [routerLink]="['/dashboard']">
       <span class="brand__mark" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
@@ -20,7 +20,7 @@
       <span class="sidebar__unit-value">Socorro Central #04</span>
     </div>
 
-    <nav class="sidebar__nav">
+    <nav class="sidebar__nav" role="navigation" aria-label="Menú principal">
       <div class="sidebar__group" *ngFor="let group of groups()">
         <span class="sidebar__group-label" *ngIf="!isCollapsed()">{{ group.label }}</span>
         <span class="sidebar__group-rule" *ngIf="isCollapsed()"></span>
@@ -30,6 +30,7 @@
           [routerLink]="item.route"
           routerLinkActive="sidebar__link--active"
           [attr.title]="isCollapsed() ? item.label : null"
+          tabindex="0"
         >
           <svg-icon [name]="item.icon" [size]="20" />
           <span class="sidebar__label" *ngIf="!isCollapsed()">{{ item.label }}</span>

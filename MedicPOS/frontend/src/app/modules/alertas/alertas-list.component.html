@@ -58,7 +58,7 @@
   </div>
 
   <div class="fm-toolbar">
-    <span class="fm-muted fm-small">Ordenadas por prioridad: alta, media y baja (RN04).</span>
+    <span class="fm-muted fm-small">Ordenadas por prioridad: alta, media y baja.</span>
     <span class="fm-spacer"></span>
     <button
       type="button"
@@ -115,7 +115,7 @@
 
           <p class="ale-card__mensaje">{{ alerta.mensaje }}</p>
 
-          <p class="fm-xs fm-muted ale-card__referencia">Referencia: {{ referencia(alerta) }}</p>
+          <p class="fm-xs fm-muted ale-card__referencia">{{ alerta.referenciaTipo }}: {{ alerta.referenciaId }}</p>
 
           <div *ngIf="alerta.atendida" class="ale-card__atendida">
             <svg-icon name="check" [size]="14" />
@@ -166,7 +166,7 @@
         class="fm-textarea"
         rows="3"
         formControlName="comentario"
-        placeholder="Detalle de la accion realizada (opcional)"
+        placeholder="Detalle de la acción realizada (opcional)"
       ></textarea>
       <span class="fm-hint">Opcional. Se registra junto a la alerta atendida.</span>
     </div>
@@ -175,7 +175,7 @@
   <ng-container modalFooter>
     <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarAtender()">Cancelar</button>
     <button type="submit" form="ale-atender-form" class="fm-btn fm-btn--primary" [disabled]="guardando()">
-      {{ guardando() ? 'Atendiendo...' : 'Confirmar atención' }}
+      {{ guardando() ? 'Atendiendo...' : 'Marcar como atendida' }}
     </button>
   </ng-container>
 </app-fm-modal>

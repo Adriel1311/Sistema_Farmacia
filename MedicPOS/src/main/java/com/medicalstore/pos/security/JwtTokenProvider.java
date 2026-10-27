@@ -21,7 +21,7 @@ public class JwtTokenProvider {
     private String jwtSecret;
     
     @Value("${spring.security.jwt.expiration}")
-    private long jwtExpiration;
+    private long defaultJwtExpiration;
     
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
@@ -29,19 +29,26 @@ public class JwtTokenProvider {
     
     public String generateToken(Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return buildToken(userDetails.getUsername(), null);
+        return buildToken(userDetails.getUsername(), null, defaultJwtExpiration);
     }
     
     /**
      * Genera el token de un usuario FarmaMed incorporando su rol (RN08).
      */
     public String generateToken(Usuario usuario) {
-        return buildToken(usuario.getUsuario(), usuario.getNombreRol());
+        return buildToken(usuario.getUsuario(), usuario.getNombreRol(), defaultJwtExpiration);
     }
     
-    private String buildToken(String subject, String rol) {
+    /**
+     * Genera un token con expiración personalizada (en milisegundos).
+     */
+    public String generateToken(Usuario usuario, long expirationMs) {
+        return buildToken(usuario.getUsuario(), usuario.getNombreRol(), expirationMs);
+    }
+    
+    private String buildToken(String subject, String rol, long expirationMs) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpiration);
+        Date expiryDate = new Date(now.getTime() + expirationMs);
         
         var builder = Jwts.builder()
                 .subject(subject)

@@ -1,5 +1,7 @@
 package com.medicalstore.pos.service;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.medicalstore.pos.dto.request.UpdateConfiguracionRequest;
 import com.medicalstore.pos.dto.response.ConfiguracionResponse;
 import com.medicalstore.pos.entity.Auditoria;
@@ -13,11 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
  * M11 Configuracion: parametros globales del sistema.
  * Solo el Jefe de Farmacia puede modificarlos y todo cambio queda auditado (RN04, RN06).
+ * Usa Caffeine cache para evitar consultas repetidas a BD en getInt/getBoolean.
  */
 @Service
 public class ConfiguracionService {
@@ -37,6 +41,12 @@ public class ConfiguracionService {
     private final ConfiguracionSistemaRepository configuracionRepository;
     private final AuditoriaService auditoriaService;
     
+    // Cache: expira a los 5 min, max 100 entradas
+    private final Cache<String, Object> configCache = Caffeine.newBuilder()
+            .maximumSize(100)
+            .expireAfterWrite(5, TimeUnit.MINUTES)
+            .build();
+    
     public ConfiguracionService(ConfiguracionSistemaRepository configuracionRepository,
                                 AuditoriaService auditoriaService) {
         this.configuracionRepository = configuracionRepository;
@@ -45,25 +55,30 @@ public class ConfiguracionService {
     
     /**
      * Devuelve el valor numerico de un parametro o el valor por defecto si no existe.
+     * Usa cache para evitar consultas repetidas a BD.
      */
     @Transactional(readOnly = true)
     public int getInt(String clave, int porDefecto) {
-        return configuracionRepository.findByClave(clave)
-                .map(c -> {
-                    try {
-                        return Integer.parseInt(c.getValor().trim());
-                    } catch (NumberFormatException e) {
-                        return porDefecto;
-                    }
-                })
-                .orElse(porDefecto);
+        return (Integer) configCache.get(clave + ":int:" + porDefecto, k -> 
+            configuracionRepository.findByClave(clave)
+                    .map(c -> {
+                        try {
+                            return Integer.parseInt(c.getValor().trim());
+                        } catch (NumberFormatException e) {
+                            return porDefecto;
+                        }
+                    })
+                    .orElse(porDefecto)
+        );
     }
     
     @Transactional(readOnly = true)
     public boolean getBoolean(String clave, boolean porDefecto) {
-        return configuracionRepository.findByClave(clave)
-                .map(c -> Boolean.parseBoolean(c.getValor().trim()))
-                .orElse(porDefecto);
+        return (Boolean) configCache.get(clave + ":bool:" + porDefecto, k ->
+            configuracionRepository.findByClave(clave)
+                    .map(c -> Boolean.parseBoolean(c.getValor().trim()))
+                    .orElse(porDefecto)
+        );
     }
     
     /**
@@ -116,6 +131,14 @@ public class ConfiguracionService {
                     valorAnterior, valor, httpRequest);
             
             actualizados.add(mapToResponse(guardada));
+        }
+        
+        // Invalidate cache for updated keys
+        for (String clave : request.getValores().keySet()) {
+            configCache.invalidate(clave + ":int:" + DEFAULT_DIAS_CRITICO);
+            configCache.invalidate(clave + ":int:" + DEFAULT_DIAS_PROXIMO);
+            configCache.invalidate(clave + ":bool:true");
+            configCache.invalidate(clave + ":bool:false");
         }
         
         return actualizados;

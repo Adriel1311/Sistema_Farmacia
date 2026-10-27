@@ -35,13 +35,16 @@ public class AlertaResponse {
     private String atendidaPor;
     
     public enum TipoAlerta {
-        VENCIMIENTO,
-        STOCK,
-        ORDEN
+        STOCK_CRITICO,
+        PROXIMO_VENCER,
+        VENCIDO,
+        ORDEN_SUGERIDA,
+        RECETA_VIGENTE
     }
     
     public enum Prioridad {
         ALTA,
-        MEDIA
+        MEDIA,
+        BAJA
     }
 }

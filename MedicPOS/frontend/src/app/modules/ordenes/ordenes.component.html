@@ -1,9 +1,9 @@
 <div class="fm-page">
   <div class="fm-page-header">
     <div>
-      <h1 class="fm-page-title">Ordenes de compra</h1>
+      <h1 class="fm-page-title">Órdenes de compra</h1>
       <p class="fm-page-subtitle">
-        Logistica genera la orden y el Jefe de Farmacia la aprueba o rechaza (RSP-06).
+        Logística genera la orden y el Jefe de Farmacia la aprueba o rechaza.
       </p>
     </div>
     <div class="fm-page-actions">
@@ -144,7 +144,7 @@
                   class="fm-btn fm-btn--sm fm-btn--primary"
                   (click)="abrirResolver(orden)"
                 >
-                  Resolver
+                  Aprobar / Rechazar
                 </button>
               </td>
             </tr>
@@ -166,8 +166,7 @@
     <div class="fm-alert fm-alert--info">
       <svg-icon name="alerta" [size]="18" />
       <span>
-        Estas sugerencias responden a la regla RN06: cuando el stock vigente iguala o queda por debajo del minimo,
-        el sistema propone reponer hasta el maximo configurado.
+        El sistema sugiere comprar cuando el stock llega al mínimo, proponiendo reponer hasta el máximo configurado.
       </span>
     </div>
 
@@ -186,8 +185,8 @@
               <th scope="col">Medicamento</th>
               <th scope="col">Proveedor</th>
               <th scope="col" class="fm-num">Stock</th>
-              <th scope="col" class="fm-num">Minimo</th>
-              <th scope="col" class="fm-num">Maximo</th>
+              <th scope="col" class="fm-num">Mínimo</th>
+              <th scope="col" class="fm-num">Máximo</th>
               <th scope="col" class="fm-num">Sugerido</th>
             </tr>
           </thead>
@@ -254,7 +253,7 @@
   </ng-container>
 </app-fm-modal>
 
-<app-fm-modal *ngIf="modalResolver() as orden" title="Resolver orden de compra" (closed)="cerrarResolver()">
+<app-fm-modal *ngIf="modalResolver() as orden" title="Aprobar o rechazar orden de compra" (closed)="cerrarResolver()">
   <div class="fm-alert fm-alert--info">
     <svg-icon name="orden" [size]="18" />
     <span>
@@ -264,7 +263,7 @@
   </div>
   <form [formGroup]="observacionForm" (ngSubmit)="resolver(OrdenEstado.APROBADA)" novalidate>
     <div class="fm-field">
-      <label class="fm-label" for="ord-resolver-obs">Observacion de la resolucion</label>
+      <label class="fm-label" for="ord-resolver-obs">Observación de la decisión</label>
       <textarea id="ord-resolver-obs" class="fm-textarea" formControlName="observacion" maxlength="300"></textarea>
     </div>
   </form>

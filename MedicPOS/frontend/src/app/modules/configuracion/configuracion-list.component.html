@@ -1,8 +1,8 @@
 <div class="fm-page">
   <header class="fm-page-header">
     <div>
-      <h1 class="fm-page-title">Configuracion</h1>
-      <p class="fm-page-subtitle">Parametros del sistema y semaforo de vencimiento</p>
+      <h1 class="fm-page-title">Configuración</h1>
+      <p class="fm-page-subtitle">Parámetros del sistema y semáforo de vencimiento</p>
     </div>
     <div class="fm-page-actions">
       <button type="button" class="fm-btn fm-btn--ghost" (click)="refrescar()">
@@ -29,66 +29,87 @@
   <div class="fm-alert fm-alert--info" role="note">
     <svg-icon name="configuracion" [size]="18" />
     <span>
-      El semaforo de vencimiento (RN04) y los minimos y maximos de stock (RN06) se definen aqui. Cada cambio
-      queda registrado en el historial de auditoria con el usuario y la fecha correspondientes.
+      El semáforo de vencimiento y los límites de stock se configuran aquí. Cada cambio
+      queda registrado en el historial con el usuario y la fecha.
     </span>
   </div>
 
-  <div class="fm-card con-semaforo">
-    <div class="fm-card-header">
-      <h2 class="fm-card-title">Semaforo de vencimiento (RN04)</h2>
-      <span class="fm-muted fm-small">Parametros vigentes</span>
-    </div>
-    <div class="fm-card-body">
-      <app-fm-loading *ngIf="loading() && !semaforo()" text="Cargando configuracion..."></app-fm-loading>
+  <!-- SECCIÓN SEMAFORO: Siempre visible arriba, editable inline -->
+  <section class="cfg-semaforo" *ngIf="parametrosSemaforo().length > 0">
+    <header class="cfg-semaforo__header">
+      <h2 class="cfg-semaforo__title">Semáforo de vencimiento</h2>
+      <span class="cfg-semaforo__subtitle">Parámetros vigentes</span>
+    </header>
 
-      <div class="con-semaforo__grid">
-        <div class="con-umbral con-umbral--rojo">
-          <span class="con-umbral__valor">{{ diasCritico() ?? '-' }}</span>
-          <span class="con-umbral__label">dias criticos</span>
-          <span class="fm-xs fm-muted">Rojo: vence en {{ diasCritico() ?? '-' }} dias o menos</span>
-        </div>
-        <div class="con-umbral con-umbral--ambar">
-          <span class="con-umbral__valor">{{ diasProximo() ?? '-' }}</span>
-          <span class="con-umbral__label">dias proximos</span>
-          <span class="fm-xs fm-muted">Ambar: entre {{ diasCritico() ?? '-' }} y {{ diasProximo() ?? '-' }} dias</span>
+    <div class="cfg-semaforo__grid">
+      <div class="cfg-umbral cfg-umbral--rojo" *ngFor="let item of parametrosSemaforo(); trackBy: trackByClave">
+        <label class="cfg-umbral__label" [for]="'cfg-' + item.clave">
+          <span class="cfg-umbral__name">{{ nombreAmigable(item.clave) }}</span>
+          <span class="cfg-umbral__hint" *ngIf="item.clave === 'vencimiento.dias.critico'">Rojo: vence en este número de días o menos</span>
+          <span class="cfg-umbral__hint" *ngIf="item.clave === 'vencimiento.dias.proximo'">Ámbar: entre días crítico + 1 y este valor</span>
+        </label>
+        <div class="cfg-umbral__input-wrapper">
+          <input
+            type="number"
+            [id]="'cfg-' + item.clave"
+            class="cfg-umbral__input"
+            [value]="valorEditado(item)"
+            [disabled]="!item.activo || guardandoClave() === item.clave"
+            (input)="editar(item, $event)"
+            (blur)="guardarIndividual(item)"
+            min="1"
+            step="1"
+          />
+          <span class="cfg-umbral__unit">días</span>
+          <button
+            type="button"
+            class="cfg-umbral__save"
+            [disabled]="guardandoClave() === item.clave || valorEditado(item) == item.valor"
+            (click)="guardarIndividual(item)"
+            *ngIf="valorEditado(item) != item.valor"
+            [attr.aria-label]="'Guardar ' + nombreAmigable(item.clave)">
+            <svg-icon name="check" [size]="14" />
+          </button>
+          <div class="cfg-umbral__saving" *ngIf="guardandoClave() === item.clave">
+            <svg-icon name="spinner" [size]="14" class="spinning" />
+          </div>
         </div>
       </div>
-
-      <ul class="con-leyenda">
-        <li class="con-leyenda__item con-leyenda__item--verde">
-          <span class="con-leyenda__dot" aria-hidden="true"></span>
-          Verde: mas de {{ diasProximo() ?? '-' }} dias para vencer
-        </li>
-        <li class="con-leyenda__item con-leyenda__item--ambar">
-          <span class="con-leyenda__dot" aria-hidden="true"></span>
-          Ambar: entre {{ diasCritico() ?? '-' }} y {{ diasProximo() ?? '-' }} dias
-        </li>
-        <li class="con-leyenda__item con-leyenda__item--rojo">
-          <span class="con-leyenda__dot" aria-hidden="true"></span>
-          Rojo: {{ diasCritico() ?? '-' }} dias o menos
-        </li>
-        <li class="con-leyenda__item con-leyenda__item--negro">
-          <span class="con-leyenda__dot" aria-hidden="true"></span>
-          Negro: lote ya vencido, no se dispensa (RN03)
-        </li>
-      </ul>
     </div>
-  </div>
+
+    <ul class="cfg-leyenda">
+      <li class="cfg-leyenda__item cfg-leyenda__item--verde">
+        <span class="cfg-leyenda__dot" aria-hidden="true"></span>
+        Verde: más de {{ diasProximo() ?? '-' }} días para vencer
+      </li>
+      <li class="cfg-leyenda__item cfg-leyenda__item--ambar">
+        <span class="cfg-leyenda__dot" aria-hidden="true"></span>
+        Ámbar: entre {{ diasCritico() ?? '-' }} y {{ diasProximo() ?? '-' }} días
+      </li>
+      <li class="cfg-leyenda__item cfg-leyenda__item--rojo">
+        <span class="cfg-leyenda__dot" aria-hidden="true"></span>
+        Rojo: {{ diasCritico() ?? '-' }} días o menos
+      </li>
+      <li class="cfg-leyenda__item cfg-leyenda__item--negro">
+        <span class="cfg-leyenda__dot" aria-hidden="true"></span>
+        Negro: lote ya vencido, no se dispensa
+      </li>
+    </ul>
+  </section>
 
   <div class="fm-stat-grid">
     <div class="fm-stat">
       <span class="fm-stat__icon"><svg-icon name="configuracion" [size]="20" /></span>
       <div>
         <div class="fm-stat__value">{{ configuraciones().length }}</div>
-        <div class="fm-stat__label">Parametros</div>
+        <div class="fm-stat__label">Parámetros</div>
       </div>
     </div>
     <div class="fm-stat fm-stat--info">
       <span class="fm-stat__icon"><svg-icon name="box" [size]="20" /></span>
       <div>
-        <div class="fm-stat__value">{{ grupos().length }}</div>
-        <div class="fm-stat__label">Categorias</div>
+        <div class="fm-stat__value">{{ gruposOtros().length }}</div>
+        <div class="fm-stat__label">Categorías</div>
       </div>
     </div>
     <div class="fm-stat fm-stat--success">
@@ -107,81 +128,95 @@
     </div>
   </div>
 
-  <app-fm-loading *ngIf="loading() && configuraciones().length === 0" text="Cargando configuracion..."></app-fm-loading>
+  <app-fm-loading *ngIf="loading() && configuraciones().length === 0" text="Cargando configuración..."></app-fm-loading>
 
   <app-fm-empty
     *ngIf="!loading() && configuraciones().length === 0"
-    title="No hay configuraciones registradas"
-    message="El administrador de TI debe cargar los parametros del sistema."
+    title="No hay parámetros registrados"
+    message="Deben cargarse los parámetros del sistema."
   ></app-fm-empty>
 
-  <div *ngFor="let grupo of grupos()" class="fm-card con-grupo">
-    <div class="fm-card-header">
-      <h2 class="fm-card-title">{{ grupo.categoria }}</h2>
-      <span class="fm-muted fm-small">{{ grupo.items.length }} parametro(s)</span>
+  <!-- RESTO DE PARÁMETROS: Tarjetas por categoría -->
+  <section *ngFor="let grupo of gruposOtros()" class="cfg-categoria">
+    <header class="cfg-categoria__header">
+      <h2 class="cfg-categoria__title">{{ grupo.categoria }}</h2>
+      <span class="cfg-categoria__count">{{ grupo.items.length }} parámetro(s)</span>
+    </header>
+
+    <div class="cfg-categoria__grid">
+      <article class="cfg-param" *ngFor="let item of grupo.items; trackBy: trackByClave" [class.cfg-param--editado]="valorEditado(item) !== item.valor">
+        <header class="cfg-param__header">
+          <h3 class="cfg-param__name">{{ nombreAmigable(item.clave) }}</h3>
+          <span class="cfg-param__badge" [class.fm-badge--success]="item.activo" [class.fm-badge--neutral]="!item.activo">
+            {{ item.activo ? 'Activo' : 'Inactivo' }}
+          </span>
+        </header>
+
+        <div class="cfg-param__body">
+          <p class="cfg-param__desc" *ngIf="item.descripcion">{{ item.descripcion }}</p>
+
+          <div class="cfg-param__input-row">
+            <label [for]="'cfg-' + item.clave" class="cfg-param__label-visual">Valor</label>
+            <div class="cfg-param__input-wrapper">
+              <input
+                [type]="item.tipoDato === 'BOOLEANO' ? 'checkbox' : 'text'"
+                [id]="'cfg-' + item.clave"
+                class="cfg-param__input"
+                [value]="valorEditado(item)"
+                [disabled]="!item.activo || guardandoClave() === item.clave"
+                (input)="editar(item, $event)"
+                (blur)="guardarIndividual(item)"
+                [attr.aria-label]="'Valor de ' + nombreAmigable(item.clave)"
+                [checked]="item.tipoDato === 'BOOLEANO' && valorEditado(item) === 'true'"
+              />
+              <span class="cfg-param__type" *ngIf="item.tipoDato !== 'BOOLEANO'">{{ item.tipoDato }}</span>
+            </div>
+          </div>
+
+          <div class="cfg-param__actions" *ngIf="valorEditado(item) !== item.valor">
+            <span class="cfg-param__meta">
+              <svg-icon name="info" [size]="12" />
+              <span>Se modificó</span>
+            </span>
+            <button
+              type="button"
+              class="cfg-param__save"
+              [disabled]="guardandoClave() === item.clave"
+              (click)="guardarIndividual(item)"
+              [attr.aria-label]="'Guardar ' + nombreAmigable(item.clave)"
+            >
+              <svg-icon name="spinner" [size]="14" class="spinning" *ngIf="guardandoClave() === item.clave" />
+              <svg-icon name="check" [size]="14" *ngIf="guardandoClave() !== item.clave" />
+              <span *ngIf="guardandoClave() !== item.clave">Guardar</span>
+              <span *ngIf="guardandoClave() === item.clave">Guardando...</span>
+            </button>
+          </div>
+
+          <div class="cfg-param__saving" *ngIf="guardandoClave() === item.clave">
+            <svg-icon name="spinner" [size]="14" class="spinning" />
+            <span>Guardando...</span>
+          </div>
+        </div>
+
+        <footer class="cfg-param__footer" *ngIf="item.descripcion">
+          <span class="cfg-param__meta">
+            <svg-icon name="user" [size]="12" />
+            <span>Modificado por {{ item.updatedByNombre || '—' }}</span>
+          </span>
+          <span class="cfg-param__meta">
+            <svg-icon name="calendar" [size]="12" />
+            <span>{{ item.updatedAt | fmDate: 'datetime' }}</span>
+          </span>
+        </footer>
+      </article>
     </div>
-    <div class="fm-card-body fm-card-body--flush">
-      <div class="fm-table-wrap">
-        <table class="fm-table">
-          <thead>
-            <tr>
-              <th>Clave</th>
-              <th>Valor</th>
-              <th class="fm-hidden-mobile">Descripcion</th>
-              <th class="fm-hidden-mobile">Tipo de dato</th>
-              <th>Activo</th>
-              <th class="fm-hidden-mobile">Ultima modificacion</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of grupo.items; trackBy: trackByClave" [class.con-row--editado]="valorEditado(item) !== item.valor">
-              <td class="fm-mono fm-nowrap">{{ item.clave }}</td>
-              <td>
-                <input
-                  class="fm-input con-input"
-                  type="text"
-                  [value]="valorEditado(item)"
-                  [attr.aria-label]="'Valor de ' + item.clave"
-                  [disabled]="!item.activo || guardandoCategoria() !== ''"
-                  (input)="editar(item, $event)"
-                />
-              </td>
-              <td class="fm-hidden-mobile con-descripcion">{{ item.descripcion }}</td>
-              <td class="fm-hidden-mobile fm-mono fm-xs">{{ item.tipoDato }}</td>
-              <td>
-                <span
-                  class="fm-badge"
-                  [class.fm-badge--success]="item.activo"
-                  [class.fm-badge--neutral]="!item.activo"
-                >
-                  {{ item.activo ? 'Activo' : 'Inactivo' }}
-                </span>
-              </td>
-              <td class="fm-hidden-mobile fm-nowrap">
-                <div>{{ item.updatedAt | fmDate: 'datetime' }}</div>
-                <div class="fm-xs fm-muted">{{ item.updatedByNombre }}</div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="fm-card-footer con-grupo__footer">
-      <span class="fm-xs fm-muted">
-        <ng-container *ngIf="hayCambios(grupo); else sinCambios">
-          {{ cantidadCambios(grupo) }} valor(es) modificado(s) en esta categoria.
-        </ng-container>
-        <ng-template #sinCambios>Edita un valor y pulsa Guardar para enviar la categoria completa.</ng-template>
-      </span>
-      <button
-        type="button"
-        class="fm-btn fm-btn--primary fm-btn--sm"
-        [disabled]="!hayCambios(grupo) || guardandoCategoria() !== ''"
-        (click)="guardarGrupo(grupo)"
-      >
-        <svg-icon name="check" [size]="14" />
-        {{ guardandoCategoria() === grupo.categoria ? 'Guardando...' : 'Guardar' }}
-      </button>
-    </div>
-  </div>
+  </section>
+
+  <app-fm-loading *ngIf="loading() && configuraciones().length === 0" text="Cargando configuración..."></app-fm-loading>
+
+  <app-fm-empty
+    *ngIf="!loading() && configuraciones().length === 0"
+    title="No hay parámetros registrados"
+    message="Deben cargarse los parámetros del sistema."
+  ></app-fm-empty>
 </div>
