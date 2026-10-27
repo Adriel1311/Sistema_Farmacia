@@ -12,16 +12,16 @@
           </svg>
         </span>
         <h1 class="login__title">FarmaMed</h1>
-        <p class="login__subtitle">Hospital Santa Maria del Socorro</p>
+        <p class="login__subtitle">Hospital Santa María del Socorro</p>
         <span class="login__badge">
           <svg-icon name="escudo" [size]="15" />
-          Portal Clinico Autorizado
+          Portal Clínico Autorizado
         </span>
       </div>
 
       <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
         <div class="fm-field">
-          <label class="fm-label" for="usuario">Usuario / Matricula Profesional</label>
+          <label class="fm-label" for="usuario">Usuario / Matrícula Profesional</label>
           <div class="login__control" [class.login__control--invalid]="usuario.invalid && usuario.touched">
             <svg-icon class="login__control-icon" name="credencial" [size]="20" />
             <input
@@ -33,11 +33,11 @@
               placeholder="Ej: emorales o MP-48192"
             />
           </div>
-          <span class="fm-error" *ngIf="usuario.invalid && usuario.touched">Ingrese su usuario o matricula</span>
+          <span class="fm-error" *ngIf="usuario.invalid && usuario.touched">Ingrese su usuario o matrícula</span>
         </div>
 
         <div class="fm-field">
-          <label class="fm-label" for="password">Contrasena</label>
+          <label class="fm-label" for="password">Contraseña</label>
           <div class="login__control" [class.login__control--invalid]="password.invalid && password.touched">
             <svg-icon class="login__control-icon" name="candado" [size]="20" />
             <input
@@ -51,21 +51,21 @@
             <button
               type="button"
               class="login__control-toggle"
-              [attr.aria-label]="showPassword() ? 'Ocultar contrasena' : 'Mostrar contrasena'"
+              [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
               (click)="showPassword.set(!showPassword())"
             >
               <svg-icon [name]="showPassword() ? 'close' : 'user'" [size]="20" />
             </button>
           </div>
-          <span class="fm-error" *ngIf="password.invalid && password.touched">Contrasena requerida</span>
+          <span class="fm-error" *ngIf="password.invalid && password.touched">Contraseña requerida</span>
         </div>
 
         <div class="login__row">
           <label class="fm-check">
             <input type="checkbox" formControlName="recordar" />
-            <span>Recordar sesion</span>
+            <span>Recordar sesión</span>
           </label>
-          <button type="button" class="login__link">Olvide mi contrasena</button>
+          <button type="button" class="login__link">Olvidé mi contraseña</button>
         </div>
 
         <div class="fm-alert fm-alert--error" *ngIf="error()" role="alert">
@@ -84,18 +84,19 @@
       </form>
 
       <p class="login__caption">
-        Sistema de Control de Caducidad, Inventario y Dispensacion
+        Sistema de Control de Caducidad, Inventario y Dispensación
       </p>
     </div>
 
     <div class="login__compliance">
       <div class="login__secure">
         <svg-icon name="escudo" [size]="14" />
-        <span>Conexion Encriptada TLS 1.3</span>
+        <span>Conexión Encriptada TLS 1.3</span>
         <span>&bull;</span>
         <span class="login__version">v2.4.0-PROD</span>
       </div>
-      <p class="login__dept">Departamento de Farmacia y Bioquimica Clinica</p>
+      <p class="login__dept">Departamento de Farmacia y Bioquímica Clínica</p>
+      <p class="login__dept">Proyecto académico Ica · 2026</p>
     </div>
   </div>
 </div>
