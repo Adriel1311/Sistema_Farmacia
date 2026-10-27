@@ -5,13 +5,21 @@
   min-height: 100vh;
 }
 
+@keyframes login-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 .login {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
   padding: $space-4;
-  background: $color-bg-primary;
+  background:
+    radial-gradient(circle at 15% 10%, rgba($color-primary, 0.10), transparent 45%),
+    radial-gradient(circle at 85% 90%, rgba($color-primary-container, 0.12), transparent 50%),
+    $color-bg-primary;
 }
 
 .login__panel {
@@ -32,6 +40,7 @@
   border-radius: $radius-lg;
   box-shadow: $shadow-md;
   overflow: hidden;
+  animation: login-enter 0.5s ease-out both;
 
   @media (min-width: 480px) {
     padding: $space-8;
@@ -43,8 +52,8 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
-  background: $color-primary;
+  height: 5px;
+  background: linear-gradient(90deg, $color-primary, $color-primary-container, $color-primary);
 }
 
 .login__brand {
@@ -60,6 +69,7 @@
   place-items: center;
   margin-bottom: $space-3;
   color: $color-primary;
+  filter: drop-shadow(0 4px 10px rgba($color-primary, 0.30));
 }
 
 .login__title {
