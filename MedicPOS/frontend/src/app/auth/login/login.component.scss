@@ -185,7 +185,18 @@
   &:hover { text-decoration: underline; }
 }
 
+@keyframes login-shine {
+  from { left: -75%; }
+  to   { left: 130%; }
+}
+
+@keyframes login-spin {
+  to { transform: rotate(360deg); }
+}
+
 .login__submit {
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -206,9 +217,25 @@
   box-shadow: $shadow-md;
   transition: background-color $motion-fast, box-shadow $motion-fast, transform $motion-fast;
 
+  // Brillo diagonal que cruza el boton al pasar el cursor
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    transform: skewX(-20deg);
+    pointer-events: none;
+  }
+
   &:hover:not(:disabled) {
     background: $color-primary-container;
     box-shadow: $shadow-lg;
+
+    &::after { animation: login-shine 0.7s ease-out; }
+    .login__submit-arrow { transform: translateX(4px); }
   }
 
   &:active:not(:disabled) {
@@ -220,6 +247,24 @@
     opacity: 0.6;
     cursor: not-allowed;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::after { display: none; }
+  }
+}
+
+.login__submit-arrow {
+  display: inline-flex;
+  transition: transform $motion-fast;
+}
+
+.login__spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: login-spin 0.7s linear infinite;
 }
 
 .login__caption {

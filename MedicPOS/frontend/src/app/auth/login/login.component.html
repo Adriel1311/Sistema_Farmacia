@@ -76,10 +76,13 @@
         <button
           type="submit"
           class="login__submit"
+          [class.login__submit--loading]="loading()"
           [disabled]="loading()"
+          [attr.aria-busy]="loading()"
         >
           <span>{{ loading() ? 'Validando credenciales...' : 'Ingresar al Sistema' }}</span>
-          <svg-icon name="chevronRight" [size]="18" />
+          <span class="login__spinner" *ngIf="loading(); else flecha" aria-hidden="true"></span>
+          <ng-template #flecha><svg-icon class="login__submit-arrow" name="chevronRight" [size]="18" /></ng-template>
         </button>
       </form>
 
