@@ -591,6 +591,16 @@ a {
   white-space: nowrap;
 }
 
+@keyframes fm-semaforo-pulso {
+  0%   { box-shadow: 0 0 0 0 rgba($semaforo-rojo, 0.55); }
+  70%  { box-shadow: 0 0 0 7px rgba($semaforo-rojo, 0); }
+  100% { box-shadow: 0 0 0 0 rgba($semaforo-rojo, 0); }
+}
+.fm-semaforo--rojo .fm-semaforo__dot {
+  animation: fm-semaforo-pulso 1.6s ease-out infinite;
+  @media (prefers-reduced-motion: reduce) { animation: none; }
+}
+
 .fm-semaforo--verde { background: $semaforo-verde-bg; color: $semaforo-verde; }
 .fm-semaforo--ambar { background: $semaforo-ambar-bg; color: $semaforo-ambar; }
 .fm-semaforo--rojo  { background: $semaforo-rojo-bg;  color: $semaforo-rojo; }
