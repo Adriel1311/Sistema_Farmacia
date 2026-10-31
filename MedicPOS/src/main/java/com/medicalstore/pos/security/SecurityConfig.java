@@ -135,6 +135,9 @@ public class SecurityConfig {
                 // M09 Usuarios y M10 Roles: solo Administrador TI (RN08)
                 .requestMatchers("/api/usuarios/**").hasRole(ADMIN_TI)
                 .requestMatchers("/api/roles/**").hasRole(ADMIN_TI)
+                // Medicos: Jefe/Admin TI gestionan el catalogo; Tecnico solo consulta para recetas.
+                .requestMatchers(HttpMethod.GET, "/api/medicos/**").hasAnyRole(JEFE, TECNICO, ADMIN_TI)
+                .requestMatchers("/api/medicos/**").hasAnyRole(JEFE, ADMIN_TI)
                 // M15 Auditoria: lectura y escritura para Jefe de Farmacia y Administrador TI
                 .requestMatchers(HttpMethod.GET, "/api/auditoria/**").hasAnyRole(JEFE, ADMIN_TI)
                 .requestMatchers("/api/auditoria/**").hasAnyRole(JEFE, ADMIN_TI)

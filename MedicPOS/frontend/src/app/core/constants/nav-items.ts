@@ -23,6 +23,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Dispensacion', route: '/dispensacion', icon: 'dispensacion', roles: [JEFE, TECNICO, ADMIN_TI], group: 'Operacion' },
   { label: 'Recetas', route: '/recetas', icon: 'receta', roles: [JEFE, TECNICO, ADMIN_TI], group: 'Operacion' },
   { label: 'Pacientes', route: '/pacientes', icon: 'paciente', roles: [JEFE, TECNICO, ADMIN_TI], group: 'Operacion' },
+  { label: 'Medicos', route: '/medicos', icon: 'user', roles: [JEFE, TECNICO, ADMIN_TI], group: 'Operacion' },
   { label: 'Inventario y lotes', route: '/inventario', icon: 'inventario', roles: [JEFE, TECNICO, ADMIN_TI], group: 'Operacion' },
   { label: 'Bajas de inventario', route: '/bajas', icon: 'baja', roles: [JEFE, TECNICO, ADMIN_TI], group: 'Operacion' },
   { label: 'Movimientos', route: '/movimientos', icon: 'movimiento', roles: [JEFE, TECNICO, ADMIN_TI], group: 'Operacion' },

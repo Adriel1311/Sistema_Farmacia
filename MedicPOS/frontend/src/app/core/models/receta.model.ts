@@ -27,7 +27,18 @@ export interface CreatePacienteRequest {
 export interface Medico {
   id: number;
   nombre: string;
+  especialidad: string | null;
+  activo: boolean;
+  createdAt?: string;
+  updatedAt?: string | null;
+}
+
+export interface CreateMedicoRequest {
+  nombre: string;
   especialidad: string;
+}
+
+export interface UpdateMedicoRequest extends CreateMedicoRequest {
   activo: boolean;
 }
 
