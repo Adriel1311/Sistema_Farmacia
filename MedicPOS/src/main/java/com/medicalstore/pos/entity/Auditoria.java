@@ -85,6 +85,14 @@ public class Auditoria {
         CONTRASENA_ACTUALIZADA,
         // Configuracion y avisos
         CONFIGURACION_ACTUALIZADA,
-        ALERTA_ATENDIDA
+        ALERTA_ATENDIDA,
+        // Cobro
+        COBRO_CREADO,
+        COBRO_ACTUALIZADO,
+        COBRO_ANULADO,
+        // Precios
+        PRECIO_CREADO,
+        PRECIO_ACTUALIZADO,
+        PRECIO_ELIMINADO
     }
 }

@@ -104,9 +104,11 @@ El sistema debe seleccionar automáticamente el lote vigente cuya fecha de venci
 
 ### Restricciones
 
-- El Técnico de Farmacia no puede elegir otro lote.
-- El Jefe de Farmacia puede realizar una excepción registrando el motivo correspondiente.
-- Toda excepción debe auditarse.
+- La dispensación automática sigue el orden FEFO y distribuye la cantidad entre lotes vigentes cuando sea necesario.
+- Si hay varios lotes disponibles, dispensar un lote dentro del umbral configurado de próximo vencimiento requiere autorización del Jefe de Farmacia y un motivo.
+- Un único lote disponible puede dispensarse sin autorización, aunque esté próximo a vencer.
+- Los lotes vencidos o dados de baja nunca pueden dispensarse.
+- Toda autorización debe auditarse.
 
 ### Reglas Asociadas
 
@@ -540,4 +542,3 @@ Los requerimientos funcionales se consideran completos cuando:
 - Todos los actores poseen funcionalidades asociadas.
 - Todos los módulos definidos poseen requerimientos identificados.
 - Existe trazabilidad completa RN → RF.
-

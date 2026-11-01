@@ -1,0 +1,163 @@
+<div class="fm-page">
+  <header class="fm-page-header">
+    <div>
+      <h1 class="fm-page-title">Precios de venta</h1>
+      <p class="fm-page-subtitle">Gestión de precios de medicamentos para dispensación particular y SIS.</p>
+    </div>
+    <div class="fm-page-actions">
+      <button type="button" class="fm-btn fm-btn--ghost" (click)="cargar()" [disabled]="loading()">
+        <svg-icon name="refresh" [size]="16" />
+        Actualizar
+      </button>
+      <button *ngIf="puedeGestionar" type="button" class="fm-btn fm-btn--primary" (click)="abrirAlta()">
+        <svg-icon name="plus" [size]="16" />
+        Registrar precio
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="success()" class="fm-alert fm-alert--success" role="status">
+    <svg-icon name="success" [size]="18" />
+    <span class="fm-spacer">{{ success() }}</span>
+    <button type="button" class="fm-btn fm-btn--ghost fm-btn--sm" aria-label="Cerrar aviso" (click)="success.set('')">
+      <svg-icon name="close" [size]="14" />
+    </button>
+  </div>
+
+  <div *ngIf="error()" class="fm-alert fm-alert--error" role="alert">
+    <svg-icon name="error" [size]="18" />
+    <span class="fm-spacer">{{ error() }}</span>
+    <button type="button" class="fm-btn fm-btn--secondary fm-btn--sm" (click)="cargar()">Reintentar</button>
+  </div>
+
+  <div class="fm-toolbar">
+    <div class="fm-field">
+      <span class="fm-label">{{ precios().length }} precio(s) registrado(s)</span>
+    </div>
+    <div *ngIf="medicamentosSinPrecio().length > 0" class="fm-field">
+      <span class="fm-label fm-badge fm-badge--warning">{{ medicamentosSinPrecio().length }} sin precio</span>
+    </div>
+  </div>
+
+  <div class="fm-card">
+    <div class="fm-card-header">
+      <h2 class="fm-card-title">Listado de precios</h2>
+      <span class="fm-muted fm-small">{{ precios().length }} registro(s)</span>
+    </div>
+    <div class="fm-card-body fm-card-body--flush">
+      <app-fm-loading *ngIf="loading()" text="Cargando precios..."></app-fm-loading>
+      <app-fm-empty
+        *ngIf="!loading() && precios().length === 0"
+        title="No hay precios registrados"
+        message="Registre el precio de venta de los medicamentos para poder dispensar recetas PARTICULAR y SIS."
+        [action]="puedeGestionar ? 'Registrar precio' : ''"
+        (actionClick)="abrirAlta()"
+      ></app-fm-empty>
+
+      <div *ngIf="!loading() && precios().length > 0" class="fm-table-wrap">
+        <table class="fm-table">
+          <thead>
+            <tr>
+              <th class="fm-num">#</th>
+              <th>Medicamento</th>
+              <th>Precio venta (S/.)</th>
+              <th>Vigente desde</th>
+              <th>Vigente hasta</th>
+              <th class="fm-right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let precio of precios(); trackBy: trackById">
+              <td class="fm-num fm-mono">{{ precio.id }}</td>
+              <td class="fm-strong">{{ precio.medicamentoNombre }}</td>
+              <td class="fm-mono">{{ precio.precioVenta | number:'1.2-2' }}</td>
+              <td>{{ precio.vigenteDesde | fmDate: 'date' }}</td>
+              <td>{{ precio.vigenteHasta ? (precio.vigenteHasta | fmDate: 'date') : 'Indefinido' }}</td>
+              <td class="fm-right fm-nowrap">
+                <button
+                  *ngIf="puedeGestionar"
+                  type="button"
+                  class="fm-btn fm-btn--ghost fm-btn--sm"
+                  (click)="abrirEdicion(precio)"
+                >
+                  <svg-icon name="configuracion" [size]="14" />
+                  Editar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-fm-modal
+  *ngIf="modalAbierto()"
+  [title]="modo() === 'alta' ? 'Registrar precio de venta' : 'Editar precio de venta'"
+  (closed)="cerrarModal()"
+>
+  <form id="precio-form" [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+    <div *ngIf="formError()" class="fm-alert fm-alert--error" role="alert">
+      <svg-icon name="error" [size]="18" />
+      <span>{{ formError() }}</span>
+    </div>
+
+    <div class="fm-field">
+      <label class="fm-label" for="precio-medicamento">Medicamento <span class="fm-label__required">*</span></label>
+      <select id="precio-medicamento" class="fm-select" formControlName="medicamentoId">
+        <option [ngValue]="0">Selecciona un medicamento</option>
+        <ng-container *ngIf="modo() === 'alta'">
+          <option *ngFor="let med of medicamentosSinPrecio()" [ngValue]="med.id">
+            {{ med.codigo }} - {{ med.nombre }}
+          </option>
+        </ng-container>
+        <ng-container *ngIf="modo() === 'edicion'">
+          <option *ngFor="let med of medicamentos()" [ngValue]="med.id">
+            {{ med.codigo }} - {{ med.nombre }}
+          </option>
+        </ng-container>
+      </select>
+      <span *ngIf="form.controls.medicamentoId.touched && form.controls.medicamentoId.invalid" class="fm-error">
+        Selecciona un medicamento.
+      </span>
+    </div>
+
+    <div class="fm-field">
+      <label class="fm-label" for="precio-venta">Precio de venta (S/.) <span class="fm-label__required">*</span></label>
+      <input
+        id="precio-venta"
+        class="fm-input"
+        type="number"
+        step="0.01"
+        min="0.01"
+        formControlName="precioVenta"
+        placeholder="0.00"
+      />
+      <span *ngIf="form.controls.precioVenta.touched && form.controls.precioVenta.invalid" class="fm-error">
+        Ingresa un precio válido mayor a 0.
+      </span>
+    </div>
+
+    <div class="fm-field">
+      <label class="fm-label" for="precio-desde">Vigente desde <span class="fm-label__required">*</span></label>
+      <input id="precio-desde" class="fm-input" type="date" formControlName="vigenteDesde" />
+      <span *ngIf="form.controls.vigenteDesde.touched && form.controls.vigenteDesde.invalid" class="fm-error">
+        La fecha de inicio es obligatoria.
+      </span>
+    </div>
+
+    <div class="fm-field">
+      <label class="fm-label" for="precio-hasta">Vigente hasta</label>
+      <input id="precio-hasta" class="fm-input" type="date" formControlName="vigenteHasta" />
+      <span class="fm-hint">Opcional. Si se deja vacío, el precio no tiene fecha de fin.</span>
+    </div>
+  </form>
+
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarModal()">Cancelar</button>
+    <button type="submit" form="precio-form" class="fm-btn fm-btn--primary" [disabled]="guardando()">
+      {{ guardando() ? 'Guardando...' : 'Guardar precio' }}
+    </button>
+  </ng-container>
+</app-fm-modal>

@@ -2,12 +2,13 @@ import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signa
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, Validators } from '@angular/forms';
 import { combineLatest, of } from 'rxjs';
-import { catchError, finalize } from 'rxjs/operators';
+import { catchError, finalize, tap } from 'rxjs/operators';
 
 import { SvgIconComponent } from '../../core/components/svg-icon/svg-icon.component';
 import { AuthService } from '../../core/services/auth.service';
 import { CatalogoService } from '../../core/services/catalogo.service';
 import { ConfiguracionService } from '../../core/services/alerta.service';
+import { CobroService } from '../../core/services/cobro.service';
 import { DispensacionService } from '../../core/services/dispensacion.service';
 import { InventarioService } from '../../core/services/inventario.service';
 import { PacienteRecetaService } from '../../core/services/paciente-receta.service';
@@ -32,10 +33,11 @@ export class DispensacionComponent {
   private readonly catalogo = inject(CatalogoService);
   private readonly auth = inject(AuthService);
   private readonly configService = inject(ConfiguracionService);
+  private readonly cobroService = inject(CobroService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly fb = inject(FormBuilder);
 
-  readonly TIPO_RECETA_LABELS = { ASEGURADO: 'Asegurado', PARTICULAR: 'Particular' } as Record<TipoReceta, string>;
+  readonly TIPO_RECETA_LABELS = { ASEGURADO: 'Asegurado', SIS: 'SIS', PARTICULAR: 'Particular' } as Record<TipoReceta, string>;
 
   /** Solo el Jefe de Farmacia puede autorizar excepción al lote sugerido (RSP-07), y solo si la config lo permite. */
   readonly excepcionLoteDistintoPermitida = signal(true);
@@ -101,7 +103,14 @@ export class DispensacionComponent {
   readonly totalUnidades = computed(() => this.items().reduce((suma, item) => suma + item.cantidad, 0));
 
   readonly puedeConfirmar = computed(
-    () => this.recetaSeleccionada() !== null && this.items().length > 0 && this.items().every(i => i.cantidad > 0 && i.loteSeleccionadoId !== null)
+    () => this.recetaSeleccionada() !== null
+      && this.items().length > 0
+      && this.items().every(i =>
+        i.cantidad > 0
+        && i.loteSeleccionadoId !== null
+        && !i.error
+        && !this.requiereAutorizacionFefo(i)
+      )
   );
 
   constructor() {
@@ -171,6 +180,7 @@ export class DispensacionComponent {
             unidadMedida: medicamento.unidadMedida,
             lotesDisponibles: dispensables,
             loteSeleccionadoId: sugerido?.id ?? null,
+            loteForzado: false,
             cantidad: 1,
             excepcionLoteDistinto: false,
             motivoExcepcionLoteDistinto: ''
@@ -189,28 +199,26 @@ export class DispensacionComponent {
     this.items.update(items =>
       items.map(item =>
         item.medicamentoId === medicamentoId
-          ? { ...item, cantidad, error: this.validarItem(item, cantidad, item.loteSeleccionadoId) }
+          ? { ...item, cantidad, error: this.validarItem(item, cantidad, item.loteSeleccionadoId, item.loteForzado) }
           : item
       )
     );
   }
 
-  setLote(medicamentoId: number, loteId: number, esUltimoPorVencimiento: boolean): void {
+  setLote(medicamentoId: number, loteId: number): void {
     const item = this.items().find(i => i.medicamentoId === medicamentoId);
     if (!item) {
       return;
     }
 
-    if (esUltimoPorVencimiento && !this.puedeExcepcionLoteDistinto) {
-      this.error.set(
-        'Solo el Jefe de Farmacia puede autorizar un lote distinto al sugerido (el que vence primero). Deja el lote sugerido o solicita autorización.'
-      );
+    const loteElegido = item.lotesDisponibles.find(lote => lote.id === loteId);
+    if (!loteElegido) {
       return;
     }
 
     const loteSugerido = item.lotesDisponibles[0];
-    const loteElegido = item.lotesDisponibles.find(l => l.id === loteId);
-    const usaExcepcion = esUltimoPorVencimiento && loteSugerido !== undefined && loteElegido !== undefined && loteElegido.id !== loteSugerido.id;
+    const loteForzado = loteSugerido !== undefined && loteElegido.id !== loteSugerido.id;
+    const requiereAutorizacion = item.lotesDisponibles.length > 1 && this.estaProximoAVencer(loteElegido);
 
     this.items.update(items =>
       items.map(i =>
@@ -218,23 +226,56 @@ export class DispensacionComponent {
           ? {
               ...i,
               loteSeleccionadoId: loteId,
-              excepcionLoteDistinto: usaExcepcion,
-              motivoExcepcionLoteDistinto: usaExcepcion ? i.motivoExcepcionLoteDistinto : '',
-              error: ''
+              loteForzado,
+              excepcionLoteDistinto: false,
+              motivoExcepcionLoteDistinto: '',
+              error: this.validarItem(i, i.cantidad, loteId, loteForzado)
             }
           : i
       )
     );
+
+    if (requiereAutorizacion) {
+      if (!this.puedeExcepcionLoteDistinto()) {
+        this.error.set('Este lote está próximo a vencer y requiere autorización del Jefe de Farmacia.');
+      } else if (!this.excepcionLoteDistintoPermitida()) {
+        this.error.set('Las autorizaciones FEFO están deshabilitadas en la configuración del sistema.');
+      } else {
+        this.error.set('');
+        this.abrirExcepcion(item, loteElegido);
+      }
+    } else {
+      this.limpiarMensajes();
+    }
   }
 
-  abrirExcepcion(item: DispensacionFormItem): void {
+  requiereAutorizacionFefo(item: DispensacionFormItem): boolean {
+    const lote = item.lotesDisponibles.find(disponible => disponible.id === item.loteSeleccionadoId);
+    return item.lotesDisponibles.length > 1
+      && lote !== undefined
+      && this.estaProximoAVencer(lote)
+      && !item.excepcionLoteDistinto;
+  }
+
+  abrirExcepcion(item: DispensacionFormItem, lote: Lote): void {
+    if (!this.puedeExcepcionLoteDistinto()) {
+      this.error.set('Solo el Jefe de Farmacia puede autorizar la dispensación de un lote próximo a vencer.');
+      return;
+    }
     if (!this.excepcionLoteDistintoPermitida()) {
-      this.error.set('Las excepciones al lote sugerido están deshabilitadas en la configuración del sistema.');
+      this.error.set('Las autorizaciones FEFO están deshabilitadas en la configuración del sistema.');
       return;
     }
     this.excepcionForm.reset({ motivo: '' });
-    this.excepcionObjetivo.set({ item, lote: item.lotesDisponibles[0] });
+    this.excepcionObjetivo.set({ item, lote });
     this.excepcionModal.set(true);
+  }
+
+  abrirExcepcionSeleccionada(item: DispensacionFormItem): void {
+    const lote = item.lotesDisponibles.find(disponible => disponible.id === item.loteSeleccionadoId);
+    if (lote) {
+      this.abrirExcepcion(item, lote);
+    }
   }
 
   cerrarExcepcion(): void {
@@ -252,10 +293,8 @@ export class DispensacionComponent {
       return;
     }
     const motivo = this.excepcionForm.getRawValue().motivo.trim();
-    const loteElegido = objetivo.item.lotesDisponibles.find(l => l.id !== objetivo.lote.id);
-
-    if (!loteElegido) {
-      this.error.set('Ese medicamento solo tiene un lote disponible, no hay excepción que aplicar.');
+    if (!objetivo.item.lotesDisponibles.some(lote => lote.id === objetivo.lote.id)) {
+      this.error.set('El lote seleccionado ya no está disponible para dispensación.');
       this.cerrarExcepcion();
       return;
     }
@@ -263,12 +302,19 @@ export class DispensacionComponent {
     this.items.update(items =>
       items.map(i =>
         i.medicamentoId === objetivo.item.medicamentoId
-          ? { ...i, loteSeleccionadoId: loteElegido.id, excepcionLoteDistinto: true, motivoExcepcionLoteDistinto: motivo, error: '' }
+          ? {
+              ...i,
+              loteSeleccionadoId: objetivo.lote.id,
+              loteForzado: objetivo.lote.id !== i.lotesDisponibles[0]?.id,
+              excepcionLoteDistinto: true,
+              motivoExcepcionLoteDistinto: motivo,
+              error: this.validarItem(i, i.cantidad, objetivo.lote.id, objetivo.lote.id !== i.lotesDisponibles[0]?.id)
+            }
           : i
       )
     );
     this.cerrarExcepcion();
-    this.success.set('Excepción registrada. Quedará en la auditoría de la dispensación.');
+    this.success.set('Autorización registrada. Quedará en la auditoría de la dispensación.');
   }
 
   confirmar(): void {
@@ -285,8 +331,8 @@ export class DispensacionComponent {
     const payload: DispensacionItemRequest[] = this.items().map(item => ({
       medicamentoId: item.medicamentoId,
       cantidad: item.cantidad,
-      loteId: item.loteSeleccionadoId,
-      motivoExcepcionLoteDistinto: item.excepcionLoteDistinto ? item.motivoExcepcionLoteDistinto : null
+      loteId: item.loteForzado || item.excepcionLoteDistinto ? item.loteSeleccionadoId : null,
+      motivoExcepcionFefo: item.excepcionLoteDistinto ? item.motivoExcepcionLoteDistinto : null
     }));
 
     this.guardando.set(true);
@@ -310,7 +356,31 @@ export class DispensacionComponent {
   }
 
   verTicket(dispensacion: Dispensacion): void {
-    this.ticketDetalle.set(dispensacion);
+    // Si la dispensación no tiene cobro, cargarlo del backend
+    if (!dispensacion.cobro) {
+      this.cobroService.getByDispensacionId(dispensacion.id).subscribe({
+        next: cobro => {
+          if (cobro) {
+            this.ticketDetalle.set({
+              ...dispensacion,
+              cobro: {
+                id: cobro.id,
+                subtotal: cobro.subtotal,
+                descuentoPorcentaje: cobro.descuentoPorcentaje,
+                descuentoMonto: cobro.descuentoMonto,
+                total: cobro.total,
+                estado: cobro.estado
+              }
+            });
+          } else {
+            this.ticketDetalle.set(dispensacion);
+          }
+        },
+        error: () => this.ticketDetalle.set(dispensacion)
+      });
+    } else {
+      this.ticketDetalle.set(dispensacion);
+    }
   }
 
   cerrarTicket(): void {
@@ -373,7 +443,7 @@ export class DispensacionComponent {
     return this.TIPO_RECETA_LABELS[tipo] ?? tipo;
   }
 
-  private validarItem(item: DispensacionFormItem, cantidad: number, loteId: number | null): string {
+  private validarItem(item: DispensacionFormItem, cantidad: number, loteId: number | null, loteForzado: boolean): string {
     if (cantidad <= 0) {
       return 'La cantidad debe ser mayor a cero.';
     }
@@ -381,13 +451,23 @@ export class DispensacionComponent {
       return 'Selecciona un lote.';
     }
     const lote = item.lotesDisponibles.find(l => l.id === loteId);
-    if (lote && cantidad > lote.cantidadActual) {
-      return `El lote ${lote.numeroLote} solo tiene ${lote.cantidadActual} disponibles.`;
+    const stockDisponible = loteForzado
+      ? lote?.cantidadActual ?? 0
+      : item.lotesDisponibles.reduce((total, disponible) => total + disponible.cantidadActual, 0);
+    if (cantidad > stockDisponible) {
+      if (loteForzado && lote) {
+        return `El lote ${lote.numeroLote} solo tiene ${lote.cantidadActual} disponibles.`;
+      }
+      return `Solo hay ${stockDisponible} unidades disponibles en lotes vigentes.`;
     }
     if (item.lotesDisponibles.length === 0) {
       return 'No hay lotes vigentes para este medicamento.';
     }
     return '';
+  }
+
+  private estaProximoAVencer(lote: Lote): boolean {
+    return lote.estadoVencimiento === 'ROJO' || lote.estadoVencimiento === 'AMBAR';
   }
 
   private cargar(): void {

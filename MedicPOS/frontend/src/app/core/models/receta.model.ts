@@ -5,6 +5,7 @@
 
 export enum TipoReceta {
   ASEGURADO = 'ASEGURADO',
+  SIS = 'SIS',
   PARTICULAR = 'PARTICULAR'
 }
 
@@ -27,7 +28,18 @@ export interface CreatePacienteRequest {
 export interface Medico {
   id: number;
   nombre: string;
+  especialidad: string | null;
+  activo: boolean;
+  createdAt?: string;
+  updatedAt?: string | null;
+}
+
+export interface CreateMedicoRequest {
+  nombre: string;
   especialidad: string;
+}
+
+export interface UpdateMedicoRequest extends CreateMedicoRequest {
   activo: boolean;
 }
 
@@ -57,5 +69,6 @@ export interface CreateRecetaRequest {
 
 export const TIPO_RECETA_LABELS: Record<TipoReceta, string> = {
   [TipoReceta.ASEGURADO]: 'Asegurado',
+  [TipoReceta.SIS]: 'SIS',
   [TipoReceta.PARTICULAR]: 'Particular'
 };

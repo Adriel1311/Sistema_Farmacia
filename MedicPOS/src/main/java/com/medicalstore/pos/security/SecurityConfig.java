@@ -135,6 +135,9 @@ public class SecurityConfig {
                 // M09 Usuarios y M10 Roles: solo Administrador TI (RN08)
                 .requestMatchers("/api/usuarios/**").hasRole(ADMIN_TI)
                 .requestMatchers("/api/roles/**").hasRole(ADMIN_TI)
+                // Medicos: Jefe/Admin TI gestionan el catalogo; Tecnico solo consulta para recetas.
+                .requestMatchers(HttpMethod.GET, "/api/medicos/**").hasAnyRole(JEFE, TECNICO, ADMIN_TI)
+                .requestMatchers("/api/medicos/**").hasAnyRole(JEFE, ADMIN_TI)
                 // M15 Auditoria: lectura y escritura para Jefe de Farmacia y Administrador TI
                 .requestMatchers(HttpMethod.GET, "/api/auditoria/**").hasAnyRole(JEFE, ADMIN_TI)
                 .requestMatchers("/api/auditoria/**").hasAnyRole(JEFE, ADMIN_TI)
@@ -162,6 +165,14 @@ public class SecurityConfig {
                 .requestMatchers("/api/dispensaciones/**").hasAnyRole(JEFE, TECNICO, ADMIN_TI)
                 .requestMatchers("/api/recetas/**").hasAnyRole(JEFE, TECNICO, ADMIN_TI)
                 .requestMatchers("/api/pacientes/**").hasAnyRole(JEFE, TECNICO, ADMIN_TI)
+                
+                // M12 Precios de venta: Jefe/Admin TI gestionan, Tecnico/Logistica leen para cobro
+                .requestMatchers(HttpMethod.GET, "/api/precios/**").hasAnyRole(JEFE, TECNICO, LOGISTICA, ADMIN_TI)
+                .requestMatchers("/api/precios/**").hasAnyRole(JEFE, ADMIN_TI)
+                
+                // Cobros: Tecnico ve su cobro en caja, Jefe/Logistica/Admin TI ven todos, pago requiere rol caja
+                .requestMatchers(HttpMethod.GET, "/api/cobros/**").hasAnyRole(JEFE, TECNICO, LOGISTICA, ADMIN_TI)
+                .requestMatchers(HttpMethod.POST, "/api/cobros/*/pagar").hasAnyRole(JEFE, TECNICO, ADMIN_TI)
                 
                 // M05 Alertas: el Tecnico solo consulta, Jefe, Logistic y Admin TI atienden
                 .requestMatchers(HttpMethod.GET, "/api/alertas/**").hasAnyRole(JEFE, TECNICO, LOGISTICA, ADMIN_TI)

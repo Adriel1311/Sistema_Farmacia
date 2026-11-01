@@ -1,0 +1,162 @@
+<div class="fm-page">
+  <header class="fm-page-header">
+    <div>
+      <h1 class="fm-page-title">Médicos</h1>
+      <p class="fm-page-subtitle">Profesionales habilitados para emitir recetas en la farmacia.</p>
+    </div>
+    <div class="fm-page-actions">
+      <button type="button" class="fm-btn fm-btn--ghost" (click)="cargar()" [disabled]="loading()">
+        <svg-icon name="refresh" [size]="16" />
+        Actualizar
+      </button>
+      <button *ngIf="puedeGestionar" type="button" class="fm-btn fm-btn--primary" (click)="abrirAlta()">
+        <svg-icon name="plus" [size]="16" />
+        Registrar médico
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="!puedeGestionar" class="fm-alert fm-alert--info">
+    <svg-icon name="warning" [size]="18" />
+    <span>Tu rol puede consultar médicos para recetas. Solo Jefatura de Farmacia y Administración TI gestionan el catálogo.</span>
+  </div>
+
+  <div *ngIf="success()" class="fm-alert fm-alert--success" role="status">
+    <svg-icon name="success" [size]="18" />
+    <span>{{ success() }}</span>
+  </div>
+  <div *ngIf="error()" class="fm-alert fm-alert--error" role="alert">
+    <svg-icon name="error" [size]="18" />
+    <span>{{ error() }}</span>
+    <button type="button" class="fm-btn fm-btn--secondary fm-btn--sm" (click)="cargar()">Reintentar</button>
+  </div>
+
+  <div class="fm-toolbar">
+    <div class="fm-field fm-toolbar__grow">
+      <label class="fm-label" for="med-busqueda">Buscar médico</label>
+      <input
+        id="med-busqueda"
+        class="fm-input"
+        type="search"
+        placeholder="Nombre o especialidad"
+        [value]="busqueda()"
+        (input)="onBusqueda($event)"
+      />
+    </div>
+    <div class="fm-field">
+      <span class="fm-label">{{ visibles().length }} médico(s)</span>
+    </div>
+  </div>
+
+  <div class="fm-card">
+    <div class="fm-card-header">
+      <h2 class="fm-card-title">Directorio de médicos</h2>
+      <span class="fm-muted fm-small">{{ visibles().length }} registro(s)</span>
+    </div>
+    <div class="fm-card-body fm-card-body--flush">
+      <app-fm-loading *ngIf="loading()" text="Cargando médicos..."></app-fm-loading>
+      <app-fm-empty
+        *ngIf="!loading() && visibles().length === 0"
+        title="No hay médicos registrados"
+        message="Registra los médicos autorizados para emitir recetas."
+        [action]="puedeGestionar ? 'Registrar médico' : ''"
+        (actionClick)="abrirAlta()"
+      ></app-fm-empty>
+
+      <div *ngIf="!loading() && visibles().length > 0" class="fm-table-wrap">
+        <table class="fm-table">
+          <thead>
+            <tr>
+              <th class="fm-num">#</th>
+              <th>Nombre</th>
+              <th>Especialidad</th>
+              <th>Estado</th>
+              <th class="fm-right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let medico of visibles(); trackBy: trackById">
+              <td class="fm-num fm-mono">{{ medico.id }}</td>
+              <td class="fm-strong">{{ medico.nombre }}</td>
+              <td>{{ medico.especialidad || 'No especificada' }}</td>
+              <td>
+                <span class="fm-badge" [class.fm-badge--success]="medico.activo" [class.fm-badge--neutral]="!medico.activo">
+                  {{ medico.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td class="fm-right fm-nowrap">
+                <button
+                  *ngIf="puedeGestionar"
+                  type="button"
+                  class="fm-btn fm-btn--ghost fm-btn--sm"
+                  (click)="abrirEdicion(medico)"
+                >
+                  <svg-icon name="configuracion" [size]="14" />
+                  Editar
+                </button>
+                <button
+                  *ngIf="puedeGestionar"
+                  type="button"
+                  class="fm-btn fm-btn--ghost fm-btn--sm"
+                  (click)="pedirToggle(medico)"
+                >
+                  <svg-icon [name]="medico.activo ? 'close' : 'check'" [size]="14" />
+                  {{ medico.activo ? 'Desactivar' : 'Activar' }}
+                </button>
+                <span *ngIf="!puedeGestionar" class="fm-muted fm-xs">Solo lectura</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-fm-modal
+  *ngIf="modalAbierto()"
+  [title]="modo() === 'alta' ? 'Registrar médico' : 'Editar médico'"
+  (closed)="cerrarModal()"
+>
+  <form id="medico-form" [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+    <div *ngIf="formError()" class="fm-alert fm-alert--error" role="alert">
+      <svg-icon name="error" [size]="18" />
+      <span>{{ formError() }}</span>
+    </div>
+
+    <div class="fm-field">
+      <label class="fm-label" for="medico-nombre">Nombre completo <span class="fm-label__required">*</span></label>
+      <input id="medico-nombre" class="fm-input" type="text" formControlName="nombre" maxlength="200" />
+      <span *ngIf="form.controls.nombre.touched && form.controls.nombre.invalid" class="fm-error">
+        Ingresa el nombre del médico (máximo 200 caracteres).
+      </span>
+    </div>
+    <div class="fm-field">
+      <label class="fm-label" for="medico-especialidad">Especialidad</label>
+      <input id="medico-especialidad" class="fm-input" type="text" formControlName="especialidad" maxlength="100" />
+      <span *ngIf="form.controls.especialidad.touched && form.controls.especialidad.invalid" class="fm-error">
+        La especialidad no debe superar 100 caracteres.
+      </span>
+    </div>
+  </form>
+
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarModal()">Cancelar</button>
+    <button type="submit" form="medico-form" class="fm-btn fm-btn--primary" [disabled]="guardando()">
+      {{ guardando() ? 'Guardando...' : 'Guardar médico' }}
+    </button>
+  </ng-container>
+</app-fm-modal>
+
+<app-fm-confirm
+  *ngIf="objetivo() as medico"
+  [title]="medico.activo ? 'Desactivar médico' : 'Activar médico'"
+  [message]="
+    medico.activo
+      ? 'El médico ' + medico.nombre + ' dejará de estar disponible para nuevas recetas.'
+      : 'El médico ' + medico.nombre + ' volverá a estar disponible para nuevas recetas.'
+  "
+  [confirmText]="medico.activo ? 'Desactivar' : 'Activar'"
+  (accepted)="confirmarToggle()"
+  (cancelled)="cancelarToggle()"
+></app-fm-confirm>

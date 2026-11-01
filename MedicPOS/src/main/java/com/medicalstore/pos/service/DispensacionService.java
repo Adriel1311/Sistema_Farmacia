@@ -17,6 +17,8 @@ import com.medicalstore.pos.entity.Usuario;
 import com.medicalstore.pos.exception.BusinessRuleException;
 import com.medicalstore.pos.exception.ResourceNotFoundException;
 import com.medicalstore.pos.exception.StockInsufficientException;
+import com.medicalstore.pos.entity.Cobro;
+import com.medicalstore.pos.repository.CobroRepository;
 import com.medicalstore.pos.repository.DispensacionRepository;
 import com.medicalstore.pos.repository.LoteRepository;
 import com.medicalstore.pos.repository.MedicamentoRepository;
@@ -39,8 +41,8 @@ import java.util.stream.Collectors;
  *
  * Reglas aplicadas:
  * - RN05.0: sin receta no hay atencion y una receta origina una sola dispensacion.
- * - RN02: FEFO. El sistema elige siempre el lote vigente que vence mas proximo.
- * - RF-04: solo el Jefe de Farmacia puede forzar otro lote, con motivo registrado y auditado.
+ * - RN02: FEFO. El sistema elige los lotes vigentes por vencimiento y distribuye el stock.
+ * - RF-04: con varios lotes, dispensar uno proximo a vencer requiere autorizacion auditada del Jefe.
  * - RN03: los lotes vencidos se bloquean aunque siga habiendo existencias fisicas.
  * - RN09: transaccion ACID con bloqueo pesimista para que el stock nunca quede negativo.
  */
@@ -57,7 +59,9 @@ public class DispensacionService {
     private final AuditoriaService auditoriaService;
     private final ConfiguracionService configuracionService;
     private final AlertScheduler alertScheduler;
-    
+    private final CobroService cobroService;
+    private final CobroRepository cobroRepository;
+
     public DispensacionService(DispensacionRepository dispensacionRepository,
                                RecetaRepository recetaRepository,
                                MedicamentoRepository medicamentoRepository,
@@ -65,7 +69,9 @@ public class DispensacionService {
                                MovimientoInventarioRepository movimientoRepository,
                                AuditoriaService auditoriaService,
                                ConfiguracionService configuracionService,
-                               AlertScheduler alertScheduler) {
+                               AlertScheduler alertScheduler,
+                               CobroService cobroService,
+                               CobroRepository cobroRepository) {
         this.dispensacionRepository = dispensacionRepository;
         this.recetaRepository = recetaRepository;
         this.medicamentoRepository = medicamentoRepository;
@@ -74,6 +80,8 @@ public class DispensacionService {
         this.auditoriaService = auditoriaService;
         this.configuracionService = configuracionService;
         this.alertScheduler = alertScheduler;
+        this.cobroService = cobroService;
+        this.cobroRepository = cobroRepository;
     }
     
     /**
@@ -116,13 +124,11 @@ public class DispensacionService {
                 throw new RuntimeException("La cantidad de " + medicamento.getNombre() + " debe ser mayor a cero");
             }
             
-            if (item.getLoteId() != null) {
-                // RF-04: excepcion al FEFO, autorizada solo por el Jefe de Farmacia
-                String motivo = dispensarLoteForzado(dispensacion, medicamento, item, user);
+            String motivo = item.getLoteId() != null
+                    ? dispensarLoteSeleccionado(dispensacion, medicamento, item, user, hoy)
+                    : dispensarPorFefo(dispensacion, medicamento, item, user, hoy);
+            if (motivo != null) {
                 excepcionesFefo.put(medicamento.getNombre(), motivo);
-            } else {
-                // RN02: FEFO automatico
-                dispensarPorFefo(dispensacion, medicamento, item.getCantidad(), user, hoy);
             }
         }
         
@@ -143,6 +149,9 @@ public class DispensacionService {
         // RN05.2: evaluar alertas tras cada venta
         alertScheduler.evaluarAlertasPostOperacion();
         
+        // Generar cobro según tipo de receta (ASEGURADO no cobra, SIS 50%, PARTICULAR 100%)
+        cobroService.calcularYCrear(dispensacion, user, httpRequest);
+        
         return mapToResponse(dispensacionRepository.findByIdDetallado(dispensacion.getId())
                 .orElse(dispensacion));
     }
@@ -151,15 +160,23 @@ public class DispensacionService {
      * RN02: recorre los lotes vigentes en orden FEFO hasta cubrir la cantidad solicitada.
      * Si un lote esta vencido se omite y se genera la alerta de vencido bloqueado (RN03).
      */
-    private void dispensarPorFefo(Dispensacion dispensacion, Medicamento medicamento, Integer cantidad,
-                                  Usuario user, LocalDate hoy) {
-        int pendiente = cantidad;
+    private String dispensarPorFefo(Dispensacion dispensacion, Medicamento medicamento,
+                                    DispensacionItemRequest item, Usuario user, LocalDate hoy) {
         List<Lote> lotes = loteRepository.findVigentesFEFOParaLockear(medicamento.getId(), hoy);
-        
         if (lotes.isEmpty()) {
-            throw new StockInsufficientException(medicamento.getNombre(), cantidad, 0);
+            throw new StockInsufficientException(medicamento.getNombre(), item.getCantidad(), 0);
         }
-        
+
+        Lote loteFefo = lotes.get(0);
+        boolean requiereAutorizacion = requiereAutorizacionFefo(lotes, loteFefo, hoy);
+        String motivo = validarAutorizacionFefo(item, user, requiereAutorizacion);
+        descontarPorFefo(dispensacion, medicamento, item.getCantidad(), user, hoy, lotes, motivo);
+        return motivo;
+    }
+
+    private void descontarPorFefo(Dispensacion dispensacion, Medicamento medicamento, Integer cantidad,
+                                  Usuario user, LocalDate hoy, List<Lote> lotes, String motivo) {
+        int pendiente = cantidad;
         for (Lote lote : lotes) {
             if (pendiente <= 0) {
                 break;
@@ -184,6 +201,7 @@ public class DispensacionService {
                     .medicamento(medicamento)
                     .lote(lote)
                     .cantidad(aDescontar)
+                    .motivoExcepcionFefo(motivo)
                     .build();
             dispensacion.agregarDetalle(detalle);
             
@@ -196,44 +214,37 @@ public class DispensacionService {
             throw new StockInsufficientException(medicamento.getNombre(), cantidad, disponible);
         }
     }
-    
+
     /**
-     * RF-04: el Jefe de Farmacia puede elegir un lote distinto al FEFO dejando el motivo.
-     * Devuelve el motivo registrado para la trazabilidad.
+     * Un lote próximo a vencer requiere autorización cuando existe más de un lote vigente.
+     * Si se eligió el lote FEFO, conserva el descuento automático y la distribución entre lotes.
      */
-    private String dispensarLoteForzado(Dispensacion dispensacion, Medicamento medicamento,
-                                        DispensacionItemRequest item, Usuario user) {
-        // RN04: verificar si las excepciones FEFO están habilitadas
-        if (!configuracionService.getBoolean(ConfiguracionService.CLAVE_PERMITIR_EXCEPCION_FEFO, true)) {
-            throw new BusinessRuleException("FEFO_EXCEPCION_DESHABILITADA", 
-                "Las excepciones al FEFO están deshabilitadas en la configuración del sistema");
-        }
-        
-        if (user.getNombreRol() == null || !ROL_JEFE_FARMACIA.equals(user.getNombreRol())) {
-            throw new BusinessRuleException("SOLO_JEFE_FARMACIA", "Solo el Jefe de Farmacia puede elegir un lote distinto al FEFO");
-        }
-        if (item.getMotivoExcepcionFefo() == null || item.getMotivoExcepcionFefo().trim().isEmpty()) {
-            throw new BusinessRuleException("MOTIVO_OBLIGATORIO", "La excepcion FEFO requiere un motivo obligatorio");
-        }
-        
-        LocalDate hoy = LocalDate.now();
+    private String dispensarLoteSeleccionado(Dispensacion dispensacion, Medicamento medicamento,
+                                             DispensacionItemRequest item, Usuario user, LocalDate hoy) {
         List<Lote> lotes = loteRepository.findVigentesFEFOParaLockear(medicamento.getId(), hoy);
         Lote loteFefo = lotes.isEmpty() ? null : lotes.get(0);
-        
+
         Lote loteElegido = loteRepository.findByIdParaActualizar(item.getLoteId())
                 .orElseThrow(() -> new ResourceNotFoundException("Lote not found with id: " + item.getLoteId()));
-        
+
         if (!loteElegido.getMedicamento().getId().equals(medicamento.getId())) {
             throw new BusinessRuleException("LOTE_NO_CORRESPONDE", "El lote " + loteElegido.getNumeroLote() + " no corresponde al medicamento " + medicamento.getNombre());
         }
-        
+
         // RN03: un lote vencido nunca puede dispensarse
-        if (loteElegido.isVencido() || loteElegido.getEstado() == Lote.Estado.BAJA) {
+        if (loteElegido.isVencido() || loteElegido.getEstado() != Lote.Estado.ACTIVO) {
             throw new BusinessRuleException("LOTE_VENCIDO", "El lote " + loteElegido.getNumeroLote() + " esta vencido y no puede dispensarse");
         }
-        if (loteFefo != null && loteFefo.getId().equals(loteElegido.getId())) {
-            throw new BusinessRuleException("LOTE_YA_ES_FEFO", "El lote seleccionado ya es el que indica el FEFO, no requiere excepcion");
+
+        boolean loteFefoSeleccionado = loteFefo != null && loteFefo.getId().equals(loteElegido.getId());
+        boolean requiereAutorizacion = requiereAutorizacionFefo(lotes, loteElegido, hoy);
+        String motivo = validarAutorizacionFefo(item, user, requiereAutorizacion);
+
+        if (loteFefoSeleccionado) {
+            descontarPorFefo(dispensacion, medicamento, item.getCantidad(), user, hoy, lotes, motivo);
+            return motivo;
         }
+
         if (!loteElegido.tieneStock(item.getCantidad())) {
             throw new BusinessRuleException("STOCK_INSUFICIENTE_LOTE", "El lote " + loteElegido.getNumeroLote() + " no tiene stock suficiente");
         }
@@ -247,13 +258,43 @@ public class DispensacionService {
                 .medicamento(medicamento)
                 .lote(loteElegido)
                 .cantidad(item.getCantidad())
-                .motivoExcepcionFefo(item.getMotivoExcepcionFefo())
+                .motivoExcepcionFefo(motivo)
                 .build();
         dispensacion.agregarDetalle(detalle);
         
         registrarSalida(loteElegido, user, item.getCantidad(), stockAnterior, loteElegido.getCantidadActual(), dispensacion);
         
-        return item.getMotivoExcepcionFefo();
+        return motivo;
+    }
+
+    private String validarAutorizacionFefo(DispensacionItemRequest item, Usuario user, boolean requerida) {
+        String motivo = item.getMotivoExcepcionFefo() == null ? null : item.getMotivoExcepcionFefo().trim();
+        boolean autorizacionSolicitada = motivo != null && !motivo.isEmpty();
+        if (!requerida && !autorizacionSolicitada) {
+            return null;
+        }
+        if (autorizacionSolicitada && !configuracionService.getBoolean(
+                ConfiguracionService.CLAVE_PERMITIR_EXCEPCION_FEFO, true)) {
+            throw new BusinessRuleException("FEFO_EXCEPCION_DESHABILITADA",
+                    "Las autorizaciones FEFO están deshabilitadas en la configuración del sistema");
+        }
+        if (user == null || user.getNombreRol() == null || !ROL_JEFE_FARMACIA.equals(user.getNombreRol())) {
+            throw new BusinessRuleException("SOLO_JEFE_FARMACIA",
+                    "Solo el Jefe de Farmacia puede autorizar la dispensación de un lote próximo a vencer");
+        }
+        if (!autorizacionSolicitada) {
+            throw new BusinessRuleException("MOTIVO_OBLIGATORIO",
+                    "La autorización FEFO requiere un motivo obligatorio");
+        }
+        return motivo;
+    }
+
+    private boolean estaProximoAVencer(Lote lote, LocalDate hoy) {
+        return !lote.getFechaVencimiento().isAfter(hoy.plusDays(configuracionService.getDiasProximo()));
+    }
+
+    boolean requiereAutorizacionFefo(List<Lote> lotes, Lote lote, LocalDate hoy) {
+        return lotes.size() > 1 && estaProximoAVencer(lote, hoy);
     }
     
     private void registrarSalida(Lote lote, Usuario user, int cantidad, int stockAnterior, int stockNuevo,
@@ -341,6 +382,9 @@ public class DispensacionService {
                 "Dispensacion anulada: receta " + dispensacion.getReceta().getNumeroReceta(),
                 valorAnterior, Dispensacion.Estado.ANULADA.toString(), httpRequest);
         
+        // Anular cobro asociado si existe
+        cobroService.anularPorDispensacion(dispensacion.getId(), user, httpRequest);
+        
         // RN05.2: evaluar alertas tras anulación (stock vuelve)
         alertScheduler.evaluarAlertasPostOperacion();
         
@@ -356,6 +400,20 @@ public class DispensacionService {
         int totalUnidades = detalles.stream()
                 .mapToInt(det -> det.getCantidad() != null ? det.getCantidad() : 0)
                 .sum();
+        
+        // Obtener cobro si existe
+        DispensacionResponse.CobroResponse cobroResponse = null;
+        Cobro cobro = cobroRepository.findByDispensacionId(d.getId()).orElse(null);
+        if (cobro != null) {
+            cobroResponse = DispensacionResponse.CobroResponse.builder()
+                    .id(cobro.getId())
+                    .subtotal(cobro.getSubtotal())
+                    .descuentoPorcentaje(cobro.getDescuentoPorcentaje())
+                    .descuentoMonto(cobro.getDescuentoMonto())
+                    .total(cobro.getTotal())
+                    .estado(cobro.getEstado())
+                    .build();
+        }
         
         return DispensacionResponse.builder()
                 .id(d.getId())
@@ -376,6 +434,7 @@ public class DispensacionService {
                 .totalItems(detalles.size())
                 .totalUnidades(totalUnidades)
                 .createdAt(d.getCreatedAt())
+                .cobro(cobroResponse)
                 .build();
     }
     

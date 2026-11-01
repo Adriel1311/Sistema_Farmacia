@@ -41,7 +41,7 @@ public class DetalleDispensacion {
     @Column(nullable = false)
     private Integer cantidad;
     
-    // RN04: motivo registrado cuando el Jefe autoriza un lote distinto al FEFO
+    // Motivo registrado cuando el Jefe autoriza un lote próximo a vencer.
     @Column(length = 500)
     private String motivoExcepcionFefo;
 }

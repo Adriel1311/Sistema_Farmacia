@@ -23,7 +23,7 @@ public class DispensacionDetalleResponse {
     private String estadoVencimiento;
     private Integer cantidad;
     
-    // RF-04: presente cuando el Jefe autorizo un lote distinto al FEFO
+    // Presente cuando el Jefe autorizó la dispensación FEFO del lote.
     private Boolean excepcionFefo;
     private String motivoExcepcionFefo;
 }

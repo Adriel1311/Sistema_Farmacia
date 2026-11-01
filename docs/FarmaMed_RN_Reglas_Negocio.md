@@ -43,11 +43,11 @@
 **En simple:** todo lote se registra con número, vencimiento posterior al ingreso y cantidad mayor a cero, si no, se rechaza.
 
 ### RN02 – Siempre sale primero lo que vence primero (FEFO)
-**En simple:** cuando se atiende en farmacia, el sistema solo elige el lote vigente que vence más pronto. El trabajador no escoge a mano para no equivocarse.
+**En simple:** cuando se atiende en farmacia, el sistema elige los lotes vigentes por fecha de vencimiento y distribuye la cantidad siguiendo FEFO.
 
 **Ejemplo:** hay lote A-001 que vence en octubre y lote A-002 que vence en diciembre. El sistema entrega automáticamente del A-001.
 
-Solo el Jefe de Farmacia puede elegir otro lote y debe dejar el motivo registrado y auditado.
+Si hay varios lotes disponibles, dispensar un lote dentro del umbral configurado de próximo vencimiento requiere autorización del Jefe de Farmacia, motivo y auditoría. Si solo hay un lote disponible, se puede dispensar sin autorización, aunque esté próximo a vencer. Los lotes vencidos o dados de baja nunca se dispensan.
 → Deriva a: RF-04.
 
 ### RN03 – Lo vencido se bloquea, no se puede vender

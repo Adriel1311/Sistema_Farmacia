@@ -206,4 +206,19 @@ public class ConfiguracionService {
         semaforo.put("diasProximo", getDiasProximo());
         return semaforo;
     }
+
+    @Transactional(readOnly = true)
+    public java.math.BigDecimal getBigDecimal(String clave, java.math.BigDecimal porDefecto) {
+        return (java.math.BigDecimal) configCache.get(clave + ":decimal:" + porDefecto, k ->
+            configuracionRepository.findByClave(clave)
+                    .map(c -> {
+                        try {
+                            return new java.math.BigDecimal(c.getValor().trim());
+                        } catch (NumberFormatException e) {
+                            return porDefecto;
+                        }
+                    })
+                    .orElse(porDefecto)
+        );
+    }
 }

@@ -17,7 +17,7 @@ public class DispensacionItemRequest {
     @Min(value = 1, message = "La cantidad debe ser mayor a cero")
     private Integer cantidad;
     
-    // Solo el Jefe de Farmacia puede forzar un lote distinto al FEFO (RF-04)
+    // Lote seleccionado manualmente; los próximos a vencer pueden requerir autorización FEFO.
     private Long loteId;
     
     @Size(max = 500, message = "El motivo de excepcion no debe superar 500 caracteres")

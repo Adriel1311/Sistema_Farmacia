@@ -14,7 +14,7 @@ export interface DispensacionItemRequest {
   medicamentoId: number;
   cantidad: number;
   loteId?: number | null;
-  motivoExcepcionLoteDistinto?: string | null; // API field: motivoExcepcionFefo
+  motivoExcepcionFefo?: string | null;
 }
 
 export interface CreateDispensacionRequest {
@@ -37,6 +37,51 @@ export interface DispensacionDetalle {
   motivoExcepcionLoteDistinto: string | null;
 }
 
+export enum EstadoCobro {
+  PENDIENTE = 'PENDIENTE',
+  PAGADO = 'PAGADO',
+  ANULADO = 'ANULADO'
+}
+
+export enum MetodoPago {
+  EFECTIVO = 'EFECTIVO',
+  TARJETA = 'TARJETA',
+  TRANSFERENCIA = 'TRANSFERENCIA',
+  MIXTO = 'MIXTO'
+}
+
+export interface Cobro {
+  id: number;
+  dispensacionId: number;
+  numeroTicket: string;
+  tipoReceta: string;
+  pacienteNombre: string;
+  subtotal: number;
+  descuentoPorcentaje: number;
+  descuentoMonto: number;
+  total: number;
+  estado: EstadoCobro;
+  metodoPago: MetodoPago | null;
+  observacion: string | null;
+  pagadoEn: string | null;
+  pagadoPorNombre: string | null;
+  createdAt: string;
+}
+
+export interface CobroResponse {
+  id: number;
+  subtotal: number;
+  descuentoPorcentaje: number;
+  descuentoMonto: number;
+  total: number;
+  estado: EstadoCobro;
+}
+
+export interface PagarCobroRequest {
+  metodoPago: 'EFECTIVO' | 'TARJETA' | 'TRANSFERENCIA' | 'MIXTO';
+  observacion: string;
+}
+
 export interface Dispensacion {
   id: number;
   numeroTicket: string;
@@ -56,6 +101,7 @@ export interface Dispensacion {
   totalItems: number;
   totalUnidades: number;
   createdAt: string;
+  cobro?: CobroResponse;
 }
 
 /** Item del formulario de caja, con la seleccion de lote ya resuelta en el cliente. */
@@ -66,6 +112,7 @@ export interface DispensacionFormItem {
   unidadMedida: string;
   lotesDisponibles: Lote[];
   loteSeleccionadoId: number | null;
+  loteForzado: boolean;
   cantidad: number;
   excepcionLoteDistinto: boolean;
   motivoExcepcionLoteDistinto: string;

@@ -72,6 +72,17 @@ export const API = {
     base: '/medicos',
     byId: (id: number) => `/medicos/${id}`
   },
+  precios: {
+    base: '/precios',
+    byId: (id: number) => `/precios/${id}`,
+    byMedicamento: (medicamentoId: number) => `/precios/medicamento/${medicamentoId}`
+  },
+  cobros: {
+    base: '/cobros',
+    byId: (id: number) => `/cobros/${id}`,
+    byDispensacion: (dispensacionId: number) => `/cobros/dispensacion/${dispensacionId}`,
+    pagar: (id: number) => `/cobros/${id}/pagar`
+  },
   dni: {
     base: '/dni',
     consultar: (dni: string) => `/dni/${dni}`

@@ -40,7 +40,7 @@ public class ConfiguracionController extends BaseController {
     }
 
     @GetMapping("/fefo.permitir.excepcion")
-    @Operation(summary = "Verificar si se permiten excepciones FEFO", description = "Devuelve true si el Jefe de Farmacia puede forzar un lote distinto al FEFO")
+    @Operation(summary = "Verificar si se permiten autorizaciones FEFO", description = "Devuelve true si se autorizan dispensaciones de lotes próximos a vencer")
     public ResponseEntity<Map<String, String>> getFefoPermitirExcepcion() {
         boolean permitido = configuracionService.getBoolean(ConfiguracionService.CLAVE_PERMITIR_EXCEPCION_FEFO, true);
         return ResponseEntity.ok(Map.of("valor", String.valueOf(permitido)));

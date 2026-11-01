@@ -155,7 +155,7 @@
                   [id]="'lote-' + item.medicamentoId"
                   class="fm-select"
                   [value]="item.loteSeleccionadoId ?? ''"
-                  (change)="setLote(item.medicamentoId, +$any($event.target).value, $any($event.target).selectedIndex > 0)"
+                  (change)="setLote(item.medicamentoId, +$any($event.target).value)"
                 >
                   <option *ngIf="item.lotesDisponibles.length === 0" [ngValue]="null">Sin lotes vigentes</option>
                   <option
@@ -170,20 +170,25 @@
 
             <div class="dis-fefo" *ngIf="item.lotesDisponibles.length > 1">
               <svg-icon name="clock" [size]="15" />
-              <span>El sistema sugiere el lote que vence primero. Usar otro lote requiere autorización.</span>
+              <span>Se aplica FEFO. Un lote próximo a vencer requiere autorización cuando hay más de un lote disponible.</span>
               <button
-                *ngIf="puedeExcepcionLoteDistinto() && !item.excepcionLoteDistinto"
+                *ngIf="requiereAutorizacionFefo(item) && puedeExcepcionLoteDistinto() && excepcionLoteDistintoPermitida()"
                 type="button"
                 class="fm-btn fm-btn--sm fm-btn--secondary"
-                (click)="abrirExcepcion(item)"
+                (click)="abrirExcepcionSeleccionada(item)"
               >
-                Autorizar lote distinto
+                Autorizar dispensación
               </button>
+            </div>
+
+            <div class="fm-alert fm-alert--warning" *ngIf="requiereAutorizacionFefo(item)">
+              <svg-icon name="warning" [size]="16" />
+              <span>El lote está próximo a vencer y requiere autorización del Jefe de Farmacia para dispensarse.</span>
             </div>
 
             <div class="fm-alert fm-alert--warning" *ngIf="item.excepcionLoteDistinto">
               <svg-icon name="warning" [size]="16" />
-              <span>Excepción (lote distinto al sugerido): {{ item.motivoExcepcionLoteDistinto }}</span>
+              <span>Autorización FEFO: {{ item.motivoExcepcionLoteDistinto }}</span>
             </div>
 
             <div class="fm-alert fm-alert--error" *ngIf="item.error">
@@ -281,6 +286,7 @@
       <div><dt>Receta</dt><dd class="fm-mono">{{ ticket.numeroReceta }}</dd></div>
       <div><dt>Paciente</dt><dd>{{ ticket.pacienteNombreCompleto }} ({{ ticket.pacienteDni }})</dd></div>
       <div><dt>Medico</dt><dd>{{ ticket.medico }}</dd></div>
+      <div><dt>Tipo receta</dt><dd>{{ ticket.tipoReceta }}</dd></div>
       <div><dt>Atendio</dt><dd>{{ ticket.usuarioNombre }}</dd></div>
     </dl>
     <div class="fm-table-wrap">
@@ -296,7 +302,7 @@
           <tr *ngFor="let detalle of ticket.detalles">
             <td>
               <div>{{ detalle.medicamentoNombre }}</div>
-              <div class="fm-xs fm-muted" *ngIf="detalle.excepcionLoteDistinto">Excepción (lote distinto al sugerido): {{ detalle.motivoExcepcionLoteDistinto }}</div>
+              <div class="fm-xs fm-muted" *ngIf="detalle.excepcionLoteDistinto">Autorización FEFO: {{ detalle.motivoExcepcionLoteDistinto }}</div>
             </td>
             <td class="fm-mono">{{ detalle.numeroLote }}</td>
             <td class="fm-num">{{ detalle.cantidad }}</td>
@@ -304,6 +310,38 @@
         </tbody>
       </table>
     </div>
+    
+    <!-- Resumen de cobro -->
+    <div *ngIf="ticket.cobro" class="dis-cobro">
+      <h3 class="dis-subtitulo">Resumen de cobro</h3>
+      <dl class="dis-detalle-receta dis-cobro__resumen">
+        <div><dt>Subtotal</dt><dd>S/ {{ ticket.cobro.subtotal | number:'1.2-2' }}</dd></div>
+        <div *ngIf="ticket.cobro.descuentoPorcentaje > 0">
+          <dt>Descuento ({{ ticket.cobro.descuentoPorcentaje }}%)</dt>
+          <dd class="dis-descuento">- S/ {{ ticket.cobro.descuentoMonto | number:'1.2-2' }}</dd>
+        </div>
+        <div class="dis-total">
+          <dt>Total a pagar</dt>
+          <dd>S/ {{ ticket.cobro.total | number:'1.2-2' }}</dd>
+        </div>
+        <div *ngIf="ticket.cobro.total === 0" class="dis-gratis">
+          <dt>Estado</dt>
+          <dd class="dis-gratis__texto">Sin cargo ({{ ticket.tipoReceta === 'ASEGURADO' ? 'Cargo a seguro' : 'SIS 100%' }})</dd>
+        </div>
+        <div *ngIf="ticket.cobro.estado">
+          <dt>Estado cobro</dt>
+          <dd>
+            <span class="fm-badge" 
+                  [class.fm-badge--success]="ticket.cobro.estado === 'PAGADO'" 
+                  [class.fm-badge--neutral]="ticket.cobro.estado === 'PENDIENTE'"
+                  [class.fm-badge--danger]="ticket.cobro.estado === 'ANULADO'">
+              {{ ticket.cobro.estado }}
+            </span>
+          </dd>
+        </div>
+      </dl>
+    </div>
+    
     <app-codigo-barras
       *ngIf="ticket.estado === 'COMPLETADA'"
       tipo="dispensacion"
@@ -316,12 +354,12 @@
   </ng-container>
 </app-fm-modal>
 
-<app-fm-modal *ngIf="excepcionModal()" title="Autorizar lote distinto al sugerido" (closed)="cerrarExcepcion()">
+<app-fm-modal *ngIf="excepcionModal()" title="Autorizar dispensación FEFO" (closed)="cerrarExcepcion()">
   <div class="fm-alert fm-alert--warning">
     <svg-icon name="warning" [size]="18" />
     <span>
-      Se usará un lote distinto al que vence primero. Solo el Jefe de Farmacia puede autorizarlo y queda
-      registrado en el historial con el motivo.
+      Este lote está próximo a vencer. Solo el Jefe de Farmacia puede autorizar la dispensación, que quedará
+      registrada en el historial con el motivo.
     </span>
   </div>
   <form [formGroup]="excepcionForm" (ngSubmit)="confirmarExcepcion()" novalidate>
@@ -332,7 +370,7 @@
         class="fm-textarea"
         formControlName="motivo"
         maxlength="300"
-        placeholder="Describe por que se descarta el lote que vence primero"
+        placeholder="Indica el motivo para dispensar este lote próximo a vencer"
       ></textarea>
       <span class="fm-error" *ngIf="excepcionForm.controls.motivo.invalid && excepcionForm.controls.motivo.touched">
         El motivo es obligatorio y debe tener al menos 10 caracteres.
