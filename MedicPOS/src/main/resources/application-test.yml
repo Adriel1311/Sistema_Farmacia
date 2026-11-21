@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    active: test
+
+farmamed:
+  rate-limit:
+    requests-per-minute: 10000
+    login-requests-per-minute: 10000

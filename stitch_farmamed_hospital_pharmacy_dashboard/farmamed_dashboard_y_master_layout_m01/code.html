@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary": "#ffffff", "on-background": "#1b1c1c", "on-surface-variant": "#414752", "tertiary": "#006771", "error": "#ba1a1a", "inverse-on-surface": "#f2f0f0", "outline": "#717783", "on-tertiary-fixed": "#001f23", "surface-variant": "#e3e2e2", "surface-dim": "#dbdad9", "surface-bright": "#fbf9f9", "secondary-fixed-dim": "#b0c6ff", "on-primary-container": "#fffdff", "surface-container": "#efeded", "surface": "#fbf9f9", "tertiary-container": "#00828e", "inverse-surface": "#303031", "on-secondary-container": "#00337c", "on-surface": "#1b1c1c", "surface-container-low": "#f5f3f3", "on-tertiary": "#ffffff", "on-error": "#ffffff", "on-primary-fixed-variant": "#004786", "surface-container-highest": "#e3e2e2", "on-error-container": "#93000a", "inverse-primary": "#a5c8ff", "tertiary-fixed": "#92f1fe", "surface-tint": "#005faf", "error-container": "#ffdad6", "on-tertiary-fixed-variant": "#004f56", "primary-fixed-dim": "#a5c8ff", "on-secondary-fixed": "#001945", "secondary-fixed": "#d9e2ff", "on-secondary": "#ffffff", "secondary-container": "#759efd", "surface-container-high": "#e9e8e7", "on-primary-fixed": "#001c3a", "primary-container": "#1976d2", "background": "#fbf9f9", "primary-fixed": "#d4e3ff", "outline-variant": "#c1c6d4", "on-secondary-fixed-variant": "#00429c", "tertiary-fixed-dim": "#75d5e2", "secondary": "#2b5bb5", "on-tertiary-container": "#fcffff", "primary": "#005dac", "surface-container-lowest": "#ffffff" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-xs": "0.25rem", "space-xl": "2rem", "margin-mobile": "1rem", "gutter-mobile": "0.5rem", "margin": "1.5rem", "space-sm": "0.5rem", "gutter": "1rem", "space-lg": "1.5rem", "space-md": "1rem" }, "fontFamily": { "title-sm": ["Roboto Flex"], "label-lg": ["Roboto Flex"], "body-md": ["Roboto Flex"], "label-sm": ["Roboto Flex"], "label-md": ["Roboto Flex"], "headline-lg": ["Roboto Flex"], "code-batch": ["Roboto Flex"], "body-lg": ["Roboto Flex"], "headline-md": ["Roboto Flex"], "headline-sm": ["Roboto Flex"], "title-md": ["Roboto Flex"], "body-sm": ["Roboto Flex"] }, "fontSize": { "title-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.5px", "fontWeight": "500" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }], "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "400" }], "code-batch": ["13px", { "lineHeight": "18px", "letterSpacing": "1px", "fontWeight": "500" }], "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }], "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "500" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "500" }], "title-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500" }], "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.4px", "fontWeight": "400" }] } } } }</script></head><body class="bg-surface font-body-md text-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-space-md flex items-center gap-space-sm bg-surface-container-lowest"><img alt="Brand logo. - Primary color: #1976d2
+- Font: robotoFlex
+- Mode: light
+- Roundness: rounded-sm
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XxTU2D48n_L9Pfvw3etZ1dqxOEtDZr87rDb6JdSPOPmK_JG848nNKZun2UJaiYDsC4gxcoSfOsAMVU0lR2IFYOx33inwPbl2R1nObI0k856fsiHp1QsZGp3hk4ubUaoG33GsZO1amqcw1M7eSTSQ85IBicu2gWwd6BCPX2JNBEs9BoD15ZtOY8Rvc2venUOl1C50pj7nx_HUmFxOH0rC114SdpA0HThf8Ao7cjknwUgBX_C0KQldPPKRc"/><div class="flex flex-col min-w-0"><span class="font-title-md text-title-sm text-primary font-bold tracking-tight truncate leading-tight">FarmaMed</span><span class="font-label-sm text-label-sm text-on-surface-variant truncate">Hosp. Santa María</span></div></div><div class="px-space-md py-space-xs"><div class="p-space-xs bg-surface-container-low rounded-lg"><p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider px-space-xs">Unidad Farmacéutica</p><p class="font-title-sm text-body-sm text-on-surface font-medium px-space-xs truncate">Socorro Central #04</p></div></div><nav class="flex-1 px-space-sm py-space-xs space-y-space-xs overflow-y-auto" data-active-classes="bg-primary-fixed text-on-primary-fixed font-title-sm"><a aria-current="page" class="flex items-center justify-between px-space-md py-space-sm rounded-lg transition-colors bg-primary-fixed text-on-primary-fixed font-title-sm" data-path="dashboard" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">dashboard</span><span class="font-label-lg text-label-lg">Dashboard</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="medicamentos" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">medication</span><span class="font-label-lg text-label-lg">Medicamentos</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="inventario" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">inventory_2</span><span class="font-label-lg text-label-lg">Inventario</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="dispensacion" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">vaccines</span><span class="font-label-lg text-label-lg">Dispensación</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="alertas" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">notification_important</span><span class="font-label-lg text-label-lg">Alertas</span></div><span class="px-space-xs py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">12</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="proveedores" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">local_shipping</span><span class="font-label-lg text-label-lg">Proveedores</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="ordenes" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span class="font-label-lg text-label-lg">Órdenes</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="reportes" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">analytics</span><span class="font-label-lg text-label-lg">Reportes</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="usuarios" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">group</span><span class="font-label-lg text-label-lg">Usuarios</span></div></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="configuracion" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">settings</span><span class="font-label-lg text-label-lg">Configuración</span></div></a></nav><div class="p-space-md bg-surface-container-low"><div class="flex items-center gap-space-xs text-on-surface-variant"><span class="material-symbols-outlined text-[16px] text-tertiary">verified</span><span class="font-label-sm text-label-sm">Norma Sanitaria SIS-MED v2.4</span></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs font-label-md text-label-md text-on-surface-variant"><span class="hover:text-primary transition-colors cursor-pointer">Hospital Santa María del Socorro</span><span class="material-symbols-outlined text-[14px]">chevron_right</span><span class="text-primary font-medium">Servicio de Farmacia Central</span></div><div class="relative ml-space-md w-72 lg:w-96"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span><input class="w-full pl-9 pr-space-md py-space-xs bg-surface-container-low text-on-surface font-body-sm text-body-sm rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary transition-all" placeholder="Buscar lote, fármaco, DNI paciente..." type="text"/></div></div><div class="flex items-center gap-space-md"><button class="relative p-space-xs rounded-full text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-error ring-2 ring-surface-container-lowest"></span></button><div class="flex items-center gap-space-sm pl-space-sm"><div class="relative"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1VzFc9HCI18YoNoaZnXe34UiAvDNyamHIhV0jEyhSho1_iMMmd7EzPDcVvsYAB-Wa0Q3oDMFGvFrL3ufvNZyQRFAxoosPaL0Ztb456NXOwxluKm2h0KRAvPJPDG8oFfdQztmoYEce_EeVh556IiDrq_3cd7U2t58RdJz_-HUOtEg3a6aHB78dIZ7UlQvF8SHOlNXvGtYjGPY2FgAXU-BGTw4PMVh9Kcra5usHv6NmV5Yhtr_0H8bxu0OUQ"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-tertiary ring-2 ring-surface-container-lowest"></span></div><div class="flex flex-col text-left"><span class="font-title-sm text-title-sm text-on-surface font-medium leading-none">Dra. Elena Morales</span><span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Jefe de Farmacia</span></div></div></div></header><main class="relative pt-16 w-full min-h-screen bg-surface"><div class="flex flex-col w-full">
+<div class="p-space-lg max-w-[1720px] w-full mx-auto space-y-space-lg">
+<!-- View Header: Title, Controls & Actions -->
+<header class="flex flex-col xl:flex-row xl:items-center justify-between gap-space-md">
+<div class="space-y-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-primary-fixed text-primary">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+</span>
+<h1 class="font-headline-md text-headline-md text-on-surface tracking-tight font-semibold">
+            Dashboard General de Farmacia
+          </h1>
+<span class="px-space-sm py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wide">
+            En Tiempo Real
+          </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant pl-10">
+          Monitoreo en tiempo real de inventario, vencimientos y reposición hospitalaria • Sistema FEFO Activo
+        </p>
+</div>
+<div class="flex flex-wrap items-center gap-space-sm pl-10 xl:pl-0">
+<!-- Ward Selector -->
+<div class="relative min-w-[280px]">
+<div class="flex items-center gap-space-xs px-space-md py-space-xs bg-surface-container-lowest rounded-lg shadow-sm border border-outline-variant/40 hover:border-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[18px] text-primary">local_hospital</span>
+<div class="flex flex-col flex-1 min-w-0 pr-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">Servicio Hospitalario</span>
+<span class="font-title-sm text-title-sm text-on-surface truncate font-medium">Todos los Servicios (Farmacia Central, UCI, Quirófanos)</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-outline">arrow_drop_down</span>
+</div>
+</div>
+<!-- Secondary Action: Export -->
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-sm bg-surface-container-lowest hover:bg-surface-container-low text-on-surface font-label-lg text-label-lg rounded-lg shadow-sm border border-outline-variant/40 transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">download</span>
+<span>Exportar Reporte</span>
+</button>
+<!-- Primary Action: New Order -->
+<button class="inline-flex items-center gap-space-xs px-space-lg py-space-sm bg-primary-container hover:bg-primary text-on-primary-container font-label-lg text-label-lg rounded-lg shadow-md hover:shadow-lg transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+<span class="font-semibold tracking-wide">NUEVA ORDEN DE REPOSICIÓN</span>
+</button>
+</div>
+</header>
+<!-- Top KPI Cards Row -->
+<section aria-label="Indicadores Clave de Desempeño" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<!-- Card 1: Critical Lots (0-30 days) -->
+<article class="relative overflow-hidden bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-all group">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-error"></div>
+<div class="flex items-start justify-between gap-space-sm">
+<div class="space-y-space-xs">
+<span class="font-label-md text-label-md uppercase tracking-wider text-error font-semibold flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+              Lotes Críticos
+            </span>
+<div class="flex items-baseline gap-space-xs">
+<h2 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">14</h2>
+<span class="font-title-sm text-title-sm text-on-surface-variant">lotes</span>
+</div>
+</div>
+<div class="w-12 h-12 rounded-xl bg-error-container flex items-center justify-center text-on-error-container group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[24px]">dangerous</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center gap-space-xs text-error font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">priority_high</span>
+<span class="font-medium">0-30 días • Requiere cuarentena preventiva</span>
+</div>
+</article>
+<!-- Card 2: Expiring Soon (31-60 days) -->
+<article class="relative overflow-hidden bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-all group">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-amber-600"></div>
+<div class="flex items-start justify-between gap-space-sm">
+<div class="space-y-space-xs">
+<span class="font-label-md text-label-md uppercase tracking-wider text-amber-700 font-semibold flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+              Próximos a Vencer
+            </span>
+<div class="flex items-baseline gap-space-xs">
+<h2 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">38</h2>
+<span class="font-title-sm text-title-sm text-on-surface-variant">lotes</span>
+</div>
+</div>
+<div class="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-amber-800 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[24px]">timelapse</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center gap-space-xs text-amber-800 font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">swap_horizontal_circle</span>
+<span class="font-medium">31-60 días • Planificar rotación FEFO</span>
+</div>
+</article>
+<!-- Card 3: Critical Floor Stock -->
+<article class="relative overflow-hidden bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-all group">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-secondary"></div>
+<div class="flex items-start justify-between gap-space-sm">
+<div class="space-y-space-xs">
+<span class="font-label-md text-label-md uppercase tracking-wider text-secondary font-semibold flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+              Stock Crítico
+            </span>
+<div class="flex items-baseline gap-space-xs">
+<h2 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">9</h2>
+<span class="font-title-sm text-title-sm text-on-surface-variant">fármacos</span>
+</div>
+</div>
+<div class="w-12 h-12 rounded-xl bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[24px]">production_quantity_limits</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center gap-space-xs text-on-secondary-container font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">info</span>
+<span class="font-medium">Bajo umbral de seguridad en piso</span>
+</div>
+</article>
+<!-- Card 4: Suggested Orders -->
+<article class="relative overflow-hidden bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-all group">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-tertiary"></div>
+<div class="flex items-start justify-between gap-space-sm">
+<div class="space-y-space-xs">
+<span class="font-label-md text-label-md uppercase tracking-wider text-tertiary font-semibold flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+              Órdenes Sugeridas
+            </span>
+<div class="flex items-baseline gap-space-xs">
+<h2 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">6</h2>
+<span class="font-title-sm text-title-sm text-on-surface-variant">órdenes</span>
+</div>
+</div>
+<div class="w-12 h-12 rounded-xl bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[24px]">assignment_turned_in</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center gap-space-xs text-tertiary font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">auto_mode</span>
+<span class="font-medium">Generadas automáticamente para firma</span>
+</div>
+</article>
+</section>
+<!-- Visual Analysis & Ward Distribution Summary -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-space-md">
+<!-- FEFO Aging Chart Container -->
+<div class="lg:col-span-2 bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm mb-space-sm">
+<div>
+<h3 class="font-title-md text-title-md text-on-surface font-semibold">Ventana de Caducidad de Inventario (FEFO)</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Distribución de 1,248 lotes activos por tiempo remanente</p>
+</div>
+<div class="flex items-center gap-space-sm text-label-sm font-label-sm">
+<span class="inline-flex items-center gap-1 text-on-surface-variant"><span class="w-2.5 h-2.5 rounded-full bg-[#2E7D32]"></span> Vigente (84%)</span>
+<span class="inline-flex items-center gap-1 text-on-surface-variant"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Próx (11%)</span>
+<span class="inline-flex items-center gap-1 text-on-surface-variant"><span class="w-2.5 h-2.5 rounded-full bg-error"></span> Crítico (5%)</span>
+</div>
+</div>
+<!-- Synthetic Visual Bar Chart -->
+<div class="space-y-space-sm my-space-xs">
+<div class="space-y-1">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface font-medium">Farmacia Central (Almacén Primario)</span>
+<span class="text-on-surface-variant">720 lotes vigentes • 18 alerta</span>
+</div>
+<div class="w-full h-3 bg-surface-container-high rounded-full overflow-hidden flex">
+<div class="h-full bg-[#2E7D32]" style="width: 82%;"></div>
+<div class="h-full bg-amber-500" style="width: 14%;"></div>
+<div class="h-full bg-error" style="width: 4%;"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface font-medium">Satélite Quirófanos & Anestesia</span>
+<span class="text-on-surface-variant">240 lotes vigentes • 9 alerta</span>
+</div>
+<div class="w-full h-3 bg-surface-container-high rounded-full overflow-hidden flex">
+<div class="h-full bg-[#2E7D32]" style="width: 78%;"></div>
+<div class="h-full bg-amber-500" style="width: 15%;"></div>
+<div class="h-full bg-error" style="width: 7%;"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface font-medium">Unidad de Cuidados Intensivos (UCI)</span>
+<span class="text-on-surface-variant">160 lotes vigentes • 12 alerta</span>
+</div>
+<div class="w-full h-3 bg-surface-container-high rounded-full overflow-hidden flex">
+<div class="h-full bg-[#2E7D32]" style="width: 74%;"></div>
+<div class="h-full bg-amber-500" style="width: 18%;"></div>
+<div class="h-full bg-error" style="width: 8%;"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface font-medium">Urgencias y Shock Room</span>
+<span class="text-on-surface-variant">128 lotes vigentes • 13 alerta</span>
+</div>
+<div class="w-full h-3 bg-surface-container-high rounded-full overflow-hidden flex">
+<div class="h-full bg-[#2E7D32]" style="width: 70%;"></div>
+<div class="h-full bg-amber-500" style="width: 20%;"></div>
+<div class="h-full bg-error" style="width: 10%;"></div>
+</div>
+</div>
+</div>
+<div class="pt-space-xs flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
+            Auditoría de lote automatizada según R.M. N° 584-2023/MINSA
+          </span>
+<button class="text-primary hover:underline font-medium">Ver desglose por piso →</button>
+</div>
+</div>
+<!-- Quick Action Dispatch & Critical Notice -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-error font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">notification_important</span>
+              Intervención Inmediata
+            </span>
+<span class="font-code-batch text-code-batch text-on-surface-variant">Turno Guardia #02</span>
+</div>
+<h4 class="font-title-sm text-title-sm font-semibold text-on-surface mb-1">
+            Retiro de Lotes por Caducidad
+          </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+            Se detectaron 3 viales vencidos de <strong class="text-on-surface">Midazolam 15mg/3ml</strong> en Urgencias Adultos pendientes de acta de bloqueo y destrucción reglamentaria.
+          </p>
+<div class="p-space-sm bg-surface-container-low rounded-lg space-y-space-xs mb-space-md">
+<div class="flex justify-between items-center text-label-sm font-label-sm">
+<span class="text-on-surface-variant">Responsable:</span>
+<span class="font-medium text-on-surface">Q.F. Manuel Arévalo</span>
+</div>
+<div class="flex justify-between items-center text-label-sm font-label-sm">
+<span class="text-on-surface-variant">Lote Afectado:</span>
+<span class="font-code-batch text-code-batch text-error font-semibold">LOT-2023-99</span>
+</div>
+<div class="flex justify-between items-center text-label-sm font-label-sm">
+<span class="text-on-surface-variant">Almacén:</span>
+<span class="text-on-surface font-medium">Urgencias - Carro Rojo 2</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="flex-1 py-space-xs px-space-sm bg-error text-on-error rounded-lg font-label-md text-label-md font-medium text-center shadow-sm hover:opacity-95 transition-opacity">
+            Generar Acta Bloqueo
+          </button>
+<button class="py-space-xs px-space-sm bg-surface-container-high text-on-surface rounded-lg font-label-md text-label-md hover:bg-surface-container-highest transition-colors">
+            Ignorar
+          </button>
+</div>
+</div>
+</div>
+<!-- Data Table Container (Angular Material Data Table Style) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<!-- Table Header Bar -->
+<div class="p-space-md flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div>
+<h3 class="font-title-md text-title-md font-semibold text-on-surface">
+            Inventario Reciente y Control de Vencimiento
+          </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Seguimiento de lotes vigentes, próximos a vencer y en estado crítico de reposición
+          </p>
+</div>
+<!-- Search Bar and Filter Pills -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<!-- Search input -->
+<div class="relative w-72 sm:w-80">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+<input class="w-full pl-9 pr-space-md py-space-xs bg-surface-container-low text-on-surface font-body-sm text-body-sm rounded-lg focus:outline-none focus:bg-surface-container-lowest border border-transparent focus:border-primary transition-all" placeholder="Buscar fármaco, lote, principio activo..." type="text"/>
+</div>
+<!-- Filter Pills -->
+<div class="flex items-center gap-1 bg-surface-container-low p-1 rounded-lg">
+<button class="px-space-sm py-1 rounded bg-surface-container-lowest font-label-sm text-label-sm font-semibold text-primary shadow-xs">Todos</button>
+<button class="px-space-sm py-1 rounded hover:bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant">Críticos (14)</button>
+<button class="px-space-sm py-1 rounded hover:bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant">Próximos (38)</button>
+<button class="px-space-sm py-1 rounded hover:bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant">Vencidos (3)</button>
+</div>
+</div>
+</div>
+<!-- Data Table -->
+<div class="overflow-x-auto">
+<table aria-label="Control de Vencimiento y Stock" class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-md text-label-md uppercase tracking-wider h-12">
+<th class="px-space-md py-space-xs font-semibold" scope="col">Código / Lote</th>
+<th class="px-space-md py-space-xs font-semibold" scope="col">Medicamento y Concentración</th>
+<th class="px-space-md py-space-xs font-semibold" scope="col">Ubicación Hospitalaria</th>
+<th class="px-space-md py-space-xs font-semibold" scope="col">Stock Actual</th>
+<th class="px-space-md py-space-xs font-semibold" scope="col">Fecha de Caducidad</th>
+<th class="px-space-md py-space-xs font-semibold" scope="col">Estado Semáforo</th>
+<th class="px-space-md py-space-xs font-semibold text-right" scope="col">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-high font-body-md text-body-md text-on-surface">
+<!-- Row 1: Vencido (Negro / Crítico) -->
+<tr class="hover:bg-error-container/10 transition-colors border-l-4 border-error">
+<td class="px-space-md py-space-sm font-code-batch text-code-batch font-semibold text-error">
+                LOT-2023-99
+              </td>
+<td class="px-space-md py-space-sm">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface">Midazolam 15mg/3ml</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Psicotrópico Lista II • Ampolla Inyectable</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<span class="inline-flex items-center gap-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-outline">meeting_room</span>
+                  Urgencias Adultos - Carro 2
+                </span>
+</td>
+<td class="px-space-md py-space-sm font-title-sm text-title-sm font-semibold">
+                3 ampollas
+              </td>
+<td class="px-space-md py-space-sm">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-error">12/03/2024</span>
+<span class="font-label-sm text-label-sm text-error font-semibold">Vencido hace 4 días</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<!-- Chip Negro: Vencido -->
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#212121] text-[#ffffff] font-label-sm text-label-sm font-semibold tracking-wide shadow-xs">
+<span class="material-symbols-outlined text-[14px]">block</span>
+                  VENCIDO (0d)
+                </span>
+</td>
+<td class="px-space-md py-space-sm text-right">
+<div class="relative inline-block text-left">
+<button class="p-1 rounded-full hover:bg-surface-container-high text-on-surface-variant transition-colors" title="Acciones">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Crítico 0-30 días (Rojo) -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-space-md py-space-sm font-code-batch text-code-batch font-medium text-on-surface">
+                LOT-2024-118
+              </td>
+<td class="px-space-md py-space-sm">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface">Propofol 1% 20ml</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Anestésico General • Emulsión Inyectable</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<span class="inline-flex items-center gap-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-outline">meeting_room</span>
+                  Quirófano Central - Carro 1
+                </span>
+</td>
+<td class="px-space-md py-space-sm font-title-sm text-title-sm font-semibold">
+                15 ampollas
+              </td>
+<td class="px-space-md py-space-sm">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface">02/04/2024</span>
+<span class="font-label-sm text-label-sm text-error font-medium">17 días restantes</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<!-- Chip Rojo: Crítico -->
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFEBEE] text-[#D32F2F] font-label-sm text-label-sm font-semibold tracking-wide">
+<span class="material-symbols-outlined text-[14px]">error</span>
+                  CRÍTICO (17d)
+                </span>
+</td>
+<td class="px-space-md py-space-sm text-right">
+<button class="p-1 rounded-full hover:bg-surface-container-high text-on-surface-variant transition-colors" title="Acciones">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Próximo a Vencer (Ámbar 31-60 días) -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-space-md py-space-sm font-code-batch text-code-batch font-medium text-on-surface">
+                LOT-2024-05
+              </td>
+<td class="px-space-md py-space-sm">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface">Fentanilo 0.05mg/ml 10ml</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Analgesia Mayor • Control Estricto SIS-MED</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<span class="inline-flex items-center gap-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-outline">meeting_room</span>
+                  Farmacia Satélite UCI
+                </span>
+</td>
+<td class="px-space-md py-space-sm font-title-sm text-title-sm font-semibold">
+                420 viales
+              </td>
+<td class="px-space-md py-space-sm">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface">25/04/2024</span>
+<span class="font-label-sm text-label-sm text-amber-700 font-medium">40 días restantes</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<!-- Chip Ámbar: Próximo -->
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFF3E0] text-[#E65100] font-label-sm text-label-sm font-semibold tracking-wide">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+                  PRÓXIMO (40d)
+                </span>
+</td>
+<td class="px-space-md py-space-sm text-right">
+<button class="p-1 rounded-full hover:bg-surface-container-high text-on-surface-variant transition-colors" title="Acciones">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: Vigente > 60 días (Verde) -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-space-md py-space-sm font-code-batch text-code-batch font-medium text-on-surface">
+                LOT-2024-88
+              </td>
+<td class="px-space-md py-space-sm">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface">Ceftriaxona 1g IV</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Antibiótico Cefalosporina • Frasco Polvo Liofilizado</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<span class="inline-flex items-center gap-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-outline">meeting_room</span>
+                  Almacén Central Gaveta B-03
+                </span>
+</td>
+<td class="px-space-md py-space-sm font-title-sm text-title-sm font-semibold">
+                850 frascos
+              </td>
+<td class="px-space-md py-space-sm">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface">18/11/2025</span>
+<span class="font-label-sm text-label-sm text-[#2E7D32] font-medium">612 días restantes</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<!-- Chip Verde: Vigente -->
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E8F5E9] text-[#2E7D32] font-label-sm text-label-sm font-semibold tracking-wide">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                  VIGENTE (>60d)
+                </span>
+</td>
+<td class="px-space-md py-space-sm text-right">
+<button class="p-1 rounded-full hover:bg-surface-container-high text-on-surface-variant transition-colors" title="Acciones">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 5: Crítico (0-30 días) -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-space-md py-space-sm font-code-batch text-code-batch font-medium text-on-surface">
+                LOT-2024-34
+              </td>
+<td class="px-space-md py-space-sm">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface">Enoxaparina 40mg/0.4ml</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Anticoagulante HBPM • Jeringa Prellenada</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<span class="inline-flex items-center gap-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-outline">meeting_room</span>
+                  Hospitalización Cirugía General
+                </span>
+</td>
+<td class="px-space-md py-space-sm font-title-sm text-title-sm font-semibold">
+                85 jeringas
+              </td>
+<td class="px-space-md py-space-sm">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface">08/04/2024</span>
+<span class="font-label-sm text-label-sm text-error font-medium">23 días restantes</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFEBEE] text-[#D32F2F] font-label-sm text-label-sm font-semibold tracking-wide">
+<span class="material-symbols-outlined text-[14px]">error</span>
+                  CRÍTICO (23d)
+                </span>
+</td>
+<td class="px-space-md py-space-sm text-right">
+<button class="p-1 rounded-full hover:bg-surface-container-high text-on-surface-variant transition-colors" title="Acciones">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 6: Próximo (31-60 días) -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-space-md py-space-sm font-code-batch text-code-batch font-medium text-on-surface">
+                LOT-2024-62
+              </td>
+<td class="px-space-md py-space-sm">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface">Salbutamol Inhalador 100mcg</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Broncodilatador Aerosol 200 dosis</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<span class="inline-flex items-center gap-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-outline">meeting_room</span>
+                  Urgencias Pediatría
+                </span>
+</td>
+<td class="px-space-md py-space-sm font-title-sm text-title-sm font-semibold">
+                48 inhaladores
+              </td>
+<td class="px-space-md py-space-sm">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface">05/05/2024</span>
+<span class="font-label-sm text-label-sm text-amber-700 font-medium">50 días restantes</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFF3E0] text-[#E65100] font-label-sm text-label-sm font-semibold tracking-wide">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+                  PRÓXIMO (50d)
+                </span>
+</td>
+<td class="px-space-md py-space-sm text-right">
+<button class="p-1 rounded-full hover:bg-surface-container-high text-on-surface-variant transition-colors" title="Acciones">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 7: Vigente > 60 días -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-space-md py-space-sm font-code-batch text-code-batch font-medium text-on-surface">
+                LOT-2024-210
+              </td>
+<td class="px-space-md py-space-sm">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface">Paracetamol 10mg/ml IV (100ml)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Analgésico / Antipirético • Frasco Infusión</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<span class="inline-flex items-center gap-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-outline">meeting_room</span>
+                  Almacén Central Pallet C-12
+                </span>
+</td>
+<td class="px-space-md py-space-sm font-title-sm text-title-sm font-semibold">
+                1,400 frascos
+              </td>
+<td class="px-space-md py-space-sm">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface">20/09/2025</span>
+<span class="font-label-sm text-label-sm text-[#2E7D32] font-medium">553 días restantes</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E8F5E9] text-[#2E7D32] font-label-sm text-label-sm font-semibold tracking-wide">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                  VIGENTE (>60d)
+                </span>
+</td>
+<td class="px-space-md py-space-sm text-right">
+<button class="p-1 rounded-full hover:bg-surface-container-high text-on-surface-variant transition-colors" title="Acciones">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Angular Material Paginator Footer -->
+<div class="flex flex-col sm:flex-row items-center justify-between px-space-md py-space-sm bg-surface-container-lowest border-t border-surface-container-high font-label-md text-label-md text-on-surface-variant gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<span>Items por página:</span>
+<div class="relative">
+<select class="bg-surface-container-low text-on-surface font-label-md text-label-md rounded px-space-sm py-1 pr-6 border-0 focus:ring-1 focus:ring-primary appearance-none cursor-pointer">
+<option selected="" value="10">10</option>
+<option value="25">25</option>
+<option value="50">50</option>
+<option value="100">100</option>
+</select>
+<span class="material-symbols-outlined text-[16px] absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none text-outline">arrow_drop_down</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<span>1–7 de 142 registros</span>
+<div class="flex items-center gap-1">
+<button class="p-1 rounded hover:bg-surface-container-high text-outline disabled:opacity-30 disabled:cursor-not-allowed" disabled="" title="Primera página">
+<span class="material-symbols-outlined text-[20px]">first_page</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container-high text-outline disabled:opacity-30 disabled:cursor-not-allowed" disabled="" title="Página anterior">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container-high text-on-surface transition-colors" title="Página siguiente">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container-high text-on-surface transition-colors" title="Última página">
+<span class="material-symbols-outlined text-[20px]">last_page</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Legend / Protocol Compliance Notification Footing -->
+<footer class="flex flex-wrap items-center justify-between gap-space-md p-space-md bg-surface-container-low rounded-xl text-on-surface-variant font-label-sm text-label-sm">
+<div class="flex flex-wrap items-center gap-space-md">
+<span class="font-semibold text-on-surface">Criterio Semáforo SIS-MED:</span>
+<span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-[#2E7D32]"></span> Vigente (>60 días)</span>
+<span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-[#E65100]"></span> Próximo a vencer (31 a 60 días)</span>
+<span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-[#D32F2F]"></span> Crítico (0 a 30 días)</span>
+<span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-[#212121]"></span> Vencido (≤ 0 días - Bloqueo FEFO)</span>
+</div>
+<div class="flex items-center gap-space-xs text-primary font-medium cursor-pointer hover:underline">
+<span class="material-symbols-outlined text-[16px]">menu_book</span>
+<span>Ver Guía Procedimental de Farmacia Hospitalaria v2.4</span>
+</div>
+</footer>
+</div>
+</div></main></div></body></html>

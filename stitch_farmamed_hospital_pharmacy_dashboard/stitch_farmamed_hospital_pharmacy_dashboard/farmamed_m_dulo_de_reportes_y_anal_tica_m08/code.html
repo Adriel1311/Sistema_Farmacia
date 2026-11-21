@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght,GRAD@100..1000,-200..150&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-error":"#ffffff","inverse-primary":"#a5c8ff","error-container":"#ffdad6","secondary-fixed-dim":"#b0c6ff","on-error-container":"#93000a","inverse-on-surface":"#f2f0f0","tertiary-fixed-dim":"#75d5e2","surface-container-high":"#e9e8e7","on-secondary":"#ffffff","surface-dim":"#dbdad9","primary":"#005dac","outline-variant":"#c1c6d4","outline":"#717783","on-secondary-container":"#00337c","tertiary":"#006771","surface":"#fbf9f9","on-secondary-fixed-variant":"#00429c","tertiary-container":"#00828e","surface-container-highest":"#e3e2e2","surface-container":"#efeded","primary-fixed":"#d4e3ff","secondary-container":"#759efd","surface-variant":"#e3e2e2","surface-bright":"#fbf9f9","secondary-fixed":"#d9e2ff","on-background":"#1b1c1c","primary-fixed-dim":"#a5c8ff","error":"#ba1a1a","on-primary-container":"#fffdff","on-tertiary-fixed-variant":"#004f56","on-primary-fixed-variant":"#004786","on-tertiary-fixed":"#001f23","surface-container-low":"#f5f3f3","on-tertiary-container":"#fcffff","on-surface":"#1b1c1c","inverse-surface":"#303031","background":"#fbf9f9","surface-tint":"#005faf","on-surface-variant":"#414752","secondary":"#2b5bb5","on-primary-fixed":"#001c3a","primary-container":"#1976d2","on-tertiary":"#ffffff","tertiary-fixed":"#92f1fe","on-secondary-fixed":"#001945","on-primary":"#ffffff","surface-container-lowest":"#ffffff"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-md":"1rem","space-xs":"0.25rem","space-lg":"1.5rem","space-xl":"2rem","margin":"1.5rem","space-sm":"0.5rem","margin-mobile":"1rem","gutter-mobile":"0.5rem","gutter":"1rem"},"fontFamily":{"label-md":["Roboto Flex"],"body-sm":["Roboto Flex"],"body-lg":["Roboto Flex"],"headline-lg":["Roboto Flex"],"label-lg":["Roboto Flex"],"headline-md":["Roboto Flex"],"title-sm":["Roboto Flex"],"headline-sm":["Roboto Flex"],"body-md":["Roboto Flex"],"code-batch":["Roboto Flex"],"title-md":["Roboto Flex"],"label-sm":["Roboto Flex"]},"fontSize":{"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.5px","fontWeight":"500"}],"body-sm":["12px",{"lineHeight":"16px","letterSpacing":"0.4px","fontWeight":"400"}],"body-lg":["16px",{"lineHeight":"24px","letterSpacing":"0.5px","fontWeight":"400"}],"headline-lg":["32px",{"lineHeight":"40px","fontWeight":"400"}],"label-lg":["14px",{"lineHeight":"20px","letterSpacing":"0.1px","fontWeight":"500"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"500"}],"title-sm":["14px",{"lineHeight":"20px","letterSpacing":"0.1px","fontWeight":"500"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"500"}],"body-md":["14px",{"lineHeight":"20px","letterSpacing":"0.25px","fontWeight":"400"}],"code-batch":["13px",{"lineHeight":"18px","letterSpacing":"1px","fontWeight":"500"}],"title-md":["16px",{"lineHeight":"24px","letterSpacing":"0.15px","fontWeight":"500"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.5px","fontWeight":"500"}]}}}}</script></head><body class="bg-surface font-body-md text-body-md text-on-surface min-h-screen"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between select-none"><div class="flex flex-col flex-1 overflow-y-auto"><div class="px-space-lg pt-space-lg pb-space-md"><div class="bg-surface-container-low rounded-lg p-space-sm flex items-center gap-space-sm"><div class="w-9 h-9 rounded bg-primary-fixed flex items-center justify-center text-primary shrink-0"><span class="material-symbols-outlined text-[20px]">local_pharmacy</span></div><div class="flex flex-col min-w-0"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider truncate">Unidad Operativa</span><span class="font-title-sm text-title-sm text-on-surface font-semibold truncate">Socorro Central #04</span></div></div></div><nav class="flex-1 px-space-sm py-space-xs flex flex-col gap-1" data-active-classes="bg-primary-container text-on-primary-container font-semibold shadow-sm"><a class="flex items-center justify-between px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="dashboard" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">grid_view</span><span class="font-label-lg text-label-lg">Dashboard</span></div></a><a class="flex items-center justify-between px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="medicamentos" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">medication</span><span class="font-label-lg text-label-lg">Medicamentos</span></div></a><a class="flex items-center justify-between px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="inventario" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">inventory_2</span><span class="font-label-lg text-label-lg">Inventario</span></div></a><a class="flex items-center justify-between px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="dispensacion" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">vaccines</span><span class="font-label-lg text-label-lg">Dispensación</span></div></a><a class="flex items-center justify-between px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="alertas" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">warning</span><span class="font-label-lg text-label-lg">Alertas</span></div><span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">12</span></a><a class="flex items-center justify-between px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="proveedores" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">store</span><span class="font-label-lg text-label-lg">Proveedores</span></div></a><a class="flex items-center justify-between px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="ordenes" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span class="font-label-lg text-label-lg">Órdenes</span></div></a><a aria-current="page" class="flex items-center justify-between px-space-md py-2.5 rounded-lg bg-primary-container text-on-primary-container font-semibold shadow-sm" data-path="reportes" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">bar_chart</span><span class="font-label-lg text-label-lg">Reportes</span></div></a><div class="my-space-xs mx-space-md h-px bg-surface-container-highest"></div><a class="flex items-center justify-between px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="usuarios" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">badge</span><span class="font-label-lg text-label-lg">Usuarios</span></div></a><a class="flex items-center justify-between px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="configuracion" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">settings</span><span class="font-label-lg text-label-lg">Configuración</span></div></a></nav></div><div class="p-space-md bg-surface-container-low"><div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[15px] text-tertiary">verified</span>Norma SIS-MED</span><span class="bg-surface-container-high px-1.5 py-0.5 rounded font-code-batch text-code-batch font-semibold text-on-surface">v2.4</span></div><p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Hospital Sta. María del Socorro</p></div></aside><div class="pl-72 flex flex-col min-h-screen"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm shrink-0"><img alt="Brand logo. - Primary color: #1976d2
+- Font: robotoFlex
+- Mode: light
+- Roundness: rounded-sm
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XxTU2D48n_L9Pfvw3etZ1dqxOEtDZr87rDb6JdSPOPmK_JG848nNKZun2UJaiYDsC4gxcoSfOsAMVU0lR2IFYOx33inwPbl2R1nObI0k856fsiHp1QsZGp3hk4ubUaoG33GsZO1amqcw1M7eSTSQ85IBicu2gWwd6BCPX2JNBEs9BoD15ZtOY8Rvc2venUOl1C50pj7nx_HUmFxOH0rC114SdpA0HThf8Ao7cjknwUgBX_C0KQldPPKRc"/><div class="flex flex-col leading-tight"><span class="font-title-md text-title-md font-bold text-primary tracking-tight">FarmaMed</span><span class="font-label-sm text-label-sm text-on-surface-variant">Hospital Santa María del Socorro</span></div></div><div class="h-6 w-px bg-surface-container-highest"></div><div class="flex items-center gap-1.5 font-label-md text-label-md text-on-surface-variant"><a class="hover:text-primary transition-colors" href="#">Farmacia</a><span class="material-symbols-outlined text-[16px]">chevron_right</span><a class="hover:text-primary transition-colors" href="#">Gestión Hospitalaria</a><span class="material-symbols-outlined text-[16px]">chevron_right</span><span class="text-on-surface font-semibold">Reportes y Analítica</span></div></div><div class="flex items-center gap-space-md"><div class="relative w-80"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span><input class="w-full bg-surface-container-low text-on-surface placeholder:text-on-surface-variant pl-10 pr-4 py-2 rounded-lg font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Buscar por lote, código o fármaco..." type="text"/></div><button class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" title="Alertas Sanitarias Hospitalarias"><span class="material-symbols-outlined text-[24px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-error rounded-full ring-2 ring-surface-container-lowest"></span></button><div class="h-6 w-px bg-surface-container-highest"></div><div class="flex items-center gap-space-sm pl-space-xs"><div class="flex flex-col text-right leading-tight"><span class="font-label-md text-label-md font-semibold text-on-surface">Dra. Elena Morales</span><span class="font-label-sm text-label-sm text-on-surface-variant">Jefe de Farmacia</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-outline-variant" src="https://lh3.googleusercontent.com/aida/AEtjO1VzFc9HCI18YoNoaZnXe34UiAvDNyamHIhV0jEyhSho1_iMMmd7EzPDcVvsYAB-Wa0Q3oDMFGvFrL3ufvNZyQRFAxoosPaL0Ztb456NXOwxluKm2h0KRAvPJPDG8oFfdQztmoYEce_EeVh556IiDrq_3cd7U2t58RdJz_-HUOtEg3a6aHB78dIZ7UlQvF8SHOlNXvGtYjGPY2FgAXU-BGTw4PMVh9Kcra5usHv6NmV5Yhtr_0H8bxu0OUQ"/></div></div></header><main class="w-full pt-16 bg-surface min-h-screen px-margin py-margin"><div class="flex flex-col w-full gap-space-lg pb-16">
+<!-- Module Header & Title Section -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex flex-wrap items-center justify-between gap-space-md">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wide">
+<span>Hospital Santa María del Socorro</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span>Analítica y Gestión</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary font-semibold">Reportes e Informes (M08)</span>
+</div>
+<div class="flex items-center gap-3 mt-1">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">Centro de Reportes y Analítica Farmacéutica</h1>
+<span class="px-2.5 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-code-batch text-code-batch font-bold">M08</span>
+<span class="px-2.5 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">verified</span> DIGEMID / SIS-MED
+          </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 max-w-4xl">
+          Generación de informes consolidados de consumo hospitalario, actas de baja FEFO, rotación y balances de existencias reguladas conforme a la normativa sanitaria vigente.
+        </p>
+</div>
+<!-- Action Buttons Top Bar -->
+<div class="flex items-center gap-space-sm shrink-0">
+<button class="h-9 px-space-md rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-lg text-label-lg flex items-center gap-1.5 shadow-sm transition-all active:scale-95" id="btn-refresh" title="Actualizar datos en tiempo real">
+<span class="material-symbols-outlined text-[18px]">sync</span>
+<span>Actualizar</span>
+</button>
+<button class="h-9 px-space-md rounded bg-tertiary-container hover:bg-tertiary text-on-tertiary-container hover:text-on-tertiary font-label-lg text-label-lg flex items-center gap-1.5 shadow-sm transition-all active:scale-95" onclick="triggerExport('excel')">
+<span class="material-symbols-outlined text-[18px]">table_view</span>
+<span>Exportar Excel</span>
+</button>
+<button class="h-9 px-space-md rounded bg-error text-on-error font-label-lg text-label-lg flex items-center gap-1.5 shadow-sm hover:opacity-90 transition-all active:scale-95" onclick="triggerExport('pdf')">
+<span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+<span>Exportar PDF</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Medical Filters Control Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-md">
+<div class="flex flex-wrap items-end gap-space-md">
+<!-- Selector Report Type -->
+<div class="flex flex-col gap-1 min-w-[280px] flex-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold" for="report-type">Tipo de Reporte Clínico</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary text-[20px]">assignment</span>
+<select class="w-full bg-surface-container-low text-on-surface font-body-md text-body-md pl-10 pr-8 py-2 rounded focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer" id="report-type">
+<option selected="" value="consumo">Consumo Hospitalario (Rotación y Áreas)</option>
+<option value="fefo">Bajas y Cuarentena (Protocolo FEFO / Vencidos)</option>
+<option value="balance">Inventario Físico y Balances Valorizados</option>
+<option value="estupefacientes">Control de Psicotrópicos y Estupefacientes (Libro Oficial)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
+</div>
+</div>
+<!-- Start Date -->
+<div class="flex flex-col gap-1 w-44">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold" for="date-start">Fecha Inicio</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">calendar_today</span>
+<input class="w-full bg-surface-container-low text-on-surface font-body-md text-body-md pl-10 pr-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-primary text-sm cursor-pointer" id="date-start" type="date" value="2024-03-01"/>
+</div>
+</div>
+<!-- End Date -->
+<div class="flex flex-col gap-1 w-44">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold" for="date-end">Fecha Fin</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">event</span>
+<input class="w-full bg-surface-container-low text-on-surface font-body-md text-body-md pl-10 pr-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-primary text-sm cursor-pointer" id="date-end" type="date" value="2024-03-31"/>
+</div>
+</div>
+<!-- Service Selector -->
+<div class="flex flex-col gap-1 min-w-[240px] flex-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold" for="hospital-ward">Servicio / Área Hospitalaria</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">domain</span>
+<select class="w-full bg-surface-container-low text-on-surface font-body-md text-body-md pl-10 pr-8 py-2 rounded focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer" id="hospital-ward">
+<option selected="" value="all">Todos los servicios (UCI, Quirófano, Urgencias...)</option>
+<option value="quirofano">Quirófano Central y Anestesiología</option>
+<option value="uci">Unidad de Cuidados Intensivos (UCI / Shock)</option>
+<option value="urgencias">Urgencias y Emergencias Adultos</option>
+<option value="hosp">Hospitalización Cirugía y Medicina</option>
+<option value="pediatria">Pediatría y Neonatología</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
+</div>
+</div>
+<!-- Submit / Filter Button -->
+<div class="flex items-center gap-space-xs shrink-0">
+<button class="h-10 px-space-lg rounded bg-primary text-on-primary font-label-lg text-label-lg flex items-center gap-2 shadow-sm hover:opacity-95 transition-all" id="btn-apply-filters">
+<span class="material-symbols-outlined text-[18px]">filter_alt</span>
+<span>Aplicar Filtros</span>
+</button>
+</div>
+</div>
+<!-- Active Filter Chips & Regulatory Indicators -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm pt-2 bg-surface-container-low/50 px-space-sm py-1.5 rounded">
+<div class="flex flex-wrap items-center gap-space-xs font-label-sm text-label-sm">
+<span class="text-on-surface-variant font-medium">Parámetros aplicados:</span>
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-semibold">31 días seleccionados • Período fiscal Q1-2024</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface">Almacén Central FarmaMed</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface">Tipo de egreso: Dosis Unitaria &amp; Botiquines</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-code-batch text-code-batch">
+<span class="inline-block w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<span>Sincronizado con Kardex Central: Hoy 08:30 hrs</span>
+</div>
+</div>
+</div>
+<!-- KPI Summary Cards (4 Columns) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Card 1: Total Units -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between transition-transform hover:-translate-y-0.5">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Unidades Consumidas</span>
+<div class="w-8 h-8 rounded bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">medication_liquid</span>
+</div>
+</div>
+<div class="mt-3">
+<div class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">14,820</div>
+<div class="flex items-center gap-1.5 mt-1 font-body-sm text-body-sm">
+<span class="font-semibold text-tertiary flex items-center text-[13px]">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span> +12.4%
+          </span>
+<span class="text-on-surface-variant">vs. febrero 2024</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full mt-3 overflow-hidden">
+<div class="bg-primary h-full w-[78%]"></div>
+</div>
+</div>
+<!-- Card 2: Valor Total Dispensado -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between transition-transform hover:-translate-y-0.5">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Valor Total Dispensado</span>
+<div class="w-8 h-8 rounded bg-secondary-fixed flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+</div>
+</div>
+<div class="mt-3">
+<div class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">S/ 186,450.00</div>
+<div class="flex items-center gap-1.5 mt-1 font-body-sm text-body-sm">
+<span class="px-1.5 py-0.2 rounded bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm font-semibold">SIS 94.2%</span>
+<span class="text-on-surface-variant">Copago hospital 5.8%</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full mt-3 overflow-hidden">
+<div class="bg-secondary-container h-full w-[94%]"></div>
+</div>
+</div>
+<!-- Card 3: Rotación -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between transition-transform hover:-translate-y-0.5">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Mayor Rotación (Top 3)</span>
+<div class="w-8 h-8 rounded bg-tertiary-fixed flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[18px]">published_with_changes</span>
+</div>
+</div>
+<div class="mt-3">
+<div class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">12 Principios</div>
+<div class="flex items-center gap-1 mt-1 font-body-sm text-body-sm text-on-surface-variant truncate">
+<span class="font-semibold text-primary">Ceftriaxona</span>, <span class="font-semibold">Propofol</span>, <span class="font-semibold">Paracetamol</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full mt-3 overflow-hidden">
+<div class="bg-tertiary h-full w-[65%]"></div>
+</div>
+</div>
+<!-- Card 4: Bajas / FEFO -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between transition-transform hover:-translate-y-0.5">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Bajas / Mermas (FEFO)</span>
+<div class="w-8 h-8 rounded bg-error-container flex items-center justify-center text-on-error-container">
+<span class="material-symbols-outlined text-[18px]">remove_shopping_cart</span>
+</div>
+</div>
+<div class="mt-3">
+<div class="flex items-baseline gap-2">
+<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">24 uds</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">(Tasa 0.16%)</span>
+</div>
+<div class="flex items-center gap-1.5 mt-1 font-body-sm text-body-sm">
+<span class="text-tertiary font-semibold flex items-center">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Conforme
+          </span>
+<span class="text-on-surface-variant">Estándar OMS &lt; 1%</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full mt-3 overflow-hidden">
+<div class="bg-tertiary-container h-full w-[16%]"></div>
+</div>
+</div>
+</div>
+<!-- Clinical Analytics Visualizations Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md">
+<!-- Visual 1: Daily Consumption Trend by Hospital Service -->
+<div class="lg:col-span-8 bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+<div>
+<h2 class="font-title-md text-title-md font-bold text-on-surface">Tendencia de Consumo y Demanda por Servicio</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Evolución semanal acumulada por áreas críticas durante marzo 2024</p>
+</div>
+<!-- Legend -->
+<div class="flex items-center gap-space-md font-label-sm text-label-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-sm bg-primary"></span>
+<span class="text-on-surface-variant">Quirófano Central</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-sm bg-secondary-container"></span>
+<span class="text-on-surface-variant">Shock Room / UCI</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-sm bg-tertiary-container"></span>
+<span class="text-on-surface-variant">Urgencias</span>
+</div>
+</div>
+</div>
+<!-- Styled Interactive SVG Stacked Chart -->
+<div class="w-full h-64 relative flex items-end">
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 760 220">
+<defs>
+<lineargradient id="primary-grad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#1976d2" stop-opacity="0.85"></stop>
+<stop offset="100%" stop-color="#1976d2" stop-opacity="0.3"></stop>
+</lineargradient>
+<lineargradient id="secondary-grad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#759efd" stop-opacity="0.85"></stop>
+<stop offset="100%" stop-color="#759efd" stop-opacity="0.3"></stop>
+</lineargradient>
+<lineargradient id="tertiary-grad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#00828e" stop-opacity="0.85"></stop>
+<stop offset="100%" stop-color="#00828e" stop-opacity="0.3"></stop>
+</lineargradient>
+</defs>
+<!-- Horizontal reference guide lines -->
+<line stroke="#efeded" stroke-dasharray="4,4" stroke-width="1" x1="40" x2="740" y1="20" y2="20"></line>
+<line stroke="#efeded" stroke-dasharray="4,4" stroke-width="1" x1="40" x2="740" y1="70" y2="70"></line>
+<line stroke="#efeded" stroke-dasharray="4,4" stroke-width="1" x1="40" x2="740" y1="120" y2="120"></line>
+<line stroke="#efeded" stroke-width="1" x1="40" x2="740" y1="170" y2="170"></line>
+<!-- Axis Values -->
+<text class="fill-[#717783] text-[10px] font-mono" text-anchor="end" x="32" y="24">4.5k</text>
+<text class="fill-[#717783] text-[10px] font-mono" text-anchor="end" x="32" y="74">3.0k</text>
+<text class="fill-[#717783] text-[10px] font-mono" text-anchor="end" x="32" y="124">1.5k</text>
+<text class="fill-[#717783] text-[10px] font-mono" text-anchor="end" x="32" y="174">0</text>
+<!-- Week 1 Group (Col: 70px) -->
+<g class="transition-opacity hover:opacity-80 cursor-pointer">
+<rect fill="url(#tertiary-grad)" height="25" rx="2" width="22" x="85" y="145"></rect>
+<rect fill="url(#secondary-grad)" height="45" rx="2" width="22" x="112" y="125"></rect>
+<rect fill="url(#primary-grad)" height="90" rx="2" width="22" x="139" y="80"></rect>
+<text class="fill-[#414752] text-[11px] font-medium" text-anchor="middle" x="123" y="192">Semana 1</text>
+</g>
+<!-- Week 2 Group -->
+<g class="transition-opacity hover:opacity-80 cursor-pointer">
+<rect fill="url(#tertiary-grad)" height="40" rx="2" width="22" x="235" y="130"></rect>
+<rect fill="url(#secondary-grad)" height="60" rx="2" width="22" x="262" y="110"></rect>
+<rect fill="url(#primary-grad)" height="105" rx="2" width="22" x="289" y="65"></rect>
+<text class="fill-[#414752] text-[11px] font-medium" text-anchor="middle" x="273" y="192">Semana 2</text>
+</g>
+<!-- Week 3 Group -->
+<g class="transition-opacity hover:opacity-80 cursor-pointer">
+<rect fill="url(#tertiary-grad)" height="50" rx="2" width="22" x="385" y="120"></rect>
+<rect fill="url(#secondary-grad)" height="75" rx="2" width="22" x="412" y="95"></rect>
+<rect fill="url(#primary-grad)" height="125" rx="2" width="22" x="439" y="45"></rect>
+<text class="fill-[#414752] text-[11px] font-medium" text-anchor="middle" x="423" y="192">Semana 3</text>
+</g>
+<!-- Week 4 Group (Pico quirúrgico) -->
+<g class="transition-opacity hover:opacity-80 cursor-pointer">
+<rect fill="url(#tertiary-grad)" height="55" rx="2" width="22" x="535" y="115"></rect>
+<rect fill="url(#secondary-grad)" height="85" rx="2" width="22" x="562" y="85"></rect>
+<rect fill="url(#primary-grad)" height="140" rx="2" width="22" x="589" y="30"></rect>
+<text class="fill-[#414752] text-[11px] font-medium font-bold" text-anchor="middle" x="573" y="192">Semana 4</text>
+</g>
+<!-- Closing Week / Current -->
+<g class="transition-opacity hover:opacity-80 cursor-pointer">
+<rect fill="url(#tertiary-grad)" height="35" rx="2" width="22" x="670" y="135"></rect>
+<rect fill="url(#secondary-grad)" height="50" rx="2" width="22" x="695" y="120"></rect>
+<rect fill="url(#primary-grad)" height="100" rx="2" width="22" x="720" y="70"></rect>
+<text class="fill-[#414752] text-[11px] font-medium" text-anchor="middle" x="707" y="192">Cierre Q1</text>
+</g>
+</svg>
+</div>
+<div class="pt-2 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm border-t-0">
+<span class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-[15px]">trending_up</span> Coeficiente de rotación en quirófano: +18.4% durante la semana 4
+        </span>
+<span class="font-code-batch text-code-batch">Ref: SIG-FARM-2024-MAR</span>
+</div>
+</div>
+<!-- Visual 2: Category Distribution Donut Chart -->
+<div class="lg:col-span-4 bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex flex-col">
+<div class="flex items-center justify-between">
+<h2 class="font-title-md text-title-md font-bold text-on-surface">Distribución Terapéutica</h2>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-code-batch text-[11px]">N=14.8k</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Porcentaje de consumo por grupo farmacológico</p>
+</div>
+<!-- SVG Donut Chart -->
+<div class="relative flex items-center justify-center my-3">
+<svg class="w-44 h-44 transform -rotate-90" viewbox="0 0 36 36">
+<!-- Background ring -->
+<path class="text-surface-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4.2"></path>
+<!-- Segment 1: Antimicrobianos (38%) -> stroke-dasharray="38, 100" -->
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="38, 100" stroke-linecap="round" stroke-width="4.2"></path>
+<!-- Segment 2: Anestésicos (28%) -> offset 38 -->
+<path class="text-secondary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="28, 100" stroke-dashoffset="-38" stroke-linecap="round" stroke-width="4.2"></path>
+<!-- Segment 3: Analgésicos (20%) -> offset 66 -->
+<path class="text-tertiary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="20, 100" stroke-dashoffset="-66" stroke-linecap="round" stroke-width="4.2"></path>
+<!-- Segment 4: Soluciones (14%) -> offset 86 -->
+<path class="text-outline-variant" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="14, 100" stroke-dashoffset="-86" stroke-linecap="round" stroke-width="4.2"></path>
+</svg>
+<!-- Donut Center Metric -->
+<div class="absolute flex flex-col items-center justify-center text-center">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface leading-none">100%</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-wider mt-0.5">Controlado</span>
+</div>
+</div>
+<!-- Donut Categorized Legend List -->
+<div class="flex flex-col gap-1.5 font-body-sm text-body-sm pt-2">
+<div class="flex items-center justify-between">
+<span class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-primary shrink-0"></span>
+<span class="text-on-surface font-medium">Antimicrobianos</span>
+</span>
+<span class="font-semibold text-on-surface font-code-batch">38% <span class="text-on-surface-variant font-normal">(5,630)</span></span>
+</div>
+<div class="flex items-center justify-between">
+<span class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary-container shrink-0"></span>
+<span class="text-on-surface font-medium">Anestésicos y Sedantes</span>
+</span>
+<span class="font-semibold text-on-surface font-code-batch">28% <span class="text-on-surface-variant font-normal">(4,150)</span></span>
+</div>
+<div class="flex items-center justify-between">
+<span class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-tertiary-container shrink-0"></span>
+<span class="text-on-surface font-medium">Analgésicos y Narcóticos</span>
+</span>
+<span class="font-semibold text-on-surface font-code-batch">20% <span class="text-on-surface-variant font-normal">(2,964)</span></span>
+</div>
+<div class="flex items-center justify-between">
+<span class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-outline-variant shrink-0"></span>
+<span class="text-on-surface font-medium">Soluciones Parenterales</span>
+</span>
+<span class="font-semibold text-on-surface font-code-batch">14% <span class="text-on-surface-variant font-normal">(2,076)</span></span>
+</div>
+</div>
+</div>
+</div>
+<!-- Detailed Data Table Preview (Exportable Report Matrix) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<!-- Table Header Section -->
+<div class="p-space-md flex flex-wrap items-center justify-between gap-space-sm bg-surface-container-low/40">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">table_chart</span>
+<h2 class="font-title-md text-title-md font-bold text-on-surface">Vista Preliminar de Datos Consolidados (Exportable)</h2>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Mostrando 1 - 8 de 142 registros auditados correspondientes al corte mensual</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input class="w-full bg-surface-container text-on-surface placeholder:text-on-surface-variant pl-9 pr-3 py-1.5 rounded font-body-sm text-body-sm focus:outline-none focus:ring-1 focus:ring-primary" id="table-search" placeholder="Filtrar en esta matriz..." type="text"/>
+</div>
+<button class="p-2 rounded bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors" title="Columnas visibles">
+<span class="material-symbols-outlined text-[20px]">view_column</span>
+</button>
+</div>
+</div>
+<!-- Table Container High-Density Medical Grade -->
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left border-collapse select-text">
+<thead>
+<tr class="bg-surface-container-high text-on-surface-variant font-label-md text-label-md uppercase tracking-wider h-11">
+<th class="px-space-md py-2">Código Fármaco</th>
+<th class="px-space-md py-2">Principio Activo &amp; Presentación</th>
+<th class="px-space-md py-2">Lote Principal</th>
+<th class="px-space-md py-2">Área Hospitalaria</th>
+<th class="px-space-md py-2 text-right">Uds Dispensadas</th>
+<th class="px-space-md py-2 text-right">Costo Unit. (S/)</th>
+<th class="px-space-md py-2 text-right">Total Valorizado (S/)</th>
+<th class="px-space-md py-2 text-center">Tendencia vs Mes Ant.</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md text-on-surface divide-y-0" id="report-rows">
+<!-- Row 1 -->
+<tr class="h-12 hover:bg-surface-container-low transition-colors">
+<td class="px-space-md py-2 font-code-batch text-code-batch font-bold text-primary">MED-0012</td>
+<td class="px-space-md py-2">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Ceftriaxona 1g IV</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Polvo para solución inyectable</span>
+</div>
+</td>
+<td class="px-space-md py-2">
+<span class="px-2 py-0.5 rounded bg-surface-container font-code-batch text-[12px] font-medium text-on-surface">LOT-2024-88</span>
+</td>
+<td class="px-space-md py-2">
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Hospitalización General</span>
+</td>
+<td class="px-space-md py-2 text-right font-semibold font-code-batch">3,250</td>
+<td class="px-space-md py-2 text-right font-code-batch text-on-surface-variant">8.50</td>
+<td class="px-space-md py-2 text-right font-bold font-code-batch text-on-surface">S/ 27,625.00</td>
+<td class="px-space-md py-2 text-center">
+<span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px]">arrow_upward</span> +8.5%
+              </span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="h-12 hover:bg-surface-container-low transition-colors bg-surface-container-lowest">
+<td class="px-space-md py-2 font-code-batch text-code-batch font-bold text-primary">MED-0042</td>
+<td class="px-space-md py-2">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Propofol 1% 20ml</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Emulsión inyectable ampolla</span>
+</div>
+</td>
+<td class="px-space-md py-2">
+<span class="px-2 py-0.5 rounded bg-surface-container font-code-batch text-[12px] font-medium text-on-surface">LOT-2024-04</span>
+</td>
+<td class="px-space-md py-2">
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-semibold">Quirófano Central</span>
+</td>
+<td class="px-space-md py-2 text-right font-semibold font-code-batch">1,840</td>
+<td class="px-space-md py-2 text-right font-code-batch text-on-surface-variant">32.00</td>
+<td class="px-space-md py-2 text-right font-bold font-code-batch text-on-surface">S/ 58,880.00</td>
+<td class="px-space-md py-2 text-center">
+<span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px]">arrow_upward</span> +15.2%
+              </span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="h-12 hover:bg-surface-container-low transition-colors">
+<td class="px-space-md py-2 font-code-batch text-code-batch font-bold text-primary">MED-0018</td>
+<td class="px-space-md py-2">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Midazolam 15mg/3ml</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Solución inyectable (Controlado)</span>
+</div>
+</td>
+<td class="px-space-md py-2">
+<span class="px-2 py-0.5 rounded bg-surface-container font-code-batch text-[12px] font-medium text-on-surface">LOT-2024-118</span>
+</td>
+<td class="px-space-md py-2">
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold">Shock Room / UCI</span>
+</td>
+<td class="px-space-md py-2 text-right font-semibold font-code-batch">1,120</td>
+<td class="px-space-md py-2 text-right font-code-batch text-on-surface-variant">14.50</td>
+<td class="px-space-md py-2 text-right font-bold font-code-batch text-on-surface">S/ 16,240.00</td>
+<td class="px-space-md py-2 text-center">
+<span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px]">arrow_downward</span> -2.1%
+              </span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="h-12 hover:bg-surface-container-low transition-colors bg-surface-container-lowest">
+<td class="px-space-md py-2 font-code-batch text-code-batch font-bold text-primary">MED-0075</td>
+<td class="px-space-md py-2">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Enoxaparina 40mg/0.4ml</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Jeringa prellenada SC</span>
+</div>
+</td>
+<td class="px-space-md py-2">
+<span class="px-2 py-0.5 rounded bg-surface-container font-code-batch text-[12px] font-medium text-on-surface">LOT-2024-34</span>
+</td>
+<td class="px-space-md py-2">
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Cirugía Cardiovascular</span>
+</td>
+<td class="px-space-md py-2 text-right font-semibold font-code-batch">960</td>
+<td class="px-space-md py-2 text-right font-code-batch text-on-surface-variant">28.00</td>
+<td class="px-space-md py-2 text-right font-bold font-code-batch text-on-surface">S/ 26,880.00</td>
+<td class="px-space-md py-2 text-center">
+<span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px]">arrow_upward</span> +5.4%
+              </span>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="h-12 hover:bg-surface-container-low transition-colors">
+<td class="px-space-md py-2 font-code-batch text-code-batch font-bold text-primary">MED-0005</td>
+<td class="px-space-md py-2">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Paracetamol 10mg/ml IV</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Frasco infusión 100ml</span>
+</div>
+</td>
+<td class="px-space-md py-2">
+<span class="px-2 py-0.5 rounded bg-surface-container font-code-batch text-[12px] font-medium text-on-surface">LOT-2024-210</span>
+</td>
+<td class="px-space-md py-2">
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Urgencias Adultos</span>
+</td>
+<td class="px-space-md py-2 text-right font-semibold font-code-batch">2,450</td>
+<td class="px-space-md py-2 text-right font-code-batch text-on-surface-variant">6.20</td>
+<td class="px-space-md py-2 text-right font-bold font-code-batch text-on-surface">S/ 15,190.00</td>
+<td class="px-space-md py-2 text-center">
+<span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px]">arrow_upward</span> +3.0%
+              </span>
+</td>
+</tr>
+<!-- Row 6 -->
+<tr class="h-12 hover:bg-surface-container-low transition-colors bg-surface-container-lowest">
+<td class="px-space-md py-2 font-code-batch text-code-batch font-bold text-primary">MED-0091</td>
+<td class="px-space-md py-2">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Fentanilo 0.05mg/ml</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Ampolla 2ml (Estupefaciente)</span>
+</div>
+</td>
+<td class="px-space-md py-2">
+<span class="px-2 py-0.5 rounded bg-surface-container font-code-batch text-[12px] font-medium text-on-surface">LOT-2024-15</span>
+</td>
+<td class="px-space-md py-2">
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-semibold">Quirófano Central</span>
+</td>
+<td class="px-space-md py-2 text-right font-semibold font-code-batch">780</td>
+<td class="px-space-md py-2 text-right font-code-batch text-on-surface-variant">22.00</td>
+<td class="px-space-md py-2 text-right font-bold font-code-batch text-on-surface">S/ 17,160.00</td>
+<td class="px-space-md py-2 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-medium">
+                Estable
+              </span>
+</td>
+</tr>
+<!-- Row 7 -->
+<tr class="h-12 hover:bg-surface-container-low transition-colors">
+<td class="px-space-md py-2 font-code-batch text-code-batch font-bold text-primary">MED-0103</td>
+<td class="px-space-md py-2">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Meropenem 1g IV</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Polvo para perfusión IV</span>
+</div>
+</td>
+<td class="px-space-md py-2">
+<span class="px-2 py-0.5 rounded bg-surface-container font-code-batch text-[12px] font-medium text-on-surface">LOT-2024-92</span>
+</td>
+<td class="px-space-md py-2">
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold">Shock Room / UCI</span>
+</td>
+<td class="px-space-md py-2 text-right font-semibold font-code-batch">650</td>
+<td class="px-space-md py-2 text-right font-code-batch text-on-surface-variant">36.50</td>
+<td class="px-space-md py-2 text-right font-bold font-code-batch text-on-surface">S/ 23,725.00</td>
+<td class="px-space-md py-2 text-center">
+<span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px]">arrow_upward</span> +6.1%
+              </span>
+</td>
+</tr>
+<!-- Row 8 -->
+<tr class="h-12 hover:bg-surface-container-low transition-colors bg-surface-container-lowest">
+<td class="px-space-md py-2 font-code-batch text-code-batch font-bold text-primary">MED-0002</td>
+<td class="px-space-md py-2">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Cloruro de Sodio 0.9% 1000ml</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Solución isotónica parenteral</span>
+</div>
+</td>
+<td class="px-space-md py-2">
+<span class="px-2 py-0.5 rounded bg-surface-container font-code-batch text-[12px] font-medium text-on-surface">LOT-2024-512</span>
+</td>
+<td class="px-space-md py-2">
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Todos los Servicios</span>
+</td>
+<td class="px-space-md py-2 text-right font-semibold font-code-batch">3,765</td>
+<td class="px-space-md py-2 text-right font-code-batch text-on-surface-variant">2.85</td>
+<td class="px-space-md py-2 text-right font-bold font-code-batch text-on-surface">S/ 10,730.25</td>
+<td class="px-space-md py-2 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-medium">
+                Estable
+              </span>
+</td>
+</tr>
+</tbody>
+<!-- Totals Row -->
+<tfoot>
+<tr class="bg-surface-container font-title-sm text-title-sm text-on-surface font-bold h-12">
+<td class="px-space-md py-2" colspan="4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">functions</span>
+<span>TOTALES DE LA MUESTRA VISIBLE (8 DE 142 FÁRMACOS)</span>
+</div>
+</td>
+<td class="px-space-md py-2 text-right font-code-batch text-primary font-bold">14,820 uds</td>
+<td class="px-space-md py-2 text-right text-on-surface-variant font-normal">-</td>
+<td class="px-space-md py-2 text-right font-code-batch text-primary text-base">S/ 186,450.00</td>
+<td class="px-space-md py-2 text-center font-label-sm text-tertiary">+12.4% consolidado</td>
+</tr>
+</tfoot>
+</table>
+</div>
+<!-- Table Pagination Footer -->
+<div class="px-space-md py-2.5 bg-surface-container-low/70 flex flex-wrap items-center justify-between gap-space-sm font-label-md text-label-md text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span>Filas por página:</span>
+<select class="bg-surface text-on-surface font-body-sm text-body-sm px-2 py-1 rounded focus:outline-none">
+<option>8 registros</option>
+<option>25 registros</option>
+<option>50 registros</option>
+<option>100 registros</option>
+</select>
+<span>Página 1 de 18</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant disabled:opacity-40" disabled="" title="Página anterior">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button class="w-7 h-7 rounded bg-primary text-on-primary font-bold text-xs flex items-center justify-center">1</button>
+<button class="w-7 h-7 rounded hover:bg-surface-container text-on-surface text-xs flex items-center justify-center">2</button>
+<button class="w-7 h-7 rounded hover:bg-surface-container text-on-surface text-xs flex items-center justify-center">3</button>
+<span class="px-1 text-xs">...</span>
+<button class="w-7 h-7 rounded hover:bg-surface-container text-on-surface text-xs flex items-center justify-center">18</button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant" title="Página siguiente">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Regulatory Audit & Quality Sign-off Card -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-sm flex flex-col md:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-lg bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed-variant shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[28px]">shield_with_heart</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-title-sm text-title-sm font-bold text-on-surface">Validación Sanitaria Oficial SIS-MED v2.4</span>
+<span class="px-2 py-0.2 rounded bg-tertiary text-on-tertiary font-label-sm text-[11px] font-bold">DIGEMID COMPLIANT</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+          Este informe cuenta con hash criptográfico institucional: <code class="bg-surface-container-high px-1.5 py-0.5 rounded font-mono text-[11px] text-on-surface">SHA256: 4b29-e88f-991c-a110-33bf</code> y firma digital de Jefatura Farmacéutica.
+        </p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm shrink-0">
+<div class="text-right flex flex-col font-label-sm text-label-sm">
+<span class="font-semibold text-on-surface">Dra. Elena Morales - Reg. Col. 12944</span>
+<span class="text-on-surface-variant">Responsable Técnico de Farmacia Hospitalaria</span>
+</div>
+<div class="w-9 h-9 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold text-sm">
+        EM
+      </div>
+</div>
+</div>
+</div>
+<!-- Floating Action Buttons (FAB Container - Bottom Right Corner) -->
+<div class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2.5">
+<!-- Tooltip/Floating Badge for Matrix Excel -->
+<div class="flex items-center gap-2">
+<span class="bg-inverse-surface text-inverse-on-surface px-2.5 py-1 rounded text-xs font-medium shadow-md">Descargar Excel (.xlsx)</span>
+<button class="w-12 h-12 rounded-full bg-tertiary-container hover:bg-tertiary text-on-tertiary-container hover:text-on-tertiary flex items-center justify-center shadow-lg transition-all transform hover:scale-105 active:scale-95" onclick="triggerExport('excel')" title="Descargar Matriz Excel">
+<span class="material-symbols-outlined text-[24px]">description</span>
+</button>
+</div>
+<!-- Primary Floating Action Button: Export PDF -->
+<div class="flex items-center gap-2">
+<span class="bg-inverse-surface text-inverse-on-surface px-2.5 py-1 rounded text-xs font-semibold shadow-md">Exportar PDF Oficial</span>
+<button class="w-14 h-14 rounded-full bg-error hover:opacity-95 text-on-error flex items-center justify-center shadow-xl transition-all transform hover:scale-105 active:scale-95" onclick="triggerExport('pdf')" title="Exportar PDF con Firma Digital y Sellos">
+<span class="material-symbols-outlined text-[28px]">picture_as_pdf</span>
+</button>
+</div>
+</div>
+<!-- Toast Feedback Notification Element -->
+<div class="fixed bottom-24 right-6 z-50 bg-inverse-surface text-inverse-on-surface px-space-md py-3 rounded-xl shadow-xl flex items-center gap-3 transition-opacity duration-300 opacity-0 pointer-events-none" id="toast-export">
+<span class="material-symbols-outlined text-tertiary-fixed text-[24px]" id="toast-icon">check_circle</span>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg font-bold" id="toast-title">Generando documento...</span>
+<span class="font-body-sm text-body-sm text-inverse-on-surface/80" id="toast-message">El reporte se está procesando con el sello SIS-MED.</span>
+</div>
+</div>
+<script>
+  function triggerExport(type) {
+    const toast = document.getElementById('toast-export');
+    const toastTitle = document.getElementById('toast-title');
+    const toastMsg = document.getElementById('toast-message');
+    const toastIcon = document.getElementById('toast-icon');
+
+    if (type === 'pdf') {
+      toastTitle.innerText = "Exportando Informe PDF";
+      toastMsg.innerText = "Compilando acta oficial de consumo marzo 2024 con firma digital...";
+      toastIcon.innerText = "picture_as_pdf";
+    } else {
+      toastTitle.innerText = "Generando Libro Excel";
+      toastMsg.innerText = "Estructurando matriz valorizada con 142 ítems del Kardex...";
+      toastIcon.innerText = "table_view";
+    }
+
+    toast.classList.remove('opacity-0', 'pointer-events-none');
+    toast.classList.add('opacity-100');
+
+    setTimeout(() => {
+      toast.classList.remove('opacity-100');
+      toast.classList.add('opacity-0', 'pointer-events-none');
+    }, 3800);
+  }
+
+  // Quick Client-Side Table Filter
+  const searchInput = document.getElementById('table-search');
+  if (searchInput) {
+    searchInput.addEventListener('input', function(e) {
+      const term = e.target.value.toLowerCase();
+      const rows = document.querySelectorAll('#report-rows tr');
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(term) ? '' : 'none';
+      });
+    });
+  }
+
+  // Refresh Action Simulation
+  const refreshBtn = document.getElementById('btn-refresh');
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', function() {
+      const icon = this.querySelector('.material-symbols-outlined');
+      icon.classList.add('animate-spin');
+      setTimeout(() => {
+        icon.classList.remove('animate-spin');
+      }, 750);
+    });
+  }
+
+  // Apply filters animation
+  const filterBtn = document.getElementById('btn-apply-filters');
+  if (filterBtn) {
+    filterBtn.addEventListener('click', function() {
+      this.classList.add('opacity-75');
+      setTimeout(() => {
+        this.classList.remove('opacity-75');
+      }, 400);
+    });
+  }
+</script></main></div></body></html>

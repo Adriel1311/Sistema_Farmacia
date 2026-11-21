@@ -1,0 +1,59 @@
+@use 'styles/design-tokens' as *;
+
+.das-retry {
+  margin-left: auto;
+}
+
+.das-stat {
+  text-decoration: none;
+  color: inherit;
+  transition: border-color $motion-fast, box-shadow $motion-fast;
+
+  &:hover {
+    text-decoration: none;
+    border-color: $color-primary-300;
+    box-shadow: $shadow-sm;
+  }
+}
+@keyframes das-aparecer {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fm-stat-grid > .fm-stat {
+  animation: das-aparecer 0.45s ease-out both;
+  transition: transform $motion-base, border-color $motion-fast, box-shadow $motion-fast;
+
+  @for $i from 1 through 6 {
+    &:nth-child(#{$i}) { animation-delay: #{($i - 1) * 70}ms; }
+  }
+
+  &:hover { transform: translateY(-3px); }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    &:hover { transform: none; }
+  }
+}
+
+.das-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $space-4;
+
+  @media (max-width: $bp-lg) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.das-proveedor {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: #{$bp-sm}) {
+  .das-proveedor {
+    max-width: 140px;
+  }
+}

@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-surface-variant": "#414752", "on-primary-fixed-variant": "#004786", "on-error": "#ffffff", "on-tertiary-container": "#fcffff", "surface-bright": "#fbf9f9", "tertiary": "#006771", "on-secondary-fixed-variant": "#00429c", "secondary-fixed-dim": "#b0c6ff", "on-surface": "#1b1c1c", "secondary-fixed": "#d9e2ff", "surface-container-lowest": "#ffffff", "tertiary-container": "#00828e", "on-secondary-fixed": "#001945", "on-primary-container": "#fffdff", "background": "#fbf9f9", "on-primary": "#ffffff", "primary-fixed-dim": "#a5c8ff", "error": "#ba1a1a", "surface": "#fbf9f9", "tertiary-fixed": "#92f1fe", "primary": "#005dac", "on-tertiary-fixed": "#001f23", "inverse-on-surface": "#f2f0f0", "error-container": "#ffdad6", "outline-variant": "#c1c6d4", "secondary-container": "#759efd", "on-secondary-container": "#00337c", "on-primary-fixed": "#001c3a", "outline": "#717783", "inverse-surface": "#303031", "surface-dim": "#dbdad9", "on-background": "#1b1c1c", "inverse-primary": "#a5c8ff", "surface-container-high": "#e9e8e7", "on-secondary": "#ffffff", "tertiary-fixed-dim": "#75d5e2", "surface-container-low": "#f5f3f3", "surface-container-highest": "#e3e2e2", "on-error-container": "#93000a", "primary-container": "#1976d2", "surface-variant": "#e3e2e2", "secondary": "#2b5bb5", "on-tertiary": "#ffffff", "surface-tint": "#005faf", "surface-container": "#efeded", "primary-fixed": "#d4e3ff", "on-tertiary-fixed-variant": "#004f56" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-lg": "1.5rem", "space-xl": "2rem", "margin-mobile": "1rem", "gutter-mobile": "0.5rem", "gutter": "1rem", "space-md": "1rem", "space-xs": "0.25rem", "margin": "1.5rem", "space-sm": "0.5rem" }, "fontFamily": { "code-batch": ["Roboto Flex"], "headline-lg": ["Roboto Flex"], "body-sm": ["Roboto Flex"], "body-lg": ["Roboto Flex"], "label-md": ["Roboto Flex"], "label-lg": ["Roboto Flex"], "headline-md": ["Roboto Flex"], "title-sm": ["Roboto Flex"], "label-sm": ["Roboto Flex"], "headline-sm": ["Roboto Flex"], "body-md": ["Roboto Flex"], "title-md": ["Roboto Flex"] }, "fontSize": { "code-batch": ["13px", { "lineHeight": "18px", "letterSpacing": "1px", "fontWeight": "500" }], "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "400" }], "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.4px", "fontWeight": "400" }], "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }], "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "500" }], "title-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.5px", "fontWeight": "500" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "500" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }], "title-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500" }] } } } };</script></head><body class="bg-background font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col shadow-[0_1px_8px_rgba(0,0,0,0.06)]"><div class="h-16 px-space-md flex items-center gap-space-sm bg-surface-container-low"><div class="flex flex-col"><span class="font-title-sm text-title-sm font-bold text-primary leading-tight tracking-tight uppercase">Hosp. Santa María</span><span class="font-label-sm text-label-sm text-on-surface-variant font-medium tracking-normal">del Socorro · Farmacia Central</span></div></div><div class="px-space-md pt-space-md pb-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-bold">Módulos Operativos</span></div><nav class="flex-1 px-space-sm space-y-0.5 overflow-y-auto" data-active-classes="bg-primary-container text-on-primary-container font-medium rounded-lg shadow-sm"><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="dashboard" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">grid_view</span><span class="font-body-md text-body-md">Dashboard</span></div><span class="font-label-sm text-label-sm text-outline font-mono">M01</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="medicamentos" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">medication</span><span class="font-body-md text-body-md">Medicamentos</span></div><span class="font-label-sm text-label-sm text-outline font-mono">M02</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="inventario" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">inventory_2</span><span class="font-body-md text-body-md">Inventario</span></div><span class="font-label-sm text-label-sm text-outline font-mono">M03</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="dispensacion" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">local_pharmacy</span><span class="font-body-md text-body-md">Dispensación</span></div><span class="font-label-sm text-label-sm text-outline font-mono">M04</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="alertas" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">notification_important</span><span class="font-body-md text-body-md">Alertas</span></div><div class="flex items-center gap-space-xs"><span class="px-1.5 py-0.2 bg-error text-on-error rounded-full font-label-sm text-label-sm font-bold">12</span><span class="font-label-sm text-label-sm text-outline font-mono">M05</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="proveedores" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">local_shipping</span><span class="font-body-md text-body-md">Proveedores</span></div><span class="font-label-sm text-label-sm text-outline font-mono">M06</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="ordenes" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span class="font-body-md text-body-md">Órdenes</span></div><span class="font-label-sm text-label-sm text-outline font-mono">M07</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="reportes" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">monitoring</span><span class="font-body-md text-body-md">Reportes</span></div><span class="font-label-sm text-label-sm text-outline font-mono">M08</span></a><div class="pt-space-sm pb-space-xs px-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-bold">Control y Gobierno</span></div><a aria-current="page" class="flex items-center justify-between px-space-sm py-2 transition-colors bg-primary-container text-on-primary-container font-medium rounded-lg shadow-sm" data-path="usuarios-y-roles" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">manage_accounts</span><span class="font-body-md text-body-md">Usuarios y Roles</span></div><span class="font-label-sm text-label-sm text-outline font-mono">M09/M10</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="configuracion" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">settings</span><span class="font-body-md text-body-md">Configuración</span></div></a></nav><div class="p-space-sm bg-surface-container-low text-center"><div class="flex items-center justify-between px-space-sm text-outline font-label-sm text-label-sm font-mono"><span>DIGEMID COMPLIANT</span><span>v2.4</span></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-lg gap-space-md"><div class="flex items-center gap-space-md min-w-0"><div class="flex items-center gap-space-sm shrink-0"><img alt="Brand logo. - Primary color: #1976d2
+- Font: robotoFlex
+- Mode: light
+- Roundness: rounded-sm
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XxTU2D48n_L9Pfvw3etZ1dqxOEtDZr87rDb6JdSPOPmK_JG848nNKZun2UJaiYDsC4gxcoSfOsAMVU0lR2IFYOx33inwPbl2R1nObI0k856fsiHp1QsZGp3hk4ubUaoG33GsZO1amqcw1M7eSTSQ85IBicu2gWwd6BCPX2JNBEs9BoD15ZtOY8Rvc2venUOl1C50pj7nx_HUmFxOH0rC114SdpA0HThf8Ao7cjknwUgBX_C0KQldPPKRc"/><span class="font-title-md text-title-md font-bold text-primary tracking-tight">FarmaMed</span></div><div class="h-6 w-px bg-surface-container-highest shrink-0"></div><nav class="hidden xl:flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md truncate"><span class="hover:text-primary transition-colors cursor-pointer">Hospital Santa María del Socorro</span><span class="material-symbols-outlined text-[16px] text-outline">chevron_right</span><span class="hover:text-primary transition-colors cursor-pointer">Administración y Seguridad</span><span class="material-symbols-outlined text-[16px] text-outline">chevron_right</span><span class="text-on-surface font-medium truncate">Gestión de Usuarios y Roles (M09 / M10)</span></nav></div><div class="flex items-center gap-space-md shrink-0"><div class="relative hidden md:block w-64"><input class="w-full pl-9 pr-space-md py-1.5 bg-surface-container-low text-on-surface placeholder:text-outline font-body-sm text-body-sm rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary shadow-sm" placeholder="Búsqueda rápida..." type="text"/><span class="material-symbols-outlined text-[18px] text-outline absolute left-2.5 top-2">search</span></div><div class="flex items-center gap-space-xs"><button class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-error rounded-full ring-2 ring-surface-container-lowest"></span></button><button class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">help_outline</span></button></div><div class="h-6 w-px bg-surface-container-highest"></div><div class="flex items-center gap-space-sm pl-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-primary/20" src="https://lh3.googleusercontent.com/aida/AEtjO1VzFc9HCI18YoNoaZnXe34UiAvDNyamHIhV0jEyhSho1_iMMmd7EzPDcVvsYAB-Wa0Q3oDMFGvFrL3ufvNZyQRFAxoosPaL0Ztb456NXOwxluKm2h0KRAvPJPDG8oFfdQztmoYEce_EeVh556IiDrq_3cd7U2t58RdJz_-HUOtEg3a6aHB78dIZ7UlQvF8SHOlNXvGtYjGPY2FgAXU-BGTw4PMVh9Kcra5usHv6NmV5Yhtr_0H8bxu0OUQ"/><div class="hidden lg:flex flex-col text-left"><span class="font-label-md text-label-md font-medium text-on-surface leading-snug">Dra. Elena Morales</span><span class="font-label-sm text-label-sm text-on-surface-variant">Jefe de Farmacia</span></div></div></div></header><main class="relative pt-16 bg-surface min-h-[calc(100vh-48px)]"><div class="flex flex-col w-full">
+<!-- SECTION HEADER & MODULE CODES -->
+<section class="p-space-lg bg-surface-container-lowest shadow-sm flex flex-col gap-space-md">
+<div class="flex flex-wrap items-center justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs max-w-3xl">
+<div class="flex flex-wrap items-center gap-space-xs">
+<span class="px-2.5 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-sm text-label-sm font-semibold tracking-wide uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">badge</span>
+            M09: Directorio de Usuarios
+          </span>
+<span class="px-2.5 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm font-semibold tracking-wide uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">shield_person</span>
+            M10: Matriz de Roles y Accesos RBAC
+          </span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-outline font-label-sm text-label-sm font-mono">
+            DIGEMID/MINSA SEC-2024
+          </span>
+</div>
+<h1 class="font-headline-md text-headline-md font-semibold text-on-surface tracking-tight">
+          Gestión de Usuarios, Roles y Permisos Clínicos
+        </h1>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          Control centralizado de identidades, privilegios de dispensación, permisos para firma biométrica de actas FEFO y perfiles de seguridad DIGEMID/MINSA.
+        </p>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-wrap items-center gap-space-sm shrink-0">
+<button class="h-9 px-space-md rounded bg-surface-container-low hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-lg text-label-lg font-medium transition-colors flex items-center gap-2 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px] text-tertiary">history_toggle_off</span>
+          Ver Auditoría de Sistema
+        </button>
+<button class="h-9 px-space-md rounded bg-secondary-fixed text-on-secondary-fixed-variant hover:bg-secondary-fixed-dim font-label-lg text-label-lg font-medium transition-colors flex items-center gap-2 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+          Gestionar Matriz de Permisos / Roles
+        </button>
+<button class="h-9 px-space-md rounded bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg font-medium tracking-wide uppercase transition-all flex items-center gap-2 shadow-md hover:shadow-lg" type="button">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+          + Nuevo Usuario
+        </button>
+</div>
+</div>
+</section>
+<!-- WORKSPACE CONTENT -->
+<div class="p-space-lg flex flex-col gap-space-lg">
+<!-- METRIC KPI CARDS -->
+<section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<!-- KPI 1 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Total Cuentas</span>
+<span class="font-headline-lg text-headline-lg font-semibold text-on-surface mt-1">24</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-primary-fixed flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[22px]">group</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between">
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm font-semibold text-tertiary">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+            92% operativas (22 activas)
+          </div>
+<span class="font-label-sm text-label-sm text-outline font-mono">Padrón 2024</span>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Perfiles Clínicos</span>
+<span class="font-headline-lg text-headline-lg font-semibold text-on-surface mt-1">4</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-secondary-fixed flex items-center justify-center text-secondary shrink-0">
+<span class="material-symbols-outlined text-[22px]">admin_panel_settings</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm truncate">
+<span class="truncate">Jefatura · Técnicos · Logística · TI</span>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Sesiones Activas</span>
+<span class="font-headline-lg text-headline-lg font-semibold text-on-surface mt-1">18</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-tertiary-fixed flex items-center justify-center text-tertiary-container shrink-0">
+<span class="material-symbols-outlined text-[22px]">point_of_sale</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Ventanillas POS & Almacén</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-high text-tertiary font-label-sm text-label-sm font-mono font-medium">Turno Día</span>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Firma Biométrica / 2FA</span>
+<span class="font-headline-lg text-headline-lg font-semibold text-tertiary-container mt-1">100%</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-tertiary-fixed flex items-center justify-center text-tertiary shrink-0">
+<span class="material-symbols-outlined text-[22px]">fingerprint</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-tertiary font-medium">Actas FEFO Habilitadas</span>
+<span class="font-mono text-outline">D.T. 003-MINSA</span>
+</div>
+</div>
+</section>
+<!-- MAIN DATA TABLE CONTAINER -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<!-- Filter Bar -->
+<div class="p-space-md bg-surface-container-low flex flex-col lg:flex-row gap-space-sm items-stretch lg:items-center justify-between">
+<div class="flex-1 flex flex-col sm:flex-row gap-space-sm items-stretch sm:items-center">
+<!-- Quick Search -->
+<div class="relative flex-1 min-w-[260px]">
+<input class="w-full pl-9 pr-space-md py-2 bg-surface-container-lowest text-on-surface placeholder:text-outline font-body-sm text-body-sm rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-primary" id="userSearchInput" placeholder="Buscar por usuario, nombre, DNI o correo institucional..." type="text"/>
+<span class="material-symbols-outlined text-[18px] text-outline absolute left-3 top-2.5">search</span>
+</div>
+<!-- Role Filter -->
+<div class="relative shrink-0">
+<select class="w-full sm:w-auto pl-3 pr-8 py-2 bg-surface-container-lowest text-on-surface font-body-sm text-body-sm rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer" id="roleFilter">
+<option value="ALL">Todos los roles</option>
+<option value="JEFE">Jefe de Farmacia</option>
+<option value="TECNICO">Técnico de Farmacia</option>
+<option value="LOGISTICA">Logística</option>
+<option value="TI">Administrador TI</option>
+</select>
+<span class="material-symbols-outlined text-[18px] text-outline absolute right-2 top-2.5 pointer-events-none">expand_more</span>
+</div>
+<!-- Status Filter -->
+<div class="relative shrink-0">
+<select class="w-full sm:w-auto pl-3 pr-8 py-2 bg-surface-container-lowest text-on-surface font-body-sm text-body-sm rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer" id="statusFilter">
+<option value="ALL">Todos los estados</option>
+<option value="ACTIVO">Activo</option>
+<option value="SUSPENDIDO">Inactivo / Suspendido</option>
+<option value="REVISION">En Revisión</option>
+</select>
+<span class="material-symbols-outlined text-[18px] text-outline absolute right-2 top-2.5 pointer-events-none">expand_more</span>
+</div>
+<!-- Service / Turn Filter -->
+<div class="relative shrink-0">
+<select class="w-full sm:w-auto pl-3 pr-8 py-2 bg-surface-container-lowest text-on-surface font-body-sm text-body-sm rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer">
+<option>Todos los servicios</option>
+<option>Farmacia Central</option>
+<option>Urgencias</option>
+<option>Almacén General</option>
+</select>
+<span class="material-symbols-outlined text-[18px] text-outline absolute right-2 top-2.5 pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs shrink-0 self-end lg:self-auto">
+<button class="h-9 px-space-md rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md font-medium transition-colors flex items-center gap-1.5 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px] text-secondary">file_download</span>
+            Exportar Padrón (Excel/PDF)
+          </button>
+</div>
+</div>
+<!-- Angular Material Style Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="h-12 bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider font-bold">
+<th class="px-space-md py-3 font-semibold" scope="col">Usuario</th>
+<th class="px-space-md py-3 font-semibold" scope="col">Nombres & Colegiatura</th>
+<th class="px-space-md py-3 font-semibold" scope="col">Correo Institucional</th>
+<th class="px-space-md py-3 font-semibold" scope="col">Rol Asignado</th>
+<th class="px-space-md py-3 font-semibold" scope="col">Estado</th>
+<th class="px-space-md py-3 font-semibold" scope="col">Último Acceso / Turno</th>
+<th class="px-space-md py-3 font-semibold text-right" scope="col">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-high font-body-md text-body-md text-on-surface" id="usersTableBody">
+<!-- Row 1: Dra. Elena Morales -->
+<tr class="h-14 hover:bg-surface-container-low transition-colors group" data-role="JEFE" data-status="ACTIVO">
+<td class="px-space-md py-2.5">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-primary-fixed text-primary font-bold font-mono text-label-sm flex items-center justify-center shrink-0">
+                    EM
+                  </div>
+<div class="flex flex-col">
+<span class="font-code-batch text-code-batch font-bold text-primary">emorales</span>
+<span class="font-label-sm text-label-sm text-outline font-mono">ID: USR-0010</span>
+</div>
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface">Dra. Elena Morales Castillo</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">DNI: 09483721 · CQFP: 08422</span>
+</div>
+</td>
+<td class="px-space-md py-2.5 font-label-md text-label-md text-on-surface-variant">
+                elena.morales@hospitalsantamaria.gob.pe
+              </td>
+<td class="px-space-md py-2.5">
+<!-- Chip: Jefe de Farmacia (Violeta/Azul Profundo) -->
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold shadow-xs">
+<span class="material-symbols-outlined text-[15px]">workspace_premium</span>
+                  Jefe de Farmacia
+                </span>
+</td>
+<td class="px-space-md py-2.5">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+                  Activo
+                </span>
+</td>
+<td class="px-space-md py-2.5 font-label-sm text-label-sm text-on-surface-variant">
+<div class="flex items-center gap-1 text-tertiary font-semibold">
+<span class="material-symbols-outlined text-[14px]">sensors</span>
+                  En línea ahora
+                </div>
+</td>
+<td class="px-space-md py-2.5 text-right">
+<div class="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors" title="Editar Usuario" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-tertiary transition-colors" title="Gestionar Permisos" type="button">
+<span class="material-symbols-outlined text-[18px]">key</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-error transition-colors" title="Seguridad / Reset" type="button">
+<span class="material-symbols-outlined text-[18px]">lock_reset</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Manuel Arevalo -->
+<tr class="h-14 hover:bg-surface-container-low transition-colors group" data-role="JEFE" data-status="ACTIVO">
+<td class="px-space-md py-2.5">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-primary-fixed text-primary font-bold font-mono text-label-sm flex items-center justify-center shrink-0">
+                    MA
+                  </div>
+<div class="flex flex-col">
+<span class="font-code-batch text-code-batch font-bold text-primary">marevalo</span>
+<span class="font-label-sm text-label-sm text-outline font-mono">ID: USR-0012</span>
+</div>
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface">Q.F. Manuel Arévalo Peña</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">DNI: 41295830 · CQFP: 11094</span>
+</div>
+</td>
+<td class="px-space-md py-2.5 font-label-md text-label-md text-on-surface-variant">
+                manuel.arevalo@hospitalsantamaria.gob.pe
+              </td>
+<td class="px-space-md py-2.5">
+<!-- Chip: Jefe de Farmacia -->
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold shadow-xs">
+<span class="material-symbols-outlined text-[15px]">workspace_premium</span>
+                  Jefe de Farmacia
+                </span>
+</td>
+<td class="px-space-md py-2.5">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                  Activo
+                </span>
+</td>
+<td class="px-space-md py-2.5 font-label-sm text-label-sm text-on-surface-variant">
+                Hoy 09:30 hrs (Farmacia Central)
+              </td>
+<td class="px-space-md py-2.5 text-right">
+<div class="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors" title="Editar Usuario" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-tertiary transition-colors" title="Gestionar Permisos" type="button">
+<span class="material-symbols-outlined text-[18px]">key</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-error transition-colors" title="Seguridad / Reset" type="button">
+<span class="material-symbols-outlined text-[18px]">lock_reset</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Roberto Saldana -->
+<tr class="h-14 hover:bg-surface-container-low transition-colors group" data-role="TECNICO" data-status="ACTIVO">
+<td class="px-space-md py-2.5">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed text-tertiary font-bold font-mono text-label-sm flex items-center justify-center shrink-0">
+                    RS
+                  </div>
+<div class="flex flex-col">
+<span class="font-code-batch text-code-batch font-bold text-primary">rsaldaña</span>
+<span class="font-label-sm text-label-sm text-outline font-mono">ID: USR-0045</span>
+</div>
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface">Téc. Roberto Saldaña Cruz</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">DNI: 46892019 · Reg. Aux: F-402</span>
+</div>
+</td>
+<td class="px-space-md py-2.5 font-label-md text-label-md text-on-surface-variant">
+                roberto.saldana@hospitalsantamaria.gob.pe
+              </td>
+<td class="px-space-md py-2.5">
+<!-- Chip: Técnico de Farmacia (Cian/Teal) -->
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm font-semibold shadow-xs">
+<span class="material-symbols-outlined text-[15px]">medication</span>
+                  Técnico de Farmacia
+                </span>
+</td>
+<td class="px-space-md py-2.5">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                  Activo
+                </span>
+</td>
+<td class="px-space-md py-2.5 font-label-sm text-label-sm text-on-surface-variant">
+                Hoy 10:45 hrs <span class="font-mono text-primary font-semibold">(POS #02)</span>
+</td>
+<td class="px-space-md py-2.5 text-right">
+<div class="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors" title="Editar Usuario" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-tertiary transition-colors" title="Gestionar Permisos" type="button">
+<span class="material-symbols-outlined text-[18px]">key</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-error transition-colors" title="Seguridad / Reset" type="button">
+<span class="material-symbols-outlined text-[18px]">lock_reset</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Carla Mendoza -->
+<tr class="h-14 hover:bg-surface-container-low transition-colors group" data-role="TECNICO" data-status="ACTIVO">
+<td class="px-space-md py-2.5">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed text-tertiary font-bold font-mono text-label-sm flex items-center justify-center shrink-0">
+                    CM
+                  </div>
+<div class="flex flex-col">
+<span class="font-code-batch text-code-batch font-bold text-primary">cmendoza</span>
+<span class="font-label-sm text-label-sm text-outline font-mono">ID: USR-0048</span>
+</div>
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface">Téc. Carla Mendoza Rivas</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">DNI: 70182944 · Reg. Aux: F-519</span>
+</div>
+</td>
+<td class="px-space-md py-2.5 font-label-md text-label-md text-on-surface-variant">
+                carla.mendoza@hospitalsantamaria.gob.pe
+              </td>
+<td class="px-space-md py-2.5">
+<!-- Chip: Técnico de Farmacia -->
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm font-semibold shadow-xs">
+<span class="material-symbols-outlined text-[15px]">medication</span>
+                  Técnico de Farmacia
+                </span>
+</td>
+<td class="px-space-md py-2.5">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                  Activo
+                </span>
+</td>
+<td class="px-space-md py-2.5 font-label-sm text-label-sm text-on-surface-variant">
+                Ayer 19:15 hrs (Urgencias)
+              </td>
+<td class="px-space-md py-2.5 text-right">
+<div class="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors" title="Editar Usuario" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-tertiary transition-colors" title="Gestionar Permisos" type="button">
+<span class="material-symbols-outlined text-[18px]">key</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-error transition-colors" title="Seguridad / Reset" type="button">
+<span class="material-symbols-outlined text-[18px]">lock_reset</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5: Jorge Quispe -->
+<tr class="h-14 hover:bg-surface-container-low transition-colors group" data-role="LOGISTICA" data-status="ACTIVO">
+<td class="px-space-md py-2.5">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-amber-100 text-amber-800 font-bold font-mono text-label-sm flex items-center justify-center shrink-0">
+                    JQ
+                  </div>
+<div class="flex flex-col">
+<span class="font-code-batch text-code-batch font-bold text-primary">jquispe</span>
+<span class="font-label-sm text-label-sm text-outline font-mono">ID: USR-0031</span>
+</div>
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface">Lic. Jorge Quispe Huamán</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">DNI: 10472911 · Logística & FEFO</span>
+</div>
+</td>
+<td class="px-space-md py-2.5 font-label-md text-label-md text-on-surface-variant">
+                jorge.quispe@hospitalsantamaria.gob.pe
+              </td>
+<td class="px-space-md py-2.5">
+<!-- Chip: Logística (Ámbar / Naranja) -->
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 font-label-sm text-label-sm font-semibold shadow-xs">
+<span class="material-symbols-outlined text-[15px]">inventory_2</span>
+                  Logística
+                </span>
+</td>
+<td class="px-space-md py-2.5">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                  Activo
+                </span>
+</td>
+<td class="px-space-md py-2.5 font-label-sm text-label-sm text-on-surface-variant">
+                Hoy 08:20 hrs (Almacén Central)
+              </td>
+<td class="px-space-md py-2.5 text-right">
+<div class="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors" title="Editar Usuario" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-tertiary transition-colors" title="Gestionar Permisos" type="button">
+<span class="material-symbols-outlined text-[18px]">key</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-error transition-colors" title="Seguridad / Reset" type="button">
+<span class="material-symbols-outlined text-[18px]">lock_reset</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 6: Sergio Caceres -->
+<tr class="h-14 hover:bg-surface-container-low transition-colors group" data-role="TI" data-status="ACTIVO">
+<td class="px-space-md py-2.5">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-slate-200 text-slate-800 font-bold font-mono text-label-sm flex items-center justify-center shrink-0">
+                    SC
+                  </div>
+<div class="flex flex-col">
+<span class="font-code-batch text-code-batch font-bold text-primary">scaceres</span>
+<span class="font-label-sm text-label-sm text-outline font-mono">ID: USR-0002</span>
+</div>
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface">Ing. Sergio Cáceres Soto</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">DNI: 42938174 · CIP: 198200</span>
+</div>
+</td>
+<td class="px-space-md py-2.5 font-label-md text-label-md text-on-surface-variant">
+                scaceres.it@hospitalsantamaria.gob.pe
+              </td>
+<td class="px-space-md py-2.5">
+<!-- Chip: Administrador TI (Índigo/Slate) -->
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-200 text-slate-800 font-label-sm text-label-sm font-semibold shadow-xs">
+<span class="material-symbols-outlined text-[15px]">terminal</span>
+                  Administrador TI
+                </span>
+</td>
+<td class="px-space-md py-2.5">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                  Activo
+                </span>
+</td>
+<td class="px-space-md py-2.5 font-label-sm text-label-sm text-on-surface-variant">
+                Hoy 07:45 hrs (Consola Servidor)
+              </td>
+<td class="px-space-md py-2.5 text-right">
+<div class="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors" title="Editar Usuario" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-tertiary transition-colors" title="Gestionar Permisos" type="button">
+<span class="material-symbols-outlined text-[18px]">key</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-error transition-colors" title="Seguridad / Reset" type="button">
+<span class="material-symbols-outlined text-[18px]">lock_reset</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 7: Patricia Valenzuela -->
+<tr class="h-14 hover:bg-surface-container-low transition-colors group bg-error-container/10" data-role="LOGISTICA" data-status="SUSPENDIDO">
+<td class="px-space-md py-2.5">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest text-outline font-bold font-mono text-label-sm flex items-center justify-center shrink-0">
+                    PV
+                  </div>
+<div class="flex flex-col">
+<span class="font-code-batch text-code-batch font-bold text-outline">pvalenzuela</span>
+<span class="font-label-sm text-label-sm text-outline font-mono">ID: USR-0038</span>
+</div>
+</div>
+</td>
+<td class="px-space-md py-2.5">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-outline">Aux. Patricia Valenzuela</span>
+<span class="font-label-sm text-label-sm text-outline">DNI: 08392011 · Licencia temporal</span>
+</div>
+</td>
+<td class="px-space-md py-2.5 font-label-md text-label-md text-outline">
+                p.valenzuela@hospitalsantamaria.gob.pe
+              </td>
+<td class="px-space-md py-2.5">
+<!-- Chip: Logística Disabled -->
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-outline font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[15px]">inventory_2</span>
+                  Logística
+                </span>
+</td>
+<td class="px-space-md py-2.5">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                  Inactivo / Suspendido
+                </span>
+</td>
+<td class="px-space-md py-2.5 font-label-sm text-label-sm text-outline">
+                Hace 14 días
+              </td>
+<td class="px-space-md py-2.5 text-right">
+<div class="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors" title="Reactivar Usuario" type="button">
+<span class="material-symbols-outlined text-[18px]">published_with_changes</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-error transition-colors" title="Ver Historial de Bloqueo" type="button">
+<span class="material-symbols-outlined text-[18px]">security</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination bar -->
+<div class="p-space-md bg-surface-container-lowest flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-md font-body-sm text-body-sm text-on-surface-variant">
+<span>Mostrando <strong>1 - 7</strong> de <strong>24</strong> usuarios registrados</span>
+<div class="flex items-center gap-space-xs">
+<span class="text-outline">Filas:</span>
+<select class="bg-surface-container-low px-2 py-1 rounded text-on-surface font-label-sm text-label-sm">
+<option>10 por página</option>
+<option>25 por página</option>
+<option>50 por página</option>
+</select>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded flex items-center justify-center text-outline hover:bg-surface-container-high hover:text-on-surface disabled:opacity-30" disabled="" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded bg-primary-container text-on-primary font-label-md text-label-md font-semibold flex items-center justify-center shadow-xs" type="button">
+            1
+          </button>
+<button class="w-8 h-8 rounded hover:bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center justify-center" type="button">
+            2
+          </button>
+<button class="w-8 h-8 rounded hover:bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center justify-center" type="button">
+            3
+          </button>
+<button class="w-8 h-8 rounded flex items-center justify-center text-outline hover:bg-surface-container-high hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- M10: ROLE POLICY MATRIX CARDS & SECURITY DIRECTIVE -->
+<section class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[22px]">policy</span>
+<h2 class="font-title-md text-title-md font-semibold text-on-surface">
+            Resumen de Capacidades Clínicas por Perfil (M10 - RBAC)
+          </h2>
+</div>
+<span class="font-label-sm text-label-sm text-outline font-mono">
+          Matriz de Privilegios v3.2
+        </span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<!-- Card: Jefe de Farmacia -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[14px]">workspace_premium</span>
+                Jefe de Farmacia
+              </span>
+<span class="font-label-sm text-label-sm font-mono text-outline">NIVEL 04</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              Firma biométrica de actas FEFO, aprobación de bajas técnicas por merma o caducidad y autorización de excepciones en lotes de alta criticidad DIGEMID.
+            </p>
+</div>
+<div class="mt-space-md pt-space-xs flex flex-wrap gap-1">
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Firma FEFO</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Bajas SIS</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Cuarentena</span>
+</div>
+</div>
+<!-- Card: Técnico de Farmacia -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[14px]">medication</span>
+                Técnico de Farmacia
+              </span>
+<span class="font-label-sm text-label-sm font-mono text-outline">NIVEL 02</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              Dispensación ambulatoria y hospitalaria en módulos POS con lector GS1 DataMatrix, verificación de recetas electrónicas y arqueo de turnos.
+            </p>
+</div>
+<div class="mt-space-md pt-space-xs flex flex-wrap gap-1">
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">POS / Barcode</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Receta Electrónica</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Cierre Turno</span>
+</div>
+</div>
+<!-- Card: Logística -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[14px]">inventory_2</span>
+                Logística
+              </span>
+<span class="font-label-sm text-label-sm font-mono text-outline">NIVEL 02</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              Emisión y control de órdenes de compra, ingreso por albarán hospitalario, pesaje, registro de temperatura de cadena de frío y cuarentena de bultos.
+            </p>
+</div>
+<div class="mt-space-md pt-space-xs flex flex-wrap gap-1">
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Guías Remisión</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Cadena Frío</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Ingresos</span>
+</div>
+</div>
+<!-- Card: Administrador TI -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-800 font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[14px]">terminal</span>
+                Administrador TI
+              </span>
+<span class="font-label-sm text-label-sm font-mono text-outline">NIVEL 05</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              Auditoría integral de eventos en base de datos, gestión de llaves criptográficas 2FA, reseteo de perfiles y sincronización con servicios web SIS-MED.
+            </p>
+</div>
+<div class="mt-space-md pt-space-xs flex flex-wrap gap-1">
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Logs Inmutables</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Sync SIS-MED</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Credenciales</span>
+</div>
+</div>
+</div>
+<!-- Regulatory banner -->
+<div class="p-space-md rounded-xl bg-surface-container-high/60 flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">verified</span>
+<span class="font-body-sm text-body-sm text-on-surface">
+<strong>Cumplimiento de Auditoría Sanitaria:</strong> Registro inmutable de logs conforme a Directiva Técnica N° 003-MINSA/OGTI para trazabilidad de medicamentos controlados.
+          </span>
+</div>
+<span class="font-mono text-outline font-label-sm text-label-sm shrink-0">
+          HASH: SHA256-DIGEMID-ACTIVO
+        </span>
+</div>
+</section>
+</div>
+</div>
+<script>
+  (function () {
+    const searchInput = document.getElementById('userSearchInput');
+    const roleSelect = document.getElementById('roleFilter');
+    const statusSelect = document.getElementById('statusFilter');
+    const tableBody = document.getElementById('usersTableBody');
+
+    if (!searchInput || !roleSelect || !statusSelect || !tableBody) return;
+
+    function filterTable() {
+      const query = searchInput.value.toLowerCase().trim();
+      const selectedRole = roleSelect.value;
+      const selectedStatus = statusSelect.value;
+
+      const rows = tableBody.querySelectorAll('tr');
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        const role = row.getAttribute('data-role');
+        const status = row.getAttribute('data-status');
+
+        const matchesQuery = query === '' || text.includes(query);
+        const matchesRole = selectedRole === 'ALL' || role === selectedRole;
+        const matchesStatus = selectedStatus === 'ALL' || status === selectedStatus;
+
+        if (matchesQuery && matchesRole && matchesStatus) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    searchInput.addEventListener('input', filterTable);
+    roleSelect.addEventListener('change', filterTable);
+    statusSelect.addEventListener('change', filterTable);
+  })();
+</script></main><footer class="w-full h-12 bg-surface-container-lowest flex items-center justify-between px-space-lg text-on-surface-variant font-label-sm text-label-sm shadow-[0_-1px_6px_rgba(0,0,0,0.02)]"><div>Sistema de Información de Farmacia Hospitalaria · <strong>FarmaMed</strong> © 2024</div><div class="flex items-center gap-space-lg font-mono"><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-tertiary-container"></span>Conforme Normativa DIGEMID</span><span>Integración SIS-MED v2.4 Activa</span></div></footer></div></body></html>

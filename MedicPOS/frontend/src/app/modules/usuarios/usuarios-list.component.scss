@@ -1,0 +1,28 @@
+@use 'styles/design-tokens' as *;
+
+:host {
+  display: block;
+}
+
+.usu-mail {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: #{$bp-sm}) {
+  .fm-table {
+    min-width: 0;
+  }
+
+  .fm-table th,
+  .fm-table td {
+    padding: $space-2 $space-3;
+    min-width: 0;
+  }
+
+  .usu-mail {
+    max-width: 160px;
+  }
+}

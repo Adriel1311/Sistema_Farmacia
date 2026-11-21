@@ -1,0 +1,198 @@
+# Pre-commit Hooks Configuration for FarmaMed
+
+## Installation
+
+```bash
+# Install pre-commit
+pip install pre-commit
+
+# Install hooks
+pre-commit install
+
+# Run manually
+pre-commit run --all-files
+```
+
+## Configuration (`.pre-commit-config.yaml`)
+
+```yaml
+repos:
+  # Java formatting with Spotless
+  - repo: https://github.com/diffplug/spotless
+    rev: 2.25.0
+    hooks:
+      - id: spotless-maven
+        name: Spotless Java Formatting
+        entry: mvn spotless:check
+        language: system
+        types: [java]
+        args: [--offline]
+
+  # Java linting
+  - repo: https://github.com/checkstyle/checkstyle
+    rev: 10.12.4
+    hooks:
+      - id: checkstyle
+        name: Checkstyle
+        entry: mvn checkstyle:check
+        language: system
+        types: [java]
+
+  # Security scanning
+  - repo: https://github.com/securego/gosec
+    rev: v2.18.0
+    hooks:
+      - id: gosec
+        name: Gosec Security Scan
+        entry: gosec
+        language: system
+        types: [go]
+
+  # Secret detection
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        name: Detect Secrets
+        entry: detect-secrets scan
+        language: system
+
+  # Generic hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: debug-logger
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+
+  # Commit message validation
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v3.13.0
+    hooks:
+      - id: commitizen
+        name: Commit Message Validation
+        stages: [commit-msg]
+```
+
+## Commit Message Convention (Conventional Commits)
+
+```bash
+# Format
+<type>(<scope>): <description>
+
+# Types
+feat:     New feature
+fix:      Bug fix
+docs:     Documentation changes
+style:    Code style (formatting, etc)
+refactor: Code refactoring
+test:     Adding/modifying tests
+chore:    Maintenance tasks
+perf:     Performance improvements
+ci:       CI/CD changes
+build:    Build system changes
+security: Security fixes
+
+# Examples
+feat(auth): add JWT token refresh endpoint
+fix(dispensacion): fix FEFO logic for expired lotes
+test(dni): add unit tests for DniService
+docs(readme): update API documentation
+ci(github): add CI/CD pipeline
+security(rate-limit): add login rate limiting
+```
+
+## Branch Naming Convention
+
+```bash
+# Feature branches
+feature/JIRA-123-add-dispensacion-fefo
+
+# Bug fixes
+fix/JIRA-456-fix-dni-duplicate-validation
+
+# Hotfixes
+hotfix/JIRA-789-security-headers
+
+# Releases
+release/v1.2.0
+```
+
+## Pull Request Template
+
+```markdown
+## Description
+Brief description of changes
+
+## Type of Change
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Breaking change
+- [ ] Documentation update
+- [ ] Refactoring
+- [ ] Tests
+- [ ] CI/CD
+
+## Testing
+- [ ] Unit tests added/updated
+- [ ] Integration tests pass
+- [ ] Manual testing performed
+
+## Checklist
+- [ ] Code follows style guidelines
+- [ ] Self-review completed
+- [ ] Tests pass locally
+- [ ] Documentation updated
+- [ ] No breaking changes (or documented)
+```
+
+## Branch Protection Rules (GitHub Settings)
+
+### Main Branch Protection
+```
+Settings > Branches > Add rule > main
+- Require pull request reviews before merging: ✓
+  - Required approving reviews: 2
+  - Dismiss stale reviews: ✓
+  - Require review from code owners: ✓
+- Require status checks to pass before merging: ✓
+  - Require branches to be up to date: ✓
+  - Required checks: test, build, code-quality, dependency-check
+- Require conversation resolution before merging: ✓
+- Require signed commits: ✓
+- Require linear history: ✓
+- Include administrators: ✓
+- Restrict who can push: ✓
+- Allow force pushes: ✗
+- Allow deletions: ✗
+```
+
+## Secrets Management
+
+### GitHub Secrets (Repository Settings)
+```
+DATABASE_URL
+DATABASE_USERNAME
+DATABASE_PASSWORD
+JWT_SECRET
+FACTILIZA_BASE_URL
+FACTILIZA_TOKEN
+FACTILIZA_TIMEOUT_MS
+FACTILIZA_CONNECT_TIMEOUT_MS
+FACTILIZA_MOCK_ENABLED
+CORS_ORIGINS
+RATE_LIMIT_RPM
+RATE_LIMIT_LOGIN_RPM
+```
+
+### Never Commit
+- .env files
+- *.pem, *.key, *.p12, *.jks
+- Any file with "secret", "password", "token", "key" in name
+- database.yml, application-prod.yml

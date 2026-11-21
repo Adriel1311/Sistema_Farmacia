@@ -1,0 +1,129 @@
+<div class="fm-page">
+  <header class="fm-page-header">
+    <div>
+      <h1 class="fm-page-title">Movimientos de inventario</h1>
+      <p class="fm-page-subtitle">Trazabilidad de entradas, salidas, bajas y ajustes por lote</p>
+    </div>
+    <div class="fm-page-actions">
+      <button type="button" class="fm-btn fm-btn--ghost" (click)="refrescar()">
+        <svg-icon name="refresh" [size]="16" />
+        <span class="fm-hidden-mobile">Actualizar</span>
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="error()" class="fm-alert fm-alert--error" role="alert">
+    <svg-icon name="error" [size]="18" />
+    <span class="fm-spacer">{{ error() }}</span>
+    <button type="button" class="fm-btn fm-btn--secondary fm-btn--sm" (click)="refrescar()">Reintentar</button>
+  </div>
+
+  <div class="fm-stat-grid">
+    <div class="fm-stat">
+      <span class="fm-stat__icon"><svg-icon name="movimiento" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ visibles().length }}</div>
+        <div class="fm-stat__label">Movimientos</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--success">
+      <span class="fm-stat__icon"><svg-icon name="plus" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ totalEntradas() }}</div>
+        <div class="fm-stat__label">Entradas</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--info">
+      <span class="fm-stat__icon"><svg-icon name="dispensacion" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ totalSalidas() }}</div>
+        <div class="fm-stat__label">Salidas</div>
+      </div>
+    </div>
+    <div class="fm-stat fm-stat--danger">
+      <span class="fm-stat__icon"><svg-icon name="baja" [size]="20" /></span>
+      <div>
+        <div class="fm-stat__value">{{ totalBajas() }}</div>
+        <div class="fm-stat__label">Bajas</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fm-toolbar">
+    <div class="fm-field fm-toolbar__grow">
+      <label class="fm-label" for="mov-busqueda">Buscar</label>
+      <input
+        id="mov-busqueda"
+        class="fm-input"
+        type="search"
+        placeholder="Medicamento o numero de lote"
+        [formControl]="searchControl"
+      />
+    </div>
+    <div class="fm-field">
+      <label class="fm-label" for="mov-tipo">Tipo de movimiento</label>
+      <select #filtroTipo id="mov-tipo" class="fm-select" [value]="tipoSeleccionado()" (change)="cambiarTipo(filtroTipo.value)">
+        <option *ngFor="let opcion of opcionesTipo" [value]="opcion.valor">{{ opcion.etiqueta }}</option>
+      </select>
+    </div>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="limpiarFiltros()">
+      <svg-icon name="close" [size]="16" />
+      Limpiar
+    </button>
+  </div>
+
+  <div class="fm-card">
+    <div class="fm-card-header">
+      <h2 class="fm-card-title">Historial de movimientos</h2>
+      <span class="fm-muted fm-small">{{ visibles().length }} de {{ movimientos().length }} registro(s)</span>
+    </div>
+    <div class="fm-card-body fm-card-body--flush">
+      <app-fm-loading *ngIf="loading()" text="Cargando movimientos..."></app-fm-loading>
+
+      <app-fm-empty
+        *ngIf="!loading() && visibles().length === 0"
+        title="Aun no hay movimientos de inventario"
+        message="Los ingresos, dispensaciones, bajas y ajustes apareceran aqui."
+      ></app-fm-empty>
+
+      <div *ngIf="!loading() && visibles().length > 0" class="fm-table-wrap">
+        <table class="fm-table">
+          <thead>
+            <tr>
+              <th class="fm-nowrap">Fecha y hora</th>
+              <th>Medicamento</th>
+              <th class="fm-nowrap">Lote</th>
+              <th>Tipo</th>
+              <th class="fm-num">Cantidad</th>
+              <th class="fm-num">Stock anterior</th>
+              <th class="fm-num">Stock nuevo</th>
+              <th class="fm-hidden-mobile">Referencia</th>
+              <th class="fm-hidden-mobile">Usuario</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let movimiento of visibles(); trackBy: trackById">
+              <td class="fm-nowrap">{{ movimiento.fechaHora | fmDate: 'datetime' }}</td>
+              <td>
+                <span class="fm-strong">{{ movimiento.medicamentoNombre }}</span>
+              </td>
+              <td class="fm-mono fm-nowrap">{{ movimiento.numeroLote }}</td>
+              <td>
+                <span class="fm-badge" [ngClass]="claseTipo(movimiento.tipoMovimiento)">
+                  {{ etiquetaTipo(movimiento.tipoMovimiento) }}
+                </span>
+              </td>
+              <td class="fm-num fm-strong">{{ movimiento.cantidad }}</td>
+              <td class="fm-num fm-muted">{{ movimiento.stockAnterior }}</td>
+              <td class="fm-num">{{ movimiento.stockNuevo }}</td>
+              <td class="fm-hidden-mobile fm-xs mov-referencia" [title]="referencia(movimiento)">
+                {{ referencia(movimiento) }}
+              </td>
+              <td class="fm-hidden-mobile">{{ movimiento.usuarioNombre }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

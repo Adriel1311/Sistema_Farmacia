@@ -1,0 +1,397 @@
+<div class="fm-page">
+  <header class="fm-page-header">
+    <div>
+      <h1 class="fm-page-title">Caja</h1>
+      <p class="fm-page-subtitle">Apertura, ventas por boleta, salidas de dinero y cierre con arqueo</p>
+    </div>
+    <div class="fm-page-actions">
+      <button type="button" class="fm-btn fm-btn--ghost" (click)="refrescar()">
+        <svg-icon name="refresh" [size]="16" />
+        <span class="fm-hidden-mobile">Actualizar</span>
+      </button>
+      <button *ngIf="!hayCajaAbierta() && !loading()" type="button" class="fm-btn fm-btn--primary" (click)="abrirApertura()">
+        <svg-icon name="plus" [size]="16" />
+        Abrir caja
+      </button>
+      <ng-container *ngIf="hayCajaAbierta()">
+        <button type="button" class="fm-btn fm-btn--secondary" (click)="abrirSalida()">
+          <svg-icon name="baja" [size]="16" />
+          Registrar salida
+        </button>
+        <button type="button" class="fm-btn fm-btn--primary" (click)="abrirCierre()">
+          <svg-icon name="check" [size]="16" />
+          Cerrar caja
+        </button>
+      </ng-container>
+    </div>
+  </header>
+
+  <div *ngIf="success()" class="fm-alert fm-alert--success" role="status">
+    <svg-icon name="success" [size]="18" />
+    <span>{{ success() }}</span>
+  </div>
+
+  <div *ngIf="error()" class="fm-alert fm-alert--error" role="alert">
+    <svg-icon name="error" [size]="18" />
+    <span class="fm-spacer">{{ error() }}</span>
+    <button type="button" class="fm-btn fm-btn--secondary fm-btn--sm" (click)="refrescar()">Reintentar</button>
+  </div>
+
+  <app-fm-loading *ngIf="loading()" text="Cargando caja..."></app-fm-loading>
+
+  <!-- Sin ninguna caja abierta -->
+  <div *ngIf="!loading() && !hayCajaAbierta()" class="fm-alert fm-alert--warning caja-aviso" role="status">
+    <svg-icon name="warning" [size]="18" />
+    <span>
+      No hay una caja abierta. Abre la caja con un monto inicial para poder cobrar las recetas particulares.
+      Las recetas de asegurados se entregan sin cobro y no necesitan caja.
+    </span>
+  </div>
+
+  <ng-container *ngIf="!loading() && cajaVista() as caja">
+    <div class="caja-vista">
+      <div>
+        <span class="fm-badge" [class.fm-badge--success]="caja.estado === CajaEstado.ABIERTA" [class.fm-badge--neutral]="caja.estado === CajaEstado.CERRADA">
+          {{ caja.estado === CajaEstado.ABIERTA ? 'Caja abierta' : 'Caja cerrada' }}
+        </span>
+        <span class="fm-muted fm-small caja-vista__meta">
+          #{{ caja.id }} · abierta el {{ caja.fechaApertura | fmDate: 'datetime' }} por {{ caja.usuarioApertura }}
+          <ng-container *ngIf="caja.fechaCierre"> · cerrada el {{ caja.fechaCierre | fmDate: 'datetime' }}</ng-container>
+        </span>
+      </div>
+    </div>
+
+    <div class="fm-stat-grid">
+      <div class="fm-stat">
+        <span class="fm-stat__icon"><svg-icon name="caja" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ caja.montoInicial | currency: 'PEN' : 'S/ ' : '1.2-2' }}</div>
+          <div class="fm-stat__label">Monto inicial</div>
+        </div>
+      </div>
+      <div class="fm-stat fm-stat--success">
+        <span class="fm-stat__icon"><svg-icon name="dispensacion" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ caja.totalRecaudado | currency: 'PEN' : 'S/ ' : '1.2-2' }}</div>
+          <div class="fm-stat__label">
+            Total recaudado · {{ caja.cantidadVentas }} {{ caja.cantidadVentas === 1 ? 'venta' : 'ventas' }}
+          </div>
+        </div>
+      </div>
+      <div class="fm-stat fm-stat--danger">
+        <span class="fm-stat__icon"><svg-icon name="baja" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ caja.totalSalidas | currency: 'PEN' : 'S/ ' : '1.2-2' }}</div>
+          <div class="fm-stat__label">Salidas de dinero</div>
+        </div>
+      </div>
+      <div class="fm-stat fm-stat--info">
+        <span class="fm-stat__icon"><svg-icon name="verificado" [size]="20" /></span>
+        <div>
+          <div class="fm-stat__value">{{ caja.saldoActual | currency: 'PEN' : 'S/ ' : '1.2-2' }}</div>
+          <div class="fm-stat__label">Saldo en caja</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="fm-muted fm-small caja-nota" *ngIf="caja.totalDevoluciones > 0">
+      El total recaudado ya descuenta {{ caja.totalDevoluciones | currency: 'PEN' : 'S/ ' : '1.2-2' }} devueltos por boletas anuladas.
+    </p>
+
+    <!-- Arqueo de una caja cerrada -->
+    <div class="fm-card" *ngIf="caja.estado === CajaEstado.CERRADA">
+      <div class="fm-card-header">
+        <h2 class="fm-card-title">Arqueo de cierre</h2>
+        <span class="fm-muted fm-small">Cerrada por {{ caja.usuarioCierre }}</span>
+      </div>
+      <div class="fm-card-body">
+        <dl class="caja-arqueo">
+          <div><dt>Esperado en caja</dt><dd>{{ caja.montoEsperado | currency: 'PEN' : 'S/ ' : '1.2-2' }}</dd></div>
+          <div><dt>Efectivo contado</dt><dd>{{ caja.montoContado | currency: 'PEN' : 'S/ ' : '1.2-2' }}</dd></div>
+          <div>
+            <dt>Diferencia</dt>
+            <dd [class.caja-sobrante]="(caja.diferencia ?? 0) > 0" [class.caja-faltante]="(caja.diferencia ?? 0) < 0">
+              {{ caja.diferencia | currency: 'PEN' : 'S/ ' : '1.2-2' }}
+              <span class="fm-xs" *ngIf="(caja.diferencia ?? 0) > 0">(sobrante)</span>
+              <span class="fm-xs" *ngIf="(caja.diferencia ?? 0) < 0">(faltante)</span>
+            </dd>
+          </div>
+        </dl>
+        <p class="fm-small" *ngIf="caja.observacionCierre" style="margin: 0.75rem 0 0">
+          <span class="fm-muted">Observacion:</span> {{ caja.observacionCierre }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Movimientos -->
+    <div class="fm-toolbar">
+      <div class="fm-field">
+        <label class="fm-label" for="caja-filtro">Mostrar</label>
+        <select #filtro id="caja-filtro" class="fm-select" [value]="filtroTipo()" (change)="cambiarFiltro(filtro.value)">
+          <option *ngFor="let opcion of opcionesTipo" [value]="opcion.valor">{{ opcion.etiqueta }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="fm-card">
+      <div class="fm-card-header">
+        <h2 class="fm-card-title">Movimientos de la caja</h2>
+        <span class="fm-muted fm-small">{{ visibles().length }} de {{ movimientos().length }} registro(s)</span>
+      </div>
+      <div class="fm-card-body fm-card-body--flush">
+        <app-fm-loading *ngIf="loadingMov()" text="Cargando movimientos..."></app-fm-loading>
+
+        <app-fm-empty
+          *ngIf="!loadingMov() && visibles().length === 0"
+          title="Sin movimientos"
+          message="Las ventas de recetas particulares, las salidas y las devoluciones apareceran aqui."
+        ></app-fm-empty>
+
+        <div *ngIf="!loadingMov() && visibles().length > 0" class="fm-table-wrap">
+          <table class="fm-table">
+            <thead>
+              <tr>
+                <th class="fm-nowrap">Fecha y hora</th>
+                <th>Tipo</th>
+                <th>Boleta</th>
+                <th>Detalle</th>
+                <th class="fm-hidden-mobile">Usuario</th>
+                <th class="fm-num">Monto</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let movimiento of visibles(); trackBy: trackMovimiento">
+                <td class="fm-nowrap">{{ movimiento.fechaHora | fmDate: 'datetime' }}</td>
+                <td>
+                  <span class="fm-badge" [ngClass]="claseTipo(movimiento.tipo)">{{ etiquetaTipo(movimiento.tipo) }}</span>
+                </td>
+                <td class="fm-mono fm-strong fm-nowrap">{{ movimiento.numeroTicket || '—' }}</td>
+                <td>
+                  <div>{{ movimiento.concepto }}</div>
+                  <div class="fm-xs fm-muted" *ngIf="movimiento.pacienteNombreCompleto">
+                    {{ movimiento.pacienteNombreCompleto }} · receta {{ movimiento.numeroReceta }}
+                  </div>
+                </td>
+                <td class="fm-hidden-mobile">{{ movimiento.usuario }}</td>
+                <td class="fm-num fm-strong" [class.caja-ingreso]="movimiento.esIngreso" [class.caja-egreso]="!movimiento.esIngreso">
+                  {{ movimiento.esIngreso ? '+' : '−' }} {{ movimiento.monto | currency: 'PEN' : 'S/ ' : '1.2-2' }}
+                </td>
+                <td class="fm-right">
+                  <button *ngIf="tieneDetalle(movimiento)" type="button" class="fm-btn fm-btn--ghost fm-btn--sm" (click)="verDetalle(movimiento)">
+                    Ver detalle
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Historial de cajas -->
+  <div class="fm-card" *ngIf="!loading() && historial().length > 0">
+    <div class="fm-card-header">
+      <h2 class="fm-card-title">Historial de cajas</h2>
+      <span class="fm-muted fm-small">Ultimos turnos</span>
+    </div>
+    <div class="fm-card-body fm-card-body--flush">
+      <div class="fm-table-wrap">
+        <table class="fm-table">
+          <thead>
+            <tr>
+              <th class="fm-nowrap">Apertura</th>
+              <th class="fm-hidden-mobile fm-nowrap">Cierre</th>
+              <th>Estado</th>
+              <th class="fm-num fm-hidden-mobile">Inicial</th>
+              <th class="fm-num">Recaudado</th>
+              <th class="fm-num fm-hidden-mobile">Salidas</th>
+              <th class="fm-num fm-hidden-mobile">Diferencia</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of historial(); trackBy: trackCaja" [class.caja-fila--activa]="item.id === cajaVista()?.id">
+              <td class="fm-nowrap">
+                {{ item.fechaApertura | fmDate: 'datetime' }}
+                <div class="fm-xs fm-muted">{{ item.usuarioApertura }}</div>
+              </td>
+              <td class="fm-nowrap fm-hidden-mobile">{{ item.fechaCierre ? (item.fechaCierre | fmDate: 'datetime') : '—' }}</td>
+              <td>
+                <span class="fm-badge" [class.fm-badge--success]="item.estado === CajaEstado.ABIERTA" [class.fm-badge--neutral]="item.estado === CajaEstado.CERRADA">
+                  {{ item.estado === CajaEstado.ABIERTA ? 'Abierta' : 'Cerrada' }}
+                </span>
+              </td>
+              <td class="fm-num fm-hidden-mobile">{{ item.montoInicial | currency: 'PEN' : 'S/ ' : '1.2-2' }}</td>
+              <td class="fm-num fm-strong">{{ item.totalRecaudado | currency: 'PEN' : 'S/ ' : '1.2-2' }}</td>
+              <td class="fm-num fm-hidden-mobile">{{ item.totalSalidas | currency: 'PEN' : 'S/ ' : '1.2-2' }}</td>
+              <td class="fm-num fm-hidden-mobile">
+                <ng-container *ngIf="item.diferencia !== null; else sinArqueo">
+                  <span [class.caja-sobrante]="(item.diferencia ?? 0) > 0" [class.caja-faltante]="(item.diferencia ?? 0) < 0">
+                    {{ item.diferencia | currency: 'PEN' : 'S/ ' : '1.2-2' }}
+                  </span>
+                </ng-container>
+                <ng-template #sinArqueo><span class="fm-muted">—</span></ng-template>
+              </td>
+              <td class="fm-right">
+                <button type="button" class="fm-btn fm-btn--ghost fm-btn--sm" [disabled]="item.id === cajaVista()?.id" (click)="verCaja(item)">
+                  {{ item.id === cajaVista()?.id ? 'Viendo' : 'Ver movimientos' }}
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Abrir caja -->
+<app-fm-modal *ngIf="modalApertura()" title="Abrir caja" (closed)="cerrarApertura()">
+  <form id="caja-apertura-form" [formGroup]="aperturaForm" (ngSubmit)="guardarApertura()" novalidate>
+    <div *ngIf="formError()" class="fm-alert fm-alert--error" role="alert">
+      <svg-icon name="error" [size]="18" />
+      <span>{{ formError() }}</span>
+    </div>
+    <div class="fm-form-grid">
+      <div class="fm-field fm-field--full">
+        <label class="fm-label" for="caja-inicial">Monto inicial (S/) <span class="fm-label__required">*</span></label>
+        <input id="caja-inicial" class="fm-input" type="number" min="0" step="0.01" formControlName="montoInicial" />
+        <span *ngIf="aperturaForm.controls.montoInicial.touched && aperturaForm.controls.montoInicial.invalid" class="fm-error">
+          Ingresa un monto mayor o igual a 0.
+        </span>
+        <span class="fm-hint">Efectivo con el que empieza el turno (sencillo para dar vuelto).</span>
+      </div>
+      <div class="fm-field fm-field--full">
+        <label class="fm-label" for="caja-obs-apertura">Observacion</label>
+        <input id="caja-obs-apertura" class="fm-input" type="text" maxlength="255" formControlName="observacion" />
+      </div>
+    </div>
+  </form>
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarApertura()">Cancelar</button>
+    <button type="submit" form="caja-apertura-form" class="fm-btn fm-btn--primary" [disabled]="guardando()">
+      {{ guardando() ? 'Abriendo...' : 'Abrir caja' }}
+    </button>
+  </ng-container>
+</app-fm-modal>
+
+<!-- Salida de dinero -->
+<app-fm-modal *ngIf="modalSalida()" title="Registrar salida de dinero" (closed)="cerrarSalida()">
+  <form id="caja-salida-form" [formGroup]="salidaForm" (ngSubmit)="guardarSalida()" novalidate>
+    <div *ngIf="formError()" class="fm-alert fm-alert--error" role="alert">
+      <svg-icon name="error" [size]="18" />
+      <span>{{ formError() }}</span>
+    </div>
+    <div class="fm-form-grid">
+      <div class="fm-field fm-field--full">
+        <label class="fm-label" for="caja-salida-monto">Monto a retirar (S/) <span class="fm-label__required">*</span></label>
+        <input id="caja-salida-monto" class="fm-input" type="number" min="0.01" step="0.01" formControlName="monto" />
+        <span *ngIf="salidaForm.controls.monto.touched && salidaForm.controls.monto.invalid" class="fm-error">
+          Ingresa un monto mayor a 0.
+        </span>
+        <span class="fm-hint" *ngIf="cajaActual() as actual">Saldo disponible: {{ actual.saldoActual | currency: 'PEN' : 'S/ ' : '1.2-2' }}</span>
+      </div>
+      <div class="fm-field fm-field--full">
+        <label class="fm-label" for="caja-salida-concepto">Concepto <span class="fm-label__required">*</span></label>
+        <input id="caja-salida-concepto" class="fm-input" type="text" maxlength="255" formControlName="concepto" placeholder="Ej. Pago a proveedor, deposito al banco" />
+        <span *ngIf="salidaForm.controls.concepto.touched && salidaForm.controls.concepto.invalid" class="fm-error">
+          Indica el motivo del retiro.
+        </span>
+      </div>
+    </div>
+  </form>
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarSalida()">Cancelar</button>
+    <button type="submit" form="caja-salida-form" class="fm-btn fm-btn--primary" [disabled]="guardando()">
+      {{ guardando() ? 'Registrando...' : 'Registrar salida' }}
+    </button>
+  </ng-container>
+</app-fm-modal>
+
+<!-- Cierre con arqueo -->
+<app-fm-modal *ngIf="modalCierre()" title="Cerrar caja" (closed)="cerrarCierre()">
+  <form id="caja-cierre-form" [formGroup]="cierreForm" (ngSubmit)="guardarCierre()" novalidate>
+    <div *ngIf="formError()" class="fm-alert fm-alert--error" role="alert">
+      <svg-icon name="error" [size]="18" />
+      <span>{{ formError() }}</span>
+    </div>
+    <dl class="caja-arqueo caja-arqueo--modal" *ngIf="cajaActual() as actual">
+      <div><dt>Monto inicial</dt><dd>{{ actual.montoInicial | currency: 'PEN' : 'S/ ' : '1.2-2' }}</dd></div>
+      <div><dt>Total recaudado</dt><dd>{{ actual.totalRecaudado | currency: 'PEN' : 'S/ ' : '1.2-2' }}</dd></div>
+      <div><dt>Salidas</dt><dd>{{ actual.totalSalidas | currency: 'PEN' : 'S/ ' : '1.2-2' }}</dd></div>
+      <div><dt>Esperado en caja</dt><dd class="fm-strong">{{ actual.saldoActual | currency: 'PEN' : 'S/ ' : '1.2-2' }}</dd></div>
+    </dl>
+    <div class="fm-form-grid">
+      <div class="fm-field fm-field--full">
+        <label class="fm-label" for="caja-contado">Efectivo contado (S/) <span class="fm-label__required">*</span></label>
+        <input id="caja-contado" class="fm-input" type="number" min="0" step="0.01" formControlName="montoContado" />
+        <span *ngIf="cierreForm.controls.montoContado.touched && cierreForm.controls.montoContado.invalid" class="fm-error">
+          Ingresa el efectivo contado.
+        </span>
+        <span class="fm-hint" [class.caja-sobrante]="diferenciaEstimada() > 0" [class.caja-faltante]="diferenciaEstimada() < 0">
+          Diferencia: {{ diferenciaEstimada() | currency: 'PEN' : 'S/ ' : '1.2-2' }}
+          <ng-container *ngIf="diferenciaEstimada() > 0">(sobrante)</ng-container>
+          <ng-container *ngIf="diferenciaEstimada() < 0">(faltante)</ng-container>
+        </span>
+      </div>
+      <div class="fm-field fm-field--full">
+        <label class="fm-label" for="caja-obs-cierre">Observacion</label>
+        <input id="caja-obs-cierre" class="fm-input" type="text" maxlength="255" formControlName="observacion" placeholder="Ej. Faltante por vuelto mal dado" />
+      </div>
+    </div>
+  </form>
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarCierre()">Cancelar</button>
+    <button type="submit" form="caja-cierre-form" class="fm-btn fm-btn--primary" [disabled]="guardando()">
+      {{ guardando() ? 'Cerrando...' : 'Cerrar caja' }}
+    </button>
+  </ng-container>
+</app-fm-modal>
+
+<!-- Detalle de una venta -->
+<app-fm-modal *ngIf="detalleVenta() as venta" [title]="venta.tipo === Tipo.DEVOLUCION ? 'Detalle de devolucion' : 'Detalle de venta'" (closed)="cerrarDetalle()">
+  <div class="caja-detalle__head">
+    <div>
+      <div class="fm-strong fm-mono">{{ venta.numeroTicket }}</div>
+      <div class="fm-small">{{ venta.fechaHora | fmDate: 'datetime' }}</div>
+    </div>
+    <span class="fm-badge" [ngClass]="claseTipo(venta.tipo)">{{ etiquetaTipo(venta.tipo) }}</span>
+  </div>
+  <dl class="caja-arqueo caja-arqueo--modal">
+    <div><dt>Receta</dt><dd class="fm-mono">{{ venta.numeroReceta }}</dd></div>
+    <div><dt>Paciente</dt><dd>{{ venta.pacienteNombreCompleto }} ({{ venta.pacienteDni }})</dd></div>
+    <div><dt>Atendio</dt><dd>{{ venta.usuario }}</dd></div>
+  </dl>
+  <div class="fm-table-wrap">
+    <table class="fm-table">
+      <thead>
+        <tr>
+          <th>Medicamento</th>
+          <th class="fm-num">Cant.</th>
+          <th class="fm-num">P. unit.</th>
+          <th class="fm-num">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of venta.items">
+          <td>
+            <div>{{ item.medicamentoNombre }}</div>
+            <div class="fm-xs fm-muted fm-mono">Lote {{ item.numeroLote }}</div>
+          </td>
+          <td class="fm-num">{{ item.cantidad }}</td>
+          <td class="fm-num">{{ item.precioUnitario | currency: 'PEN' : 'S/ ' : '1.2-2' }}</td>
+          <td class="fm-num fm-strong">{{ item.subtotal | currency: 'PEN' : 'S/ ' : '1.2-2' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="caja-detalle__total">
+    <span>{{ venta.tipo === Tipo.DEVOLUCION ? 'Total devuelto' : 'Total cobrado' }}</span>
+    <strong>{{ totalDetalle(venta) | currency: 'PEN' : 'S/ ' : '1.2-2' }}</strong>
+  </div>
+  <ng-container modalFooter>
+    <button type="button" class="fm-btn fm-btn--secondary" (click)="cerrarDetalle()">Cerrar</button>
+  </ng-container>
+</app-fm-modal>

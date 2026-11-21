@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary": "#ffffff", "on-background": "#1b1c1c", "on-surface-variant": "#414752", "tertiary": "#006771", "error": "#ba1a1a", "inverse-on-surface": "#f2f0f0", "outline": "#717783", "on-tertiary-fixed": "#001f23", "surface-variant": "#e3e2e2", "surface-dim": "#dbdad9", "surface-bright": "#fbf9f9", "secondary-fixed-dim": "#b0c6ff", "on-primary-container": "#fffdff", "surface-container": "#efeded", "surface": "#fbf9f9", "tertiary-container": "#00828e", "inverse-surface": "#303031", "on-secondary-container": "#00337c", "on-surface": "#1b1c1c", "surface-container-low": "#f5f3f3", "on-tertiary": "#ffffff", "on-error": "#ffffff", "on-primary-fixed-variant": "#004786", "surface-container-highest": "#e3e2e2", "on-error-container": "#93000a", "inverse-primary": "#a5c8ff", "tertiary-fixed": "#92f1fe", "surface-tint": "#005faf", "error-container": "#ffdad6", "on-tertiary-fixed-variant": "#004f56", "primary-fixed-dim": "#a5c8ff", "on-secondary-fixed": "#001945", "secondary-fixed": "#d9e2ff", "on-secondary": "#ffffff", "secondary-container": "#759efd", "surface-container-high": "#e9e8e7", "on-primary-fixed": "#001c3a", "primary-container": "#1976d2", "background": "#fbf9f9", "primary-fixed": "#d4e3ff", "outline-variant": "#c1c6d4", "on-secondary-fixed-variant": "#00429c", "tertiary-fixed-dim": "#75d5e2", "secondary": "#2b5bb5", "on-tertiary-container": "#fcffff", "primary": "#005dac", "surface-container-lowest": "#ffffff" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-xs": "0.25rem", "space-xl": "2rem", "margin-mobile": "1rem", "gutter-mobile": "0.5rem", "margin": "1.5rem", "space-sm": "0.5rem", "gutter": "1rem", "space-lg": "1.5rem", "space-md": "1rem" }, "fontFamily": { "title-sm": ["Roboto Flex"], "label-lg": ["Roboto Flex"], "body-md": ["Roboto Flex"], "label-sm": ["Roboto Flex"], "label-md": ["Roboto Flex"], "headline-lg": ["Roboto Flex"], "code-batch": ["Roboto Flex"], "body-lg": ["Roboto Flex"], "headline-md": ["Roboto Flex"], "headline-sm": ["Roboto Flex"], "title-md": ["Roboto Flex"], "body-sm": ["Roboto Flex"] }, "fontSize": { "title-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.5px", "fontWeight": "500" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }], "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "400" }], "code-batch": ["13px", { "lineHeight": "18px", "letterSpacing": "1px", "fontWeight": "500" }], "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }], "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "500" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "500" }], "title-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500" }], "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.4px", "fontWeight": "400" }] } } } }</script></head><body class="bg-surface font-body-md text-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-space-md flex items-center gap-space-sm bg-surface-container-lowest"><img alt="Brand logo. - Primary color: #1976d2
+- Font: robotoFlex
+- Mode: light
+- Roundness: rounded-sm
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XxTU2D48n_L9Pfvw3etZ1dqxOEtDZr87rDb6JdSPOPmK_JG848nNKZun2UJaiYDsC4gxcoSfOsAMVU0lR2IFYOx33inwPbl2R1nObI0k856fsiHp1QsZGp3hk4ubUaoG33GsZO1amqcw1M7eSTSQ85IBicu2gWwd6BCPX2JNBEs9BoD15ZtOY8Rvc2venUOl1C50pj7nx_HUmFxOH0rC114SdpA0HThf8Ao7cjknwUgBX_C0KQldPPKRc"/><div class="flex flex-col min-w-0"><span class="font-title-md text-title-sm text-primary font-bold tracking-tight truncate leading-tight">FarmaMed</span><span class="font-label-sm text-label-sm text-on-surface-variant truncate">Hosp. Santa María</span></div></div><div class="px-space-md py-space-xs"><div class="p-space-xs bg-surface-container-low rounded-lg"><p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider px-space-xs">Unidad Farmacéutica</p><p class="font-title-sm text-body-sm text-on-surface font-medium px-space-xs truncate">Socorro Central #04</p></div></div><nav class="flex-1 px-space-sm py-space-xs space-y-space-xs overflow-y-auto" data-active-classes="bg-primary-fixed text-on-primary-fixed font-title-sm"><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="dashboard" href="#"><span class="font-label-lg text-label-lg">Dashboard</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="medicamentos" href="#"><span class="font-label-lg text-label-lg">Medicamentos</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="inventario" href="#"><span class="font-label-lg text-label-lg">Inventario</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="dispensacion" href="#"><span class="font-label-lg text-label-lg">Dispensación</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="alertas" href="#"><span class="font-label-lg text-label-lg font-medium">Alertas</span><span class="px-space-xs py-0.5 rounded-full bg-error text-on-error font-label-sm text-label-sm font-semibold shadow-sm">12</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="proveedores" href="#"><span class="font-label-lg text-label-lg">Proveedores</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="ordenes" href="#"><span class="font-label-lg text-label-lg">Órdenes</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="reportes" href="#"><span class="font-label-lg text-label-lg">Reportes</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="usuarios" href="#"><span class="font-label-lg text-label-lg">Usuarios</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="configuracion" href="#"><span class="font-label-lg text-label-lg">Configuración</span></a></nav><div class="p-space-md bg-surface-container-low"><div class="flex items-center gap-space-xs text-on-surface-variant"><span class="material-symbols-outlined text-[16px] text-tertiary">verified</span><span class="font-label-sm text-label-sm">Norma Sanitaria SIS-MED v2.4</span></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs font-label-md text-label-md text-on-surface-variant"><span class="hover:text-primary transition-colors cursor-pointer">Hospital Santa María del Socorro</span><span class="material-symbols-outlined text-[14px]">chevron_right</span><span class="text-primary font-medium">Servicio de Farmacia Central</span></div><div class="relative ml-space-md w-72 lg:w-96"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span><input class="w-full pl-9 pr-space-md py-space-xs bg-surface-container-low text-on-surface font-body-sm text-body-sm rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary transition-all" placeholder="Buscar lote, fármaco, DNI paciente..." type="text"/></div></div><div class="flex items-center gap-space-md"><button class="relative p-space-xs rounded-full text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" title="Notificaciones"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-error ring-2 ring-surface-container-lowest"></span></button><div class="flex items-center gap-space-sm pl-space-sm"><div class="relative"><img alt="Profile Dra. Elena Morales" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1VzFc9HCI18YoNoaZnXe34UiAvDNyamHIhV0jEyhSho1_iMMmd7EzPDcVvsYAB-Wa0Q3oDMFGvFrL3ufvNZyQRFAxoosPaL0Ztb456NXOwxluKm2h0KRAvPJPDG8oFfdQztmoYEce_EeVh556IiDrq_3cd7U2t58RdJz_-HUOtEg3a6aHB78dIZ7UlQvF8SHOlNXvGtYjGPY2FgAXU-BGTw4PMVh9Kcra5usHv6NmV5Yhtr_0H8bxu0OUQ"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-tertiary ring-2 ring-surface-container-lowest"></span></div><div class="flex flex-col text-left"><span class="font-title-sm text-title-sm text-on-surface font-medium leading-none">Dra. Elena Morales</span><span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Jefe de Farmacia</span></div></div></div></header><main class="relative pt-16 w-full min-h-screen bg-surface"><div class="flex flex-col w-full">
+<!-- Interactive script to update Master Shell active state and breadcrumb context seamlessly -->
+<script>
+    (function initModuleState() {
+      // Synchronize App Shell Navigation active indicator to 'Proveedores'
+      const navLinks = document.querySelectorAll('aside nav a');
+      navLinks.forEach(link => {
+        const path = link.getAttribute('data-path');
+        if (path === 'proveedores') {
+          link.className = 'flex items-center justify-between px-space-md py-space-sm rounded-lg bg-primary-fixed text-on-primary-fixed font-title-sm shadow-sm';
+          const span = link.querySelector('span');
+          if (span) span.className = 'font-label-lg text-label-lg font-semibold flex items-center gap-space-xs';
+          if (!link.querySelector('.nav-icon-badge')) {
+            const icon = document.createElement('span');
+            icon.className = 'material-symbols-outlined text-[18px] text-primary nav-icon-badge';
+            icon.textContent = 'local_shipping';
+            link.prepend(icon);
+          }
+        } else {
+          link.className = 'flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors';
+          const oldIcon = link.querySelector('.nav-icon-badge');
+          if (oldIcon) oldIcon.remove();
+        }
+      });
+
+      // Synchronize Header Breadcrumbs for Module 06
+      const breadcrumbEl = document.querySelector('header .font-label-md');
+      if (breadcrumbEl) {
+        breadcrumbEl.innerHTML = `
+          <span class="hover:text-primary transition-colors cursor-pointer">Hospital Santa María del Socorro</span>
+          <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+          <span class="hover:text-primary transition-colors cursor-pointer">Logística Farmacéutica</span>
+          <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+          <span class="text-primary font-medium">Proveedores Homologados (M06)</span>
+        `;
+      }
+    })();
+  </script>
+<!-- Module 06 Master Container with Side-by-Side Sidenav Layout -->
+<div class="p-space-lg flex gap-space-lg relative items-start">
+<!-- Left/Center Primary Workspace: Metrics, Toolbar & Table -->
+<div class="flex-1 flex flex-col gap-space-lg min-w-0 transition-all duration-300">
+<!-- Module Header with High-Authority Clinical Typography -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md pb-space-xs">
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm uppercase tracking-wider font-semibold">Módulo M06</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">• Catálogo Institucional Central</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-on-surface font-semibold tracking-tight mt-1">Directorio y Registro de Proveedores Homologados</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-3xl mt-0.5">
+            Padrón calificado de droguerías, laboratorios farmacéuticos y consorcios autorizados bajo regulación DIGEMID, estándar BPA (Buenas Prácticas de Almacenamiento) y normativa SIS-MED Hospitalaria.
+          </p>
+</div>
+<div class="flex items-center gap-space-xs self-start md:self-auto shrink-0">
+<button class="flex items-center gap-space-xs px-space-md py-space-sm bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface rounded-lg font-label-lg text-label-lg font-medium transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span>Manual de Homologación</span>
+</button>
+</div>
+</div>
+<!-- Quick Metrics Cards (Material Clinical Stats) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Metric 1: Total -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-medium">Total Registrados</span>
+<div class="flex items-baseline gap-space-xs mt-1">
+<span class="font-headline-lg text-headline-lg text-on-surface font-semibold tracking-tight">48</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">empresas</span>
+</div>
+<span class="font-label-sm text-label-sm text-tertiary flex items-center gap-0.5 mt-1">
+<span class="material-symbols-outlined text-[14px]">domain_verification</span> DIGEMID Habilitado
+            </span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">corporate_fare</span>
+</div>
+</div>
+<!-- Metric 2: Activos Homologados -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-medium">Activos / Homologados</span>
+<div class="flex items-baseline gap-space-xs mt-1">
+<span class="font-headline-lg text-headline-lg text-on-surface font-semibold tracking-tight">42</span>
+<span class="font-label-md text-label-md text-[#2e7d32] font-semibold bg-[#e8f5e9] px-space-xs py-0.5 rounded-full">87.5%</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1">BPA Vigente y activo</span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-[#e8f5e9] flex items-center justify-center text-[#2e7d32]">
+<span class="material-symbols-outlined text-[24px]">task_alt</span>
+</div>
+</div>
+<!-- Metric 3: En Auditoría -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-medium">En Auditoría / Evaluación</span>
+<div class="flex items-baseline gap-space-xs mt-1">
+<span class="font-headline-lg text-headline-lg text-on-surface font-semibold tracking-tight">4</span>
+<span class="font-label-md text-label-md text-[#f57c00] font-semibold bg-[#fff3e0] px-space-xs py-0.5 rounded-full">Revisión</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1">Expediente técnico 2024</span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-[#fff3e0] flex items-center justify-center text-[#f57c00]">
+<span class="material-symbols-outlined text-[24px]">pending_actions</span>
+</div>
+</div>
+<!-- Metric 4: Suspendidos -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-medium">Suspendidos / Inactivos</span>
+<div class="flex items-baseline gap-space-xs mt-1">
+<span class="font-headline-lg text-headline-lg text-on-surface font-semibold tracking-tight">2</span>
+<span class="font-label-md text-label-md text-error font-semibold bg-error-container px-space-xs py-0.5 rounded-full">Bloqueados</span>
+</div>
+<span class="font-label-sm text-label-sm text-error flex items-center gap-0.5 mt-1">
+<span class="material-symbols-outlined text-[14px]">do_not_disturb</span> No emitir órdenes
+            </span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-error-container flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-[24px]">gavel</span>
+</div>
+</div>
+</div>
+<!-- Main Data Container (Table + Filter Bar) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm flex flex-col overflow-hidden">
+<!-- Action & Filter Bar -->
+<div class="p-space-md flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-md bg-surface-container-lowest">
+<!-- Search & Status Selectors -->
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-space-sm flex-1">
+<div class="relative flex-1 max-w-lg">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+<input class="w-full pl-9 pr-space-md py-2.5 bg-surface-container-low text-on-surface font-body-sm text-body-sm rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all" id="searchTableInput" placeholder="Buscar por RUC, razón social, especialidad o correo..." type="text" value=""/>
+</div>
+<!-- Material-style Dropdown filter -->
+<div class="relative w-48 shrink-0">
+<select class="w-full appearance-none px-space-md py-2.5 bg-surface-container-low text-on-surface font-body-sm text-body-sm rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all cursor-pointer">
+<option value="all">Estado: Todos (48)</option>
+<option value="active">Activos (42)</option>
+<option value="audit">En Auditoría (4)</option>
+<option value="inactive">Suspendidos (2)</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline text-[18px] pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-space-sm shrink-0">
+<!-- Secondary Export Button -->
+<button class="flex items-center gap-space-xs px-space-md py-2.5 bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg font-medium rounded-lg transition-colors">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">download</span>
+<span>Exportar (Excel/PDF)</span>
+</button>
+<!-- Primary Create Button -->
+<button class="flex items-center gap-space-xs px-space-md py-2.5 bg-primary hover:bg-[#1565c0] text-on-primary font-label-lg text-label-lg font-semibold rounded-lg shadow-sm transition-all active:scale-[0.98]" onclick="toggleDrawer(true)">
+<span class="material-symbols-outlined text-[18px]">add_business</span>
+<span>+ Nuevo Proveedor</span>
+</button>
+</div>
+</div>
+<!-- Material Table Wrapper (High clinical density & legibility) -->
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-md text-label-md uppercase tracking-wider h-12 select-none">
+<th class="px-space-md font-semibold w-36">RUC</th>
+<th class="px-space-md font-semibold min-w-[280px]">Razón Social / Especialidad</th>
+<th class="px-space-md font-semibold w-40">Teléfono Directo</th>
+<th class="px-space-md font-semibold min-w-[220px]">Correo Electrónico</th>
+<th class="px-space-md font-semibold w-36 text-center">Estado</th>
+<th class="px-space-md font-semibold w-32 text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-transparent font-body-md text-body-md text-on-surface">
+<!-- Row 1: Selected / Actively in Sidenav (Droguería Farmacéutica del Sur S.A.C.) -->
+<tr class="bg-primary-fixed/20 hover:bg-primary-fixed/30 transition-colors cursor-pointer group relative">
+<td class="px-space-md py-3.5 align-middle">
+<div class="flex items-center gap-space-xs">
+<span class="w-1.5 h-6 bg-primary rounded-full -ml-1"></span>
+<span class="font-code-batch text-code-batch font-medium text-primary">20458931201</span>
+</div>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-title-sm text-title-sm font-semibold text-primary">Droguería Farmacéutica del Sur S.A.C.</span>
+<span class="px-1.5 py-0.2 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-[10px] uppercase font-bold tracking-wider">Alias: Farmasur</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[13px] text-tertiary">science</span>
+                      Anestésicos &amp; Oncológicos • Soluciones Parenterales
+                    </span>
+</div>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<span class="font-body-sm text-body-sm text-on-surface whitespace-nowrap">(01) 482-9011</span>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<a class="font-body-sm text-body-sm text-primary hover:underline flex items-center gap-1" href="mailto:ventas@drogueriadelsur.com.pe">
+<span class="material-symbols-outlined text-[14px]">mail</span>
+<span>ventas@drogueriadelsur.com.pe</span>
+</a>
+</td>
+<td class="px-space-md py-3.5 align-middle text-center">
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#e8f5e9] text-[#2e7d32] font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>Activo</span>
+</span>
+</td>
+<td class="px-space-md py-3.5 align-middle text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded text-primary hover:bg-primary-fixed/40 transition-colors" onclick="toggleDrawer(true)" title="Editar ficha de proveedor">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors" title="Historial y órdenes asociadas">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors" title="Opciones">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Laboratorios BioTech Perú S.A. -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-space-md py-3.5 align-middle">
+<span class="font-code-batch text-code-batch font-medium text-on-surface-variant">20100055362</span>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface group-hover:text-primary transition-colors">Laboratorios BioTech Perú S.A.</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[13px] text-tertiary">ac_unit</span>
+                      Cadena de Frío • Vacunas &amp; Biológicos Hospitalarios
+                    </span>
+</div>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<span class="font-body-sm text-body-sm text-on-surface whitespace-nowrap">(01) 710-3340</span>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary flex items-center gap-1" href="mailto:licitaciones@biotechperu.com">
+<span class="material-symbols-outlined text-[14px]">mail</span>
+<span>licitaciones@biotechperu.com</span>
+</a>
+</td>
+<td class="px-space-md py-3.5 align-middle text-center">
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#e8f5e9] text-[#2e7d32] font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>Activo</span>
+</span>
+</td>
+<td class="px-space-md py-3.5 align-middle text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors" onclick="toggleDrawer(true)">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Distribuidora Médica Global S.R.L. -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-space-md py-3.5 align-middle">
+<span class="font-code-batch text-code-batch font-medium text-on-surface-variant">20384729105</span>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface group-hover:text-primary transition-colors">Distribuidora Médica Global S.R.L.</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[13px] text-tertiary">medication</span>
+                      Genéricos Hospitalarios Petitorio EsSalud/MINSA
+                    </span>
+</div>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<span class="font-body-sm text-body-sm text-on-surface whitespace-nowrap">+51 984 512 890</span>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary flex items-center gap-1" href="mailto:contacto@medglobal.pe">
+<span class="material-symbols-outlined text-[14px]">mail</span>
+<span>contacto@medglobal.pe</span>
+</a>
+</td>
+<td class="px-space-md py-3.5 align-middle text-center">
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#fff3e0] text-[#f57c00] font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">pending</span>
+<span>En Auditoría</span>
+</span>
+</td>
+<td class="px-space-md py-3.5 align-middle text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors" onclick="toggleDrawer(true)">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Pharmasol Andina S.A.C. -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-space-md py-3.5 align-middle">
+<span class="font-code-batch text-code-batch font-medium text-on-surface-variant">20512849301</span>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface group-hover:text-primary transition-colors">Pharmasol Andina S.A.C.</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[13px] text-tertiary">vaccines</span>
+                      Antibióticos de Reserva &amp; Ampollas UCI
+                    </span>
+</div>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<span class="font-body-sm text-body-sm text-on-surface whitespace-nowrap">(01) 321-7700</span>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary flex items-center gap-1" href="mailto:operaciones@pharmasol.pe">
+<span class="material-symbols-outlined text-[14px]">mail</span>
+<span>operaciones@pharmasol.pe</span>
+</a>
+</td>
+<td class="px-space-md py-3.5 align-middle text-center">
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#e8f5e9] text-[#2e7d32] font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>Activo</span>
+</span>
+</td>
+<td class="px-space-md py-3.5 align-middle text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors" onclick="toggleDrawer(true)">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5: Insumos Quirúrgicos & Hospitalarios S.A. -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-space-md py-3.5 align-middle">
+<span class="font-code-batch text-code-batch font-medium text-on-surface-variant">20601294811</span>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface group-hover:text-primary transition-colors">Insumos Quirúrgicos &amp; Hospitalarios S.A.</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[13px] text-tertiary">sanitizer</span>
+                      Material Médico Quirúrgico &amp; Desinfectantes
+                    </span>
+</div>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<span class="font-body-sm text-body-sm text-on-surface whitespace-nowrap">(01) 540-8822</span>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary flex items-center gap-1" href="mailto:institucional@iqhperu.com">
+<span class="material-symbols-outlined text-[14px]">mail</span>
+<span>institucional@iqhperu.com</span>
+</a>
+</td>
+<td class="px-space-md py-3.5 align-middle text-center">
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-error-container text-error font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">block</span>
+<span>Suspendido</span>
+</span>
+</td>
+<td class="px-space-md py-3.5 align-middle text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors" onclick="toggleDrawer(true)">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 6: Laboratorios Baxter Perú -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-space-md py-3.5 align-middle">
+<span class="font-code-batch text-code-batch font-medium text-on-surface-variant">20129384719</span>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface group-hover:text-primary transition-colors">Laboratorios Baxter Perú S.A.</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[13px] text-tertiary">bloodtype</span>
+                      Soluciones Dialíticas • Nutrición Parenteral Hospitalaria
+                    </span>
+</div>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<span class="font-body-sm text-body-sm text-on-surface whitespace-nowrap">(01) 619-2000</span>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary flex items-center gap-1" href="mailto:pedidos_peru@baxter.com">
+<span class="material-symbols-outlined text-[14px]">mail</span>
+<span>pedidos_peru@baxter.com</span>
+</a>
+</td>
+<td class="px-space-md py-3.5 align-middle text-center">
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#e8f5e9] text-[#2e7d32] font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>Activo</span>
+</span>
+</td>
+<td class="px-space-md py-3.5 align-middle text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors" onclick="toggleDrawer(true)">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 7: Medifarma Distribuciones S.A. -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-space-md py-3.5 align-middle">
+<span class="font-code-batch text-code-batch font-medium text-on-surface-variant">20485719302</span>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-medium text-on-surface group-hover:text-primary transition-colors">Medifarma Distribuciones S.A.</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[13px] text-tertiary">local_pharmacy</span>
+                      Formulaciones orales hospitalarias &amp; Analgésicos
+                    </span>
+</div>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<span class="font-body-sm text-body-sm text-on-surface whitespace-nowrap">(01) 315-9900</span>
+</td>
+<td class="px-space-md py-3.5 align-middle">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary flex items-center gap-1" href="mailto:hospitales@medifarma.com.pe">
+<span class="material-symbols-outlined text-[14px]">mail</span>
+<span>hospitales@medifarma.com.pe</span>
+</a>
+</td>
+<td class="px-space-md py-3.5 align-middle text-center">
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#e8f5e9] text-[#2e7d32] font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>Activo</span>
+</span>
+</td>
+<td class="px-space-md py-3.5 align-middle text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors" onclick="toggleDrawer(true)">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Material Paginator Toolbar -->
+<div class="p-space-md bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-space-sm text-on-surface-variant font-label-md text-label-md">
+<div class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm">
+<span class="w-2 h-2 rounded-full bg-[#2e7d32]"></span>
+<span>Registro sincronizado con la base tributaria SUNAT y SIS-MED central.</span>
+</div>
+<div class="flex items-center gap-space-lg">
+<div class="flex items-center gap-space-xs">
+<span class="font-body-sm text-body-sm">Filas por página:</span>
+<select class="bg-surface-container-lowest text-on-surface px-space-xs py-1 rounded font-medium focus:outline-none">
+<option selected="">10</option>
+<option>25</option>
+<option>50</option>
+</select>
+</div>
+<span class="font-body-sm text-body-sm font-medium">1 - 7 de 48 registros</span>
+<div class="flex items-center gap-1">
+<button class="p-1 rounded text-outline-variant cursor-not-allowed" disabled="">
+<span class="material-symbols-outlined text-[20px]">first_page</span>
+</button>
+<button class="p-1 rounded text-outline-variant cursor-not-allowed" disabled="">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button class="p-1 rounded text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+<button class="p-1 rounded text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[20px]">last_page</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Drawer Sidenav (mat-drawer edit form, 440px fixed width, elevated z-30) -->
+<aside class="w-[440px] xl:w-[460px] bg-surface-container-lowest rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.12)] flex flex-col shrink-0 overflow-hidden sticky top-20 border-l border-transparent transition-all duration-300" id="supplierEditDrawer">
+<!-- Sidenav Header -->
+<div class="p-space-md bg-surface-container-low flex items-start justify-between">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">edit_document</span>
+<h2 class="font-title-md text-title-md font-semibold text-on-surface">Editar Proveedor</h2>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Actualización de datos y certificación sanitaria DIGEMID</span>
+</div>
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" onclick="toggleDrawer(false)" title="Cerrar panel lateral">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Sidenav Form Workspace (Scrollable) -->
+<div class="p-space-md flex flex-col gap-space-md max-h-[calc(100vh-13rem)] overflow-y-auto">
+<!-- Field 1: RUC (11 Digits) with Real-Time SUNAT Validation Badge -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center">
+<label class="font-label-sm text-label-sm font-semibold uppercase tracking-wider text-on-surface-variant">RUC (Registro Único de Contribuyente)</label>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm font-medium text-[#2e7d32] bg-[#e8f5e9] px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[13px]">check</span> RUC Válido SUNAT
+            </span>
+</div>
+<div class="relative">
+<input class="w-full px-space-md py-2.5 bg-surface-container-low text-on-surface font-code-batch text-code-batch rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all font-semibold" maxlength="11" type="text" value="20458931201"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 text-primary hover:text-[#1565c0] font-label-sm text-label-sm font-semibold px-2 py-1 rounded bg-primary-fixed/30 hover:bg-primary-fixed/50 transition-colors">
+              Revalidar
+            </button>
+</div>
+</div>
+<!-- Field 2: Razón Social -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm font-semibold uppercase tracking-wider text-on-surface-variant">Razón Social Registrada</label>
+<input class="w-full px-space-md py-2.5 bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all font-medium" type="text" value="Droguería Farmacéutica del Sur S.A.C."/>
+</div>
+<!-- Field 3: Nombre Comercial / Alias -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm font-semibold uppercase tracking-wider text-on-surface-variant">Nombre Comercial / Alias Institucional</label>
+<input class="w-full px-space-md py-2.5 bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all" type="text" value="Farmasur Hospitalaria"/>
+</div>
+<!-- Two Column row: Teléfono & Estado -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+<!-- Field 4: Teléfono -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm font-semibold uppercase tracking-wider text-on-surface-variant">Teléfono Contacto</label>
+<input class="w-full px-space-md py-2.5 bg-surface-container-low text-on-surface font-body-sm text-body-sm rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all" type="text" value="(01) 482-9011"/>
+</div>
+<!-- Field 5: Estado -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm font-semibold uppercase tracking-wider text-on-surface-variant">Estado Homologación</label>
+<div class="relative">
+<select class="w-full appearance-none px-space-md py-2.5 bg-surface-container-low text-on-surface font-body-sm text-body-sm rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all font-semibold">
+<option selected="" value="active">Activo - Homologado</option>
+<option value="audit">En Auditoría Técnica</option>
+<option value="suspended">Suspendido / Bloqueado</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline text-[18px] pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Field 6: Correo Electrónico -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm font-semibold uppercase tracking-wider text-on-surface-variant">Correo Electrónico (Recepción de Órdenes)</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">alternate_email</span>
+<input class="w-full pl-9 pr-space-md py-2.5 bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all" type="email" value="ventas@drogueriadelsur.com.pe"/>
+</div>
+</div>
+<!-- Field 7: Categoría Farmacológica -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm font-semibold uppercase tracking-wider text-on-surface-variant">Categoría Farmacológica Primaria</label>
+<input class="w-full px-space-md py-2.5 bg-surface-container-low text-on-surface font-body-sm text-body-sm rounded-lg focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all" type="text" value="Anestésicos, Soluciones Parenterales y Psicotrópicos"/>
+</div>
+<!-- Field 8: Certificación Sanitaria BPA / DIGEMID -->
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm font-semibold uppercase tracking-wider text-on-surface-variant">Certificación BPA / DIGEMID</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px]">verified</span> Inspeccionado
+            </span>
+</div>
+<div class="relative">
+<input class="w-full px-space-md py-2 bg-surface-container-lowest text-on-surface font-code-batch text-code-batch rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" type="text" value="BPA-N° 2023-8841 (Vence: 12/2025)"/>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-tertiary">calendar_clock</span> Próxima auditoría obligatoria: Noviembre 2025
+          </span>
+</div>
+<!-- Field 9: Checkbox / Emergency Purchasing -->
+<label class="flex items-start gap-space-sm p-space-md bg-surface-container-low hover:bg-surface-container-high/60 rounded-xl cursor-pointer transition-colors select-none">
+<input checked="" class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary cursor-pointer accent-primary" type="checkbox"/>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface font-medium">Habilitado para Compras de Emergencia</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant leading-tight mt-0.5">
+              Permite emitir órdenes de despacho urgente sin confirmación previa de comité en caso de desabastecimiento crítico en UCI o Emergencias.
+            </span>
+</div>
+</label>
+</div>
+<!-- Sidenav Footer with Fixed Action Buttons -->
+<div class="p-space-md bg-surface-container-low flex items-center justify-between gap-space-sm">
+<button class="flex-1 px-space-md py-2.5 bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg font-semibold rounded-lg transition-colors text-center" onclick="toggleDrawer(false)">
+          Cancelar
+        </button>
+<button class="flex-1 flex items-center justify-center gap-space-xs px-space-md py-2.5 bg-primary hover:bg-[#1565c0] text-on-primary font-label-lg text-label-lg font-semibold rounded-lg shadow-sm transition-all text-center" onclick="saveSupplierChanges()">
+<span class="material-symbols-outlined text-[18px]">save</span>
+<span>Guardar Cambios</span>
+</button>
+</div>
+</aside>
+</div>
+<!-- Notification Toast for Save Micro-Interaction -->
+<div class="fixed bottom-6 right-6 bg-inverse-surface text-inverse-on-surface px-space-lg py-space-md rounded-xl shadow-xl flex items-center gap-space-md z-50 transform translate-y-32 opacity-0 transition-all duration-300 pointer-events-none" id="saveToast">
+<span class="material-symbols-outlined text-[24px] text-tertiary-fixed">check_circle</span>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm font-semibold">Registro Actualizado con Éxito</span>
+<span class="font-body-sm text-body-sm opacity-80">La ficha técnica de Droguería Farmacéutica del Sur fue sincronizada.</span>
+</div>
+</div>
+<!-- Client-side Logic for Drawer and Filtering Interactions -->
+<script>
+    function toggleDrawer(open) {
+      const drawer = document.getElementById('supplierEditDrawer');
+      if (!drawer) return;
+      if (open) {
+        drawer.style.display = 'flex';
+        drawer.style.opacity = '1';
+        drawer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else {
+        drawer.style.display = 'none';
+      }
+    }
+
+    function saveSupplierChanges() {
+      const toast = document.getElementById('saveToast');
+      if (toast) {
+        toast.classList.remove('translate-y-32', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+        setTimeout(() => {
+          toast.classList.add('translate-y-32', 'opacity-0');
+          toast.classList.remove('translate-y-0', 'opacity-100');
+        }, 3400);
+      }
+    }
+
+    // Quick filter typing interaction on the search bar
+    const searchInput = document.getElementById('searchTableInput');
+    if (searchInput) {
+      searchInput.addEventListener('input', function(e) {
+        const val = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+          const text = row.innerText.toLowerCase();
+          row.style.display = text.includes(val) ? '' : 'none';
+        });
+      });
+    }
+  </script>
+</div></main></div></body></html>

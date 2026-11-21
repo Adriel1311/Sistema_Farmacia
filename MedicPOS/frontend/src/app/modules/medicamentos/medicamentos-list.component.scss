@@ -1,0 +1,57 @@
+@use 'styles/design-tokens' as *;
+
+:host {
+  display: block;
+}
+
+.med-desc {
+  margin-top: 2px;
+  max-width: 320px;
+}
+
+.fm-table tbody tr.med-row--critical {
+  background: $color-danger-light;
+  box-shadow: inset 3px 0 0 0 $color-danger;
+}
+
+.fm-table tbody tr.med-row--critical:hover {
+  background: mix($color-danger-light, $color-danger, 12%);
+}
+
+.fm-table tbody tr.med-row--critical td {
+  border-bottom-color: rgba(192, 57, 47, 0.18);
+}
+
+.fm-table tbody tr.med-row--critical .med-stock {
+  color: $color-danger;
+}
+
+.med-stock {
+  font-weight: $font-weight-semibold;
+}
+
+:host {
+  @media (max-width: #{$bp-sm}) {
+    .fm-table {
+      min-width: 0;
+    }
+
+    .fm-table th,
+    .fm-table td {
+      padding: $space-2 $space-3;
+      min-width: 0;
+    }
+
+    .med-desc {
+      max-width: 200px;
+    }
+
+    .fm-btn--ghost .fm-hidden-mobile {
+      display: none;
+    }
+
+    .fm-btn--ghost {
+      padding: $space-1 $space-2;
+    }
+  }
+}

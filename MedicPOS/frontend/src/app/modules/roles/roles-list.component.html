@@ -1,0 +1,76 @@
+<div class="fm-page">
+  <header class="fm-page-header">
+    <div>
+      <h1 class="fm-page-title">Roles</h1>
+      <p class="fm-page-subtitle">Perfiles de acceso disponibles en FarmaMed</p>
+    </div>
+    <div class="fm-page-actions">
+      <button type="button" class="fm-btn fm-btn--ghost" (click)="refrescar()">
+        <svg-icon name="refresh" [size]="16" />
+        <span class="fm-hidden-mobile">Actualizar</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="fm-alert fm-alert--info">
+    <svg-icon name="warning" [size]="18" />
+    <span>
+      El rol se asigna al usuario desde la pantalla de Usuarios. Esta pantalla es solo de consulta porque el backend
+      expone unicamente el listado de roles (<span class="fm-mono">GET /api/roles</span>).
+    </span>
+  </div>
+
+  <div *ngIf="error()" class="fm-alert fm-alert--error" role="alert">
+    <svg-icon name="error" [size]="18" />
+    <span class="fm-spacer">{{ error() }}</span>
+    <button type="button" class="fm-btn fm-btn--secondary fm-btn--sm" (click)="refrescar()">Reintentar</button>
+  </div>
+
+  <app-fm-loading *ngIf="loading()" text="Cargando roles..."></app-fm-loading>
+
+  <app-fm-empty
+    *ngIf="!loading() && !error() && roles().length === 0"
+    title="No hay roles configurados"
+    message="El administrador de TI debe registrar los roles base del sistema."
+  ></app-fm-empty>
+
+  <div *ngIf="!loading() && roles().length > 0" class="rol-grid">
+    <article *ngFor="let rol of roles(); trackBy: trackById" class="fm-card rol-card">
+      <div class="fm-card-header">
+        <div class="fm-row">
+          <span class="rol-card__icon">
+            <svg-icon name="roles" [size]="20" />
+          </span>
+          <h2 class="fm-card-title">{{ rol.nombre }}</h2>
+        </div>
+        <span
+          class="fm-badge"
+          [class.fm-badge--success]="rol.activo"
+          [class.fm-badge--neutral]="!rol.activo"
+        >
+          {{ rol.activo ? 'Activo' : 'Inactivo' }}
+        </span>
+      </div>
+      <div class="fm-card-body">
+        <p class="rol-card__desc">{{ rol.descripcion }}</p>
+        <dl class="rol-card__meta">
+          <div>
+            <dt class="fm-stat__label">Usuarios asignados</dt>
+            <dd class="rol-card__value">{{ rol.usuariosAsignados }}</dd>
+          </div>
+          <div>
+            <dt class="fm-stat__label">Alta</dt>
+            <dd class="rol-card__value rol-card__value--sm">{{ rol.createdAt | fmDate: 'date' }}</dd>
+          </div>
+        </dl>
+      </div>
+    </article>
+  </div>
+
+  <div *ngIf="!loading() && roles().length > 0" class="fm-card rol-total">
+    <div class="fm-card-body">
+      <span class="fm-muted fm-small">Usuarios con rol asignado en total</span>
+      <span class="rol-total__value">{{ totalUsuarios() }}</span>
+    </div>
+  </div>
+</div>

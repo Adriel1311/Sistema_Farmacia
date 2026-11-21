@@ -1,0 +1,57 @@
+@use 'styles/design-tokens' as *;
+
+.ord-segments {
+  gap: $space-2;
+  margin-bottom: $space-4;
+
+  .fm-btn {
+    border: 1px solid $color-border-strong;
+    background: $color-bg-secondary;
+    color: $color-text-secondary;
+
+    &:hover { background: $color-bg-tertiary; }
+  }
+}
+
+.ord-segment--active {
+  background: $color-primary-light !important;
+  border-color: $color-primary !important;
+  color: $color-primary-dark !important;
+}
+
+.ord-row--selected {
+  background: $color-primary-light;
+}
+
+.ord-aprobador,
+.ord-proveedor {
+  max-width: 190px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ord-detalle {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: $space-3;
+  margin: 0 0 $space-4;
+  padding-bottom: $space-3;
+  border-bottom: 1px solid $color-border;
+
+  dt {
+    font-size: $font-size-xs;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: $color-text-tertiary;
+  }
+
+  dd {
+    margin: 2px 0 0;
+    font-size: $font-size-sm;
+  }
+
+  @media (max-width: $bp-sm) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

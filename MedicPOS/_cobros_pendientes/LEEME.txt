@@ -1,0 +1,3 @@
+Modulo de Cobros y Precios (Cobro, MedicamentoPrecio, 006_cobro.sql, receta SIS, pantalla Precios).
+Se aparto de src/ porque chocaba con la Caja (faltaban constantes de Auditoria y DispensacionService
+ya no lo llamaba). No se borro nada: aqui sigue todo para integrarlo despues con la Caja.
